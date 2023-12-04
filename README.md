@@ -1,103 +1,137 @@
 # thinkpad-x1-yoga-5-hack
 
-Yet another Opencore config for Lenovo Thinkpad X1 Yoga gen5.
+Yet another Opencore config for Lenovo Thinkpad X1 Yoga Gen5.
 
 OC 0.9.6 | macOS 13.6.1
 
 ## Hardware
 
-| Part        | Model                     | How to enable                                                           |
-| ----------- | ------------------------- | ----------------------------------------------------------------- |
-| CPU         | Comet Lake (10310U)       | PluginType is enough.                                             |
-| GPU         | Intel UHD 620             | WhateverGreen with some extended framebuffer patching.            |
-| Ethernet    | Intel i219LM              | IntelMausi. Just works™.                                          |
-| WiFi        | Intel AX201               | itlwm *or* AirportItlwm.                                          |
-| Audio       | ALC 285                   | AppleALC, layout *??*. Problems with microphones and volume. |
-| Bluetooth   | Intel AX201               | IntelBluetoothFirmware.                                           |
-| Keyboard    | Generic PS/2              | VoodooPS2Keyboard.                                                |
-| Trackpad    | I2C, SYNA8006             | VoodooI2C with HID satellite.                                     |
-| Trackpoint  | PS/2 mouse                | VoodooPS2Mouse.                                                   |
-| Touchscreen | USB device                | VoodooI2C                                                       |
-| Wacom pen   | USB device                | ???                                                               |
+| Part        | Model               | How to enable                                                |
+| ----------- | ------------------- | ------------------------------------------------------------ |
+| CPU         | Comet Lake (10310U) | PluginType is enough.                                        |
+| GPU         | Intel UHD 620       | WhateverGreen with some extended framebuffer patching.       |
+| Ethernet    | Intel i219LM        | IntelMausi. Just works™.                                     |
+| WiFi        | Intel AX201         | itlwm *or* AirportItlwm.                                     |
+| Audio       | ALC 285             | AppleALC, layout *??*. Problems with microphones and volume. |
+| Bluetooth   | Intel AX201         | IntelBluetoothFirmware.                                      |
+| Keyboard    | Generic PS/2        | VoodooPS2Keyboard.                                           |
+| Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite.                                |
+| Trackpoint  | PS/2 mouse          | VoodooPS2Mouse.                                              |
+| Touchscreen | USB device          | VoodooI2C                                                    |
+| Wacom pen   | USB device          | ???                                                          |
+
+## Final issues (won't ever work)
+
+- Usual suspects: fingerprint, IR camera (if present), WWAN (if present).
+- Internal microphone.
+- [DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — broken on iGPU.
 
 ## Current issues
 
-- CFG Lock in BIOS.
-  - Usual ways of unlocking **do not work**. Either flash BIOS directly or use quirks.
 - Wacom pen not detected.
-  - Unclear. There are reports of it working.
-- Built-in microphones don't work.
-  - Unclear. Playing with AppleALC layouts. Will consider trying to write my own.
+  - Unclear. There are reports of it working through VoodooRMI.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
-  - Unclear. Check if YogaSMC can do this at all.
-- Thunderbolt
-  - [TODO] Unclear, no hardware to test.
+  - Unclear. YogaSMC supposed to do this.
 - Middle button of trackpoint not working.
   - Supposedly some extra configuration of VoodooPS2 required.
+  - Pressing trackpoint buttons stops trackpad for a half second. Mildly infuriating.
+    - Same happens on Windows, so probably nothing can be done here.
+    - There is a setting in kext, but apparently delay is needed for filtering out packets from trackpoint.
 - Fn keys.
-  - Most are solved with YogaSMC and Brightness keys.
-- [No DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — dosn't use anyway.
-- Usual incompatibilities: fingerprint reader.
+  - Many are solved with YogaSMC and Brightness keys. Some issues remain.
+- Thunderbolt
+  - Controller appears in system and I can connect another monitor over TB/DP. Requires further testing, but I have no hardware to test.
 
 ## Notes on work in progress
 
 ### Next thing to do
 
-Thunderbolt.
+Keyboard and trackpoint.
+
+VoodooRMI — check again.
+
+Check if GPRW fix is needed. Doesn't seem to be any sleep problems.
+
+Final cleaning: ScanPolicy, etc.
 
 ### Thoughts
 
 From boot log: `OCABC: MMIO devirt end, saved 0 KB` — does that mean I don't need DevirtualiseMmio? Seems to work fine without it.
 
-According to some reports replacing DMAR table may be better than DisableIOMapper quirk.
+According to some reports replacing DMAR table may be better than DisableIOMapper quirk. Works fine with DMAR, leaving it.
 
 Resetting NVRAM is reported to brick certain Thinkpads with certain BIOS versions. Better not to risk that.
 
-VoodooSMBus — check if needed/better. Seems to be incompatible with Trackpoint. Everything seems to work fine without it.
-
-A couple unknown devices, poorly recognised Thunderbolt/USB3.1:
-
-- "ExpressCard" unknown 8086:15d2 sub 17aa:25be, x4
-- "ExpressCard" XHCI 8086:15d4 sub 17aa:25be, x4
-
-Also consider cometic SSDT devices for:
-
-- 8086:2a4 - 17aa:22be @1f,5 — SPI (Flash) controller
-- 8086:2ef - 17aa:22be @14,2 — Shared SRAM
-- 8086:2f9 - 17aa:22be @12 — Coffee Lake Thermal Subsystem
+ 
 
 Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb
 
-### Keys
+YogaSMC doesn't need YVPS.
 
-- [x] Fn-Space works OOB and outside of OS (but doesn't show keyboard backlight either)
-- [x] Fn-Esc (FnLock) works OOB and independent of OS
-- [x] Fn-F1 to F3 work OOB
-- [x] Fn-F4 (mute mic) with YogaSMC
-- [x] Fn-F5-F6 work with BrightnessKeys
-- [x] Fn-F7 (dual display) with YogaSMC
-- [x] Fn-F8 (airplane mode) with YogaSMC
-- [ ] Fn-F9-F11 (custom Windows-only keys) - detects, check value
-- [ ] Fn-F12 (custom key) — unclear.
-- [ ] Fn-PrnScr (snipping tool) - detects, check value
-- [ ] Fn-B = Break - detects, check value
-- [ ] Fn-K = Scroll Lock - detects, check value
-- [ ] Fn-P = Pause - detects, check value
-- [ ] Fn-S = SysRq - detects, check value
-- [x] Fn-4 = Sleep - **requires YogaSMC**. Kernel panic with CMOS checksum error without it.
+### Input devices
+
+Current state:
+- VoodooPS2 for keyboard, trackpoint (seems to be PS/2 as well).
+- VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen
+- Pen doesn't work.
+- Middle trackpoint key doesn't work.
+
+There are reports that pen could work with VoodooI2C. 
+
+Enter VoodooRMI. Supposedly helps with pen?
+Trackpoint (along with buttons) doesn't work, pen doesn't work, and I don't see any trackpad improvements. What's the deal with it?
+Ideas:
+- Try older 1.2 version that has separate kext for trackpoint
+- Be a grownup and open issue with debugging information.
+- Ask around if anyone actually managed to make pen work.
+- Try to find that UPDD driver from those guys. It's paid, and bloody expensive.
+
+
+### Extra keys
+
+- [x] Fn-Space works OOB and outside of OS. YogaSMC adds notifications.
+- [x] Fn-Esc (FnLock) works OOB and independent of OS. YogaSMC adds notifications.
+- [x] Fn-F1 to F3 work OOB. Indicator on F1 works with YogaSMC.
+- [x] Fn-F4 (mute mic). Fully works with YogaSMC.
+- [x] Fn-F5-F6 work with BrightnessKeys. Check with only YogaSMC.
+- [x] Fn-F7 (dual display). Fully works with YogaSMC.
+- [x] Fn-F8 (airplane mode). Fully works with YogaSMC.
+- [ ] Fn-F9-F11 (custom Windows-only keys) — YogaSMC reports events 0x1317:0 to 0x1319:0. No keyboard events.
+- [ ] Fn-F12 (custom key) — unclear, YogaSMC doesn't report anything. No keyboard events.
+- [ ] Fn-PrnScr (snipping tool) — YogaSMC reports event 0x1312:0. No keyboard events.
+- [ ] Fn-Tab (zoom) — YogaSMC reports event 0x1014:0. No keyboard events.
+- [ ] Fn-B = Break — keycode not detected. Should it be?
+- [ ] Fn-K = Scroll Lock — keycode not detected, works as brightness down.
+- [ ] Fn-P = Pause — keycode not detected, works as brightness up.
+- [ ] Fn-S = SysRq — keycode detected, shows as Opt-F18, 79/0x4f.
+- [x] Fn-4 = Sleep - works, **requires YogaSMC**. Got a reboot with CMOS checksum error without it.
+- [ ] Ctrl-Ins — for *some* reason works as power button, at least with YogaSMC.
+
+There also exists a SSDT fix for Fn-4 sleep crash.
 
 ### Audio
 
-Requires testing. Layouts: 11, 21, 31, 52, 61, 66, 71, 88
+[TODO] Move table to separate docs.
 
-- 11
-- 21 — only top dynamics, rather low volume, no builtin microphones, jack ?
-- 31
-- 52
-- 61
-- 66
-- 71
-- 88
+First of all, internal mic is **unsupported**, end of the line. It's a microphone array powered by Intel Smart Sound Technology.
+
+In short, AppleALC works by explaining to native AppleHDA how to connect with audio layouts inside HDA chip that it doesn't know. What we have is a separate chip that has nothing to do with HDA, so neither AppleALC nor VoodooHDA support that. Unless someone writes a completely new driver, there's nothing to be done.
+
+Out of available layouts the best one is **71**. Both sets of speakers work, jack is fully functional.
+
+Unfortunately, macOS can use only one device for output. One solution is to make an aggregate device in MIDI settings, but then you lose some QoL like volume control and autoswitching to headphones. You can install third-party volume control, like [AggregateVolumeMenu](https://github.com/adaskar/AggregateVolumeMenu) or something more advanced like SoundSource.
+
+| ID | Speakers | Microphones | Jack out | Jack in | Comments                                       |
+| -- | -------- | ----------- | -------- | ------- | ---------------------------------------------- |
+| 11 | Top      | **NO**      | Yes      | Yes     |                                                |
+| 21 | Top      | **NO**      | Yes      | Yes     | Jack in not detected as headphones.            |
+| 31 | Top      | **NO**      | Yes      | Yes     |                                                |
+| 52 | Top      | **NO**      | Yes      | Broken? |                                                |
+| 61 | Top      | **NO**      | Yes      | Yes     |                                                |
+| 66 | Bottom   | **NO**      | Yes      | Yes     |                                                |
+| 71 | Both     | **NO**      | Yes      | Yes     | Best one. Requires aggregate device.    |
+| 88 | Top      | **NO**      | Yes      | Yes     | Headphones on separate channel without switch. |
+
 
 ## BIOS settings
 
@@ -119,34 +153,36 @@ Requires testing. Layouts: 11, 21, 31, 52, 61, 66, 71, 88
 - Startup
   - CSM Support → Disabled
 
-There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it **do not work**. Reportedly, the only way to toggle it is through direct BIOS write, with programmer clip and all, with corresponding dangers (it breaks TPM, among other things).
+There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but apparently it's already 64Mb by default.
+There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
 ## ACPI files
 
-Required:
+See acpi/ACPI.md for details.
 
-| Name         | What it is  | Comment                                                                                 |
-| ------------ | ----------- | --------------------------------------------------------------------------------------- |
-| SSDT-PLUG    | PluginType  | CPU location is `_SB_.PR00`                                                             |
-| SSDT-USBX    | USB power   | Standard one. EC device is present and correct.                                         |
-| SSDT-PNLF    | Backlight   | GPU location is `_SB_.PCI0.GFX0`. The one from SSDTTime is smaller, but requires patch. |
-| SSDT-RTCAWAC | RTC fix     | Standard one.                                                                           |
-| SSDT-RHUB    | USB hub fix | `_SB_.PCI0.XHC.RHUB`. Standard one is okay.                                             |
-| SSDT-OSI     | OS patches  | For I2C trackpad and some other things.                                                 |
-| SSDT-ECFIX   | Edits to EC | Most are required by YogaSMC                                                            |
-| SSDT-Devices | Add devices | DMAC for DMAR table; power button; fake ALS0; several mostly cosmetic ones              |
-| DMAR         | Replacement | Either use it (and drop original) or enable DisableIOMapper, or disable VT-d            |
-| SSDT‑HPET    | IRQ patches | Might not be necessary.                                                                 |
+| Name         | What it is                       |
+| ------------ | -------------------------------- |
+| SSDT-PLUG    | CPU PluginType enabler           |
+| SSDT-USBX    | USB power injection              |
+| SSDT-PNLF    | Backlight fix                    |
+| SSDT-RTCAWAC | RTC fix                          |
+| SSDT-RHUB    | USB hub fix                      |
+| SSDT-XOSI    | OS version patches               |
+| SSDT‑HPET    | IRQ patches                      |
+| SSDT-FIXDEV  | Fixes to some devices.           |
+| SSDT-YOGA    | Supplementary SSDT for YogaSMC   |
+| SSDT-TB      | Thunderbolt fixes                |
+| SSDT-EXTRAS  | Cosmetic device fixes, optional  |
+| DMAR         | See below. Requires SSDT-FIXDEV  |
 
-Testing:
+DMAR is a replacement DMA Regions table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
 
-| Name      | What it is  | Comment                            |
-| --------- | ----------- | ---------------------------------- |
-| SSDT-TB   | Thunderbolt | Testing                            |
-| SSDT-YVPC | YVPC device | From YogaSMC; unclear if required. |
-| SSDT-WMIS | WMIS ?      | From YogaSMC; unclear if required. |
+- Disable VT-d in BIOS. Best option if you don't need it in other OSes.
+- Use DisableIOMapper quirk in OC. OC manual recommend this, but there are also reports that next option sometimes work better.
+- Add DMAC device (in SSDT-FIXDEV), remove protected regions in DMAR table and reinject it, dropping original.
+
+As it could change with BIOS update, **you must make it yourself**, so it is not provided. Use SSDTTime for that.
 
 ## Kexts
 
@@ -186,6 +222,7 @@ Testing:
 ## Acknowledgements
 
 Dortania, AcidAnthera team and other people from community
+Authors of all drivers and software used here.
 https://github.com/jsassu20/OpenCore-HotPatching-Guide
 https://github.com/tylernguyen/x1c6-hackintosh
 https://github.com/Jamesxxx1997/thinkpad-x1-yoga-2018-hackintosh
