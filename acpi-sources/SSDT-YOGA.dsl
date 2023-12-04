@@ -1,39 +1,22 @@
 /*
- *  Several EC fixes
+ * YogaSMC supplementary patches.
  *
- *  AC: Patching AC Device so that AppleACPIACAdapter driver loads.
- *  Device named ADP1 on Mac
+ * ESEN: Sensor access.
  *
- *  ESEN: Sensor access or something?
- *
- *  RE1B,RECB,WE1B,WECB,NBAT - EC rw access for YogaSMC. 
- *  
+ * RE1B,RECB,WE1B,WECB,NBAT: EC rw access for YogaSMC. *
+ * CSSI: some LED control fixes.
  */
-
-
-DefinitionBlock ("", "SSDT", 2, "hack", "_AC", 0x00001000)
+DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
 {
-    External (_SB_.PCI0.LPCB.EC__, DeviceObj)
-    External (_SB_.PCI0.LPCB.EC__.AC__, DeviceObj)
-    External (_SB_.PCI0.LPCB.EC__.HKEY, DeviceObj)
-    External (_SB_.PCI0.LPCB.EC__.BAT1, DeviceObj)
-    External (_SI_._SST, MethodObj)
 
+    External(_SB_.PCI0.LPCB.EC__, DeviceObj)
+    External(_SB_.PCI0.LPCB.EC__.HKEY, DeviceObj)
+    External(_SB_.PCI0.LPCB.EC__.BAT1, DeviceObj)
+    External(_SI_._SST, MethodObj)
 
-    Scope (\_SB.PCI0.LPCB.EC)
+    Scope (_SB.PCI0.LPCB.EC)
     {
-        Scope (AC) // AC fix
-        {
-            If (_OSI ("Darwin"))
-            {
-                Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
-                {
-                    0x17, 
-                    0x03
-                })
-            }
-        }
-        
+
     /*
      * Sensor access for YogaSMC
      * 
@@ -67,7 +50,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_AC", 0x00001000)
             }
         }
 
-        // EC RW methods for YogaSMC
+        // EC RW methods
+        
         Method (RE1B, 1, NotSerialized)
         {
             OperationRegion (ERAM, EmbeddedControl, Arg0, One)
@@ -131,5 +115,19 @@ DefinitionBlock ("", "SSDT", 2, "hack", "_AC", 0x00001000)
             }
         }   
 
+    }
+
+    Scope (\_SB.PCI0.LPCB.EC.HKEY)
+    {
+        // Optional: Route to customized LED pattern or origin _SI._SST
+        // if differ from built in pattern. Unsure if required.
+
+        Method (CSSI, 1, NotSerialized)
+        {
+            If (_OSI ("Darwin"))
+            {
+                \_SI._SST (Arg0)
+            }
+        }
     }
 }

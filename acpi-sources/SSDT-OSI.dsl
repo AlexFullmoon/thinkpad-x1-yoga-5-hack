@@ -18,7 +18,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
         If (_OSI ("Darwin")) 
         {
             //HPTE = Zero    // Disables HPET?
-            //TPDM = Zero    // Does something with TPD0?
+            //TPDM = Zero    // Does something with TPD0? Find specifics.
             
             // YogaSMC
             LNUX = One     // Sets OS type to Linus
@@ -52,14 +52,6 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
                 If (_OSI ("Darwin"))
                 {
                     Name (OSYS, 0x07DF)
-                }
-                // Optional: Route to customized LED pattern or origin _SI._SST if differ from built in pattern.
-                Method (CSSI, 1, NotSerialized)
-                {
-                    If (_OSI ("Darwin"))
-                    {
-                        \_SI._SST (Arg0)
-                    }
                 }
             }
         }
