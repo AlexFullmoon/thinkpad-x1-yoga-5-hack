@@ -6,19 +6,20 @@ OC 0.9.6 | macOS 13.6.1
 
 ## Hardware
 
-| Part        | Model               | How to enable                                                |
-| ----------- | ------------------- | ------------------------------------------------------------ |
-| CPU         | Comet Lake (10310U) | PluginType is enough.                                        |
-| GPU         | Intel UHD 620       | WhateverGreen with some extended framebuffer patching.       |
-| Ethernet    | Intel i219LM        | IntelMausi. Just works™.                                     |
-| WiFi        | Intel AX201         | itlwm *or* AirportItlwm.                                     |
-| Audio       | ALC 285             | AppleALC, layout *??*. Problems with microphones and volume. |
-| Bluetooth   | Intel AX201         | IntelBluetoothFirmware.                                      |
-| Keyboard    | Generic PS/2        | VoodooPS2Keyboard.                                           |
-| Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite.                                |
-| Trackpoint  | PS/2 mouse          | VoodooPS2Mouse.                                              |
-| Touchscreen | USB device          | VoodooI2C                                                    |
-| Wacom pen   | USB device          | ???                                                          |
+| Part        | Model               | How to enable                                 |
+| ----------- | ------------------- | --------------------------------------------- |
+| CPU         | Comet Lake (10310U) | PluginType is enough.                         |
+| GPU         | Intel UHD 620       | WhateverGreen with some framebuffer patching. |
+| Ethernet    | Intel i219LM        | IntelMausi. Just works™.                      |
+| WiFi        | Intel AX201         | itlwm *or* AirportItlwm.                      |
+| Audio       | ALC 285             | AppleALC, layout 71.                          |
+| Bluetooth   | Intel AX201         | IntelBluetoothFirmware.                       |
+| Keyboard    | Generic PS/2        | VoodooPS2Keyboard.                            |
+| Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite.                 |
+| Trackpoint  | PS/2 mouse          | VoodooPS2Mouse.                               |
+| Touchscreen | USB device          | VoodooI2C                                     |
+| Wacom pen   | USB device          | ???                                           |
+
 
 ## Final issues (won't ever work)
 
@@ -29,7 +30,7 @@ OC 0.9.6 | macOS 13.6.1
 ## Current issues
 
 - Wacom pen not detected.
-  - Unclear. There are reports of it working through VoodooRMI.
+  - Unclear. There are reports of it working through VoodooRMI or VoodooI2C.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
   - Unclear. YogaSMC supposed to do this.
 - Middle button of trackpoint not working.
@@ -50,9 +51,9 @@ Keyboard and trackpoint.
 
 VoodooRMI — check again.
 
-Check if GPRW fix is needed. Doesn't seem to be any sleep problems.
+Check if GPRW fix is needed. Doesn't seem to be any sleep problems though.
 
-Final cleaning: ScanPolicy, etc.
+Final cleaning: ScanPolicy, removing serial, public repo, etc.
 
 ### Thoughts
 
@@ -62,11 +63,9 @@ According to some reports replacing DMAR table may be better than DisableIOMappe
 
 Resetting NVRAM is reported to brick certain Thinkpads with certain BIOS versions. Better not to risk that.
 
- 
+Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb or more?
 
-Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb
-
-YogaSMC doesn't need YVPS.
+YogaSMC doesn't need YVPS and \_LID.
 
 ### Input devices
 
@@ -75,6 +74,7 @@ Current state:
 - VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen
 - Pen doesn't work.
 - Middle trackpoint key doesn't work.
+- Several keys work weirdly, require remapping
 
 There are reports that pen could work with VoodooI2C. 
 
@@ -86,10 +86,9 @@ Ideas:
 - Ask around if anyone actually managed to make pen work.
 - Try to find that UPDD driver from those guys. It's paid, and bloody expensive.
 
-
 ### Extra keys
 
-- [x] Fn-Space works OOB and outside of OS. YogaSMC adds notifications.
+- [x] Fn-Space works OOB even outside of OS. YogaSMC adds notifications.
 - [x] Fn-Esc (FnLock) works OOB and independent of OS. YogaSMC adds notifications.
 - [x] Fn-F1 to F3 work OOB. Indicator on F1 works with YogaSMC.
 - [x] Fn-F4 (mute mic). Fully works with YogaSMC.
@@ -97,7 +96,7 @@ Ideas:
 - [x] Fn-F7 (dual display). Fully works with YogaSMC.
 - [x] Fn-F8 (airplane mode). Fully works with YogaSMC.
 - [ ] Fn-F9-F11 (custom Windows-only keys) — YogaSMC reports events 0x1317:0 to 0x1319:0. No keyboard events.
-- [ ] Fn-F12 (custom key) — unclear, YogaSMC doesn't report anything. No keyboard events.
+- [ ] Fn-F12 (custom key, star) — unclear, YogaSMC doesn't report anything. No keyboard events.
 - [ ] Fn-PrnScr (snipping tool) — YogaSMC reports event 0x1312:0. No keyboard events.
 - [ ] Fn-Tab (zoom) — YogaSMC reports event 0x1014:0. No keyboard events.
 - [ ] Fn-B = Break — keycode not detected. Should it be?
@@ -105,33 +104,11 @@ Ideas:
 - [ ] Fn-P = Pause — keycode not detected, works as brightness up.
 - [ ] Fn-S = SysRq — keycode detected, shows as Opt-F18, 79/0x4f.
 - [x] Fn-4 = Sleep - works, **requires YogaSMC**. Got a reboot with CMOS checksum error without it.
+- [x] Fn-Left/Right = Home/End — works.
 - [ ] Ctrl-Ins — for *some* reason works as power button, at least with YogaSMC.
 
 There also exists a SSDT fix for Fn-4 sleep crash.
-
-### Audio
-
-[TODO] Move table to separate docs.
-
-First of all, internal mic is **unsupported**, end of the line. It's a microphone array powered by Intel Smart Sound Technology.
-
-In short, AppleALC works by explaining to native AppleHDA how to connect with audio layouts inside HDA chip that it doesn't know. What we have is a separate chip that has nothing to do with HDA, so neither AppleALC nor VoodooHDA support that. Unless someone writes a completely new driver, there's nothing to be done.
-
-Out of available layouts the best one is **71**. Both sets of speakers work, jack is fully functional.
-
-Unfortunately, macOS can use only one device for output. One solution is to make an aggregate device in MIDI settings, but then you lose some QoL like volume control and autoswitching to headphones. You can install third-party volume control, like [AggregateVolumeMenu](https://github.com/adaskar/AggregateVolumeMenu) or something more advanced like SoundSource.
-
-| ID | Speakers | Microphones | Jack out | Jack in | Comments                                       |
-| -- | -------- | ----------- | -------- | ------- | ---------------------------------------------- |
-| 11 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 21 | Top      | **NO**      | Yes      | Yes     | Jack in not detected as headphones.            |
-| 31 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 52 | Top      | **NO**      | Yes      | Broken? |                                                |
-| 61 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 66 | Bottom   | **NO**      | Yes      | Yes     |                                                |
-| 71 | Both     | **NO**      | Yes      | Yes     | Best one. Requires aggregate device.    |
-| 88 | Top      | **NO**      | Yes      | Yes     | Headphones on separate channel without switch. |
-
+Very rarely YogaSMC actually detects one of Fn-F10-F12 keys. Weird.
 
 ## BIOS settings
 
