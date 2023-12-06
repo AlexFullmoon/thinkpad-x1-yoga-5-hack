@@ -1,10 +1,71 @@
-# Keyboard keys
+# Information on input devices
 
-## Current status
+## Current state
+
+**Important!** Do not use Fn-4 without YogaSMC, it crashes the system.
+
+- VoodooPS2 for keyboard and trackpoint.
+- VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen.
+- VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
+- YogaSMC for most Fn keys and other functionality.
+- Pen doesn't have pressure detection.
+- Middle trackpoint key works only as middle mouse button. Unclear if it can be switched to scroll.
+- Several keys require (re)mapping. Some Fn keys  work even outside of OS, most will require YogaSMC and BrightnessKeys.
+
+VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of readme.
+
+## Pen
+
+Pen support is broken in VoodooI2C (in VoodooI2CHID satellite, to be specific) from version 2.7 to at least 2.8. See [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details. You can:
+
+- Roll back to v.2.6.5. Outdated.
+- Use the one I compiled. Probably would get outdated before long.
+- Wait for devs to release fixed version. Good luck with that.
+- Compile VoodooI2CHID from source. See short guide below.
+
+Pen support in VoodooI2C is limited — no pressure detection. (frankly, it's amazing it works so well). You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/). It is better, but bloody expensive, so you might want to google for some other solution.
+
+### building VoodooI2C
+
+Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
+
+```sh
+# This uses Python 3 instead of 2, but works fine.
+pip3 install cpplint
+
+# You might jump in the rabbit hole that is installing special version of cldoc.
+# It requires coffeescript and sass, which require Node 16 and Python 2, and
+# still fail when building the project. Luckily there is no need for all that.
+# It is needed for documentation only, and kexts are compiled successfully. 
+# You can even try installing it from pip3 and ignore Python 2 altogether.
+
+git clone --recursive https://github.com/VoodooI2C/VoodooI2C.git
+cd VoodooI2C
+
+# Dependencies
+git clone https://github.com/acidanthera/MacKernelSDK
+
+src=$(/usr/bin/curl -Lfs \
+    https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) \
+    && eval "$src" \
+    && mv VoodooInput Dependencies
+
+# Update VoodooI2CHID to _latest_ commit. This is what we're here for.
+git submodule sync
+git submodule update --init --recursive --remote
+```
+
+Then in XCode open VoodooI2C folder, go to root of project navigator in left panel, select Build Settings tab and switch Build active architecture from Debug to Release. Press ⌘B to build. Select Product in navigator, and open results folder in right panel.
+
+Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
+
+## Keyboard Fn keys
+
+### Current status
 
 - [x] Fn-Space works OOB, even outside of OS. YogaSMC adds notifications.
 - [x] Fn-Esc (FnLock) works OOB and independent of OS. YogaSMC adds notifications.
-- [x] Fn-F1 to F3 work OOB. Indicator on F1 works with YogaSMC.
+- [x] Fn-F1 to F3 work OOB. Indicator on F1 works(?) with YogaSMC.
 - [x] Fn-F4 (mute mic). Fully works with YogaSMC.
 - [x] Fn-F5-F6 work with BrightnessKeys.
 - [ ] Fn-F7 (dual display). YogaSMC shows notification but doesn't seem to do anything.
@@ -23,7 +84,7 @@
   - Actually this is correct behaviour, it maps to Ctrl-Break by default.
   - Remapped to F19.
 - [x] Fn-K = Scroll Lock — works, but VoodooPS2 maps it to brightness down.
-  - Check if it's possible to un-map it, Fn-F5/f6 with BrightnessKeys kext are enough.
+  - Unclear if it's possible to un-map it, as we already have Fn-F5/F6 for that.
   - Remapped to F17.
 - [x] Fn-P = Pause — works, but VoodooPS2 maps it to brightness up.
   - Same, remapped to F16.
@@ -33,7 +94,7 @@
 - [x] Fn-Left/Right = Home/End — works.
 - [x] PrnScr — works, not used in system.
   - Remapped to RightCmd.
-  - Optionally it can be remapped to high F key, e.g. F20, and used to take screenshots.
+  - Optionally it can be remapped to high F key, e.g. F20, and used to take screenshots or whatever.
 - [x] Ctrl-Ins — for *some* reason works as power button?
   - Actually this is correct behaviour. Insert doubles as Media Eject key, which is used in a bunch of [default Apple shortcuts](https://support.apple.com/en-us/HT201236) for sleep/reboot/power. Might be unexpected to user — e.g. Ctrl-Cmd-Insert will cause reboot.
   - One option (provided but commented out in SSDT-KEYMAP) is to remap it to Numpad Ins.
@@ -42,11 +103,11 @@ I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
 
 Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6 which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
 
-Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error — scary! As I've read somewhere, it's caused by key sending system into non-standard sleep mode. this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error — scary! As I've read somewhere, it's caused by key sending system into non-standard sleep mode. This can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
-## Remapping
+### Remapping
 
-To recap, here are currently implemented key remappings:
+To recap, here are currently implemented key remappings (last two are disabled):
 
 | Key      | Keycodes    | Maps to  | Keycode |
 | -------- | ----------- | -------- | ------- |
@@ -61,9 +122,9 @@ Set F16-120 as shortcuts to whatever you like in macOS keyboard settings.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
 
-Insert remap is not enabled by default, uncomment it if you need it. Likewise, if you need default functions of Break for some reason, comment it out. Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
+Insert remap is not enabled by default, uncomment it if you need it. Likewise, if you need default functions of Break for some reason, comment it out, etc. Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
 
-## Debugging information
+### Debugging information
 
 | Key    | PS2   | ADB | Comment                                   |
 | ------ | ----- | --- | ----------------------------------------- |
@@ -85,6 +146,8 @@ f19=50
 f20=5a
 
 ## Links
+
+[TODO] Add more.
 
 https://www.insanelymac.com/forum/topic/330440-beginners-guide-fix-keyboard-hot-keys-functional-keys/
 
