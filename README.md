@@ -8,7 +8,7 @@ You must build it yourself.
 
 I am also not sure if packaging a bunch of precompiled files with different licenses is right and which license should *I* use for that.
 
-One exception is VoodooI2C — I had to build a newer version than was at the moment, so here it is.
+One exception is VoodooI2C — I had to build a newer version than was released at the moment.
 
 ## Hardware
 
@@ -28,13 +28,13 @@ One exception is VoodooI2C — I had to build a newer version than was at the mo
 
 See docs/Hardware.md for more details.
 
-## Final issues (won't ever work)
+## 🚫 Final issues (won't ever work)
 
 - Usual suspects: fingerprint, IR camera (if present), WWAN (if present).
 - Internal microphone.
 - [DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — broken on iGPU.
 
-## Lesser issues
+## ❓ Lesser issues
 
 - Wacom pen has limited functionality.
 - Fn keys. Most works with YogaSMC and Brightness keys. Some issues remain.
@@ -45,11 +45,14 @@ See docs/Hardware.md for more details.
 - Rare night-time sleep crashes. Hard to debug.
   - Simplest way is disabling hibernation and related features via usual `pmset` litany.
   - Check with *enabled* HibernationFixup. Though it might be unrelated to crash.
-- **Important!** Do not use Fn-4 without YogaSMC, it crashes the system.
+
+## ⚠️ Warnings
+
+Do not use Fn-4 without YogaSMC, it crashes the system.
+
+Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS versions. Might be unrelated to this model, but better not to risk that.
 
 ## Notes on work in progress
-
-### Next thing to do
 
 Remaining keyboard buttons.
 
@@ -63,17 +66,7 @@ Final cleaning: ScanPolicy, removing serial, public repo, etc.
  
 Cosmetic stuff injection in DeviceProperties.
 
-### Thoughts
-
-From boot log: `OCABC: MMIO devirt end, saved 0 KB` — does that mean I don't need DevirtualiseMmio? Seems to work fine without it.
-
-According to some reports replacing DMAR table may be better than DisableIOMapper quirk. Works fine with DMAR, leaving it.
-
-Resetting NVRAM is reported to brick certain Thinkpads with certain BIOS versions. Better not to risk that.
-
 Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb or more?
-
-YogaSMC doesn't need YVPS and \_LID.
 
 ## BIOS settings
 
@@ -95,7 +88,7 @@ YogaSMC doesn't need YVPS and \_LID.
 - Startup
   - CSM Support → *Disabled*
 
-There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
+There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
@@ -112,22 +105,24 @@ See docs/ACPI.md for more details.
 | SSDT-RHUB    | USB hub fix                     |
 | SSDT-OSI     | OS version patches              |
 | SSDT‑HPET    | IRQ patches                     |
-| SSDT-FIXDEV  | Fixes to some devices.          |
+| SSDT-FIXDEV  | Fixes to some devices           |
 | SSDT-YOGA    | Supplementary SSDT for YogaSMC  |
 | SSDT-TB      | Thunderbolt fixes               |
-| SSDT-KEYMAP  | Keyboard remaps. Optional.      |
+| SSDT-KEYMAP  | Keyboard remaps. Optional       |
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
 | DMAR         | See below. Requires SSDT-FIXDEV |
 
 DMAR is a replacement DMA Regions table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
 
 1. Disable VT-d in BIOS. Probably best option if you don't need it in other OSes.
-2. Use DisableIOMapper quirk in OC. OC manual recommend this, but there are also reports that next option sometimes work better.
+2. Use DisableIOMapper quirk in OC. OC manual recommends this, but there are also reports that next option sometimes work better.
 3. Add DMAC device (in SSDT-FIXDEV), remove protected regions in DMAR table and reinject it while dropping original.
 
 As it could change with BIOS update, **you must make it yourself**, so it is not provided. Use SSDTTime for that.
 
 ## Kexts
+
+[TODO] List current.
 
 - Lilu
 - VirtualSMC
@@ -159,7 +154,28 @@ As it could change with BIOS update, **you must make it yourself**, so it is not
 
 ## Opencore config
 
-[TODO] write something
+Use provided config for reference, follow Dortania guide to build your own for current OpenCore version. Here are some notes:
+
+- ACPI
+  - Add all SSDTs, remember to drop DMAR table if using that method.
+  - Quirks: none.
+- Booter/Quirks
+  - `ProvideCustomSlide` and `DevirtualiseMmio` are unnecessary.
+- DeviceProperties
+  - Audio is at `PciRoot(0x0)/Pci(0x1f,0x3)`.
+  - Video is at `PciRoot(0x0)/Pci(0x2,0x0)`, as usual.
+  - Rest are optional cosmetic patches to show devices in System Information.
+- Kernel
+  - Kext order: see comments to kext entries in config.
+  - Quirks:
+    - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
+    - `AppleCpuPmCfgLock` is apparently not necessary, though.
+    - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
+    - `DisableIoMapper` is disabled because I replace DMAR table. See docs/ACPI.md.
+- Misc
+  - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB froves and only Apple FS, NTFS and EFI partition.
+- PlatformInfo
+  - `UpdateSMBIOSMode` is Custom for multiboot configuration. If using only macOS, set to Create
 
 ## Acknowledgements
 
