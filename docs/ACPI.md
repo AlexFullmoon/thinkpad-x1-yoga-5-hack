@@ -2,7 +2,7 @@
 
 ## SSDT-PLUG
 
-Adds PluginType for CPU power management. Pretty much a default one, you can grab grab sample from Dortania and edit as described there.
+Adds PluginType for CPU power management. Pretty much a default one, you can grab sample from Dortania and edit as described there.
 
 CPU ACPI location is `_SB_.PR00`.
 
@@ -22,7 +22,7 @@ RTC fix. Default one, you can get it either from Dortania or generate with SSDTT
 
 ## SSDT-RHUB  
 
-USB hub fix. Device location is `_SB_.PCI0.XHC.RHUB`. Default one from Dortania or SSDTTime is okay, remove everything not needed from it.
+USB hub fix. Device location is `_SB_.PCI0.XHC.RHUB`. Default one from Dortania or SSDTTime.
 
 ## SSDT-OSI
 
@@ -31,27 +31,6 @@ OS variables. For I2C trackpad and YogaSMC functionality. Usually you would use 
 ## SSDT-FIXDEV   
 
 Recommended fixes for some devices: AC adapter, fake ambient light sensor, power button and DMA controller. See file content for more details.
-
-## DMAR
-
-Replacement DMA Regions table with Protected regions removed. **Requires DMAC device from previous SSDT.**
-
-**!!MAKE YOUR OWN!!** With SSDTTime, for example. These tables *may be* specific to BIOS version. If using it, you **have to drop original** DMAR table.
-
-Choose between using it, using DisableIOMapper quirk, or disabling VT-d in BIOS. Latter variant is preferred if you don't need it for other OSes, e.g. for running VMs.
-
-Which way (quirk or DMAR) is preferable is unclear. OpenCore manual recommends quirk, but there are reports that cleaned DMAR table is better in some cases.
-
-## SSDT-EXTRAS
-
-Adding a bunch of missing devices to IORegistry, most likely there are only cosmetic fixes and don't do anything significant.
-
-- MCHC — Host Bridge/DRAM Registers, part of older SMBus patch stuff. Supposedly not necessary nowadays.
-- PGMM — Core Processor Gaussian Mixture Model. Something something speech recognition co-processor?
-- BUS0 — Missing SMBus device. Supposedly not necessary nowadays.
-- PMCR — Thermal Controller.
-- SRAM — Comet Lake Shared SRAM.
-- XSPI — Comet Lake SPI controller.
 
 ## SSDT‑HPET
 
@@ -66,6 +45,31 @@ Currently controller appear in system, and display connection over Thunderbolt/D
 ## SSDT-YOGA
 
 Collection of supplementary patches for YogaSMC, mainly providing RW interface to kext.
+
+## SSDT-KEYMAP
+
+Remapping several keys, configuration for VoodooPS2Keyboard. See details in [docs/Input.md](Input.md).
+
+## SSDT-EXTRAS
+
+Adding a bunch of missing devices to IORegistry, most likely there are only cosmetic fixes and don't do anything significant.
+
+- MCHC — Host Bridge/DRAM Registers, part of older SMBus patch stuff. Supposedly not necessary nowadays.
+- PGMM — Core Processor Gaussian Mixture Model. Something something speech recognition co-processor?
+- BUS0 — Missing SMBus device. Supposedly not necessary nowadays.
+- PMCR — Comet Lake Thermal Controller.
+- SRAM — Comet Lake Shared SRAM.
+- XSPI — Comet Lake SPI controller.
+
+## DMAR
+
+Replacement DMA Regions table with Protected regions removed. **Requires DMAC device from SSDT-FIXDEV.**
+
+**!!MAKE YOUR OWN!!** With SSDTTime, for example. These tables *may be* specific to BIOS version. If using it, you **have to drop original** DMAR table.
+
+Choose between using it, using DisableIOMapper quirk, or disabling VT-d in BIOS. Latter variant is preferred if you don't need it for other OSes, e.g. for running VMs.
+
+Which way (quirk or DMAR) is preferable is unclear. OpenCore manual recommends quirk, but there are reports that cleaned DMAR table is better in some cases.
 
 # Some theory
 

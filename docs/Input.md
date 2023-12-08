@@ -8,11 +8,11 @@
 - VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen.
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
 - YogaSMC for most Fn keys and other functionality.
-- Pen doesn't have pressure detection.
-- Middle trackpoint key works only as middle mouse button. Unclear if it can be switched to scroll.
-- Several keys require (re)mapping. Some Fn keys  work even outside of OS, most will require YogaSMC and BrightnessKeys.
+- Pen doesn't have pressure detection with VoodooI2C. There are third-party drivers.
+- Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
+- Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
 
-VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of readme.
+VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of [README.md](../README.md).
 
 ## Pen
 
@@ -23,9 +23,9 @@ Pen support is broken in VoodooI2C (in VoodooI2CHID satellite, to be specific) f
 - Wait for devs to release fixed version. Good luck with that.
 - Compile VoodooI2CHID from source. See short guide below.
 
-Pen support in VoodooI2C is limited — no pressure detection. (frankly, it's amazing it works so well). You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/). It is better, but bloody expensive, so you might want to google for some other solution.
+Pen support in VoodooI2C is limited — no pressure detection. (frankly, it's amazing it works so well). You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/). It is better but bloody expensive, so you might want to google for some other solution.
 
-### building VoodooI2C
+### Building VoodooI2C
 
 Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
 
@@ -35,7 +35,7 @@ pip3 install cpplint
 
 # You might jump in the rabbit hole that is installing special version of cldoc.
 # It requires coffeescript and sass, which require Node 16 and Python 2, and
-# still fail when building the project. Luckily there is no need for all that.
+# still fails when building the project. Luckily there is no need for all that.
 # It is needed for documentation only, and kexts are compiled successfully. 
 # You can even try installing it from pip3 and ignore Python 2 altogether.
 
@@ -80,7 +80,7 @@ Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
 - [ ] Fn-Tab (zoom) — YogaSMC reports event 0x1014:0.
   - No keyboard events.
 - [x] Fn-B = Break — outputs something weird.
-  - Correct keycode should be PS2:e046 ABD:deadkey, output in log has extra Ctrl.
+  - Correct keycode should be PS2:e046 ABD:0x80, output in log has extra Ctrl.
   - Actually this is correct behaviour, it maps to Ctrl-Break by default.
   - Remapped to F19.
 - [x] Fn-K = Scroll Lock — works, but VoodooPS2 maps it to brightness down.
@@ -90,7 +90,7 @@ Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
   - Same, remapped to F16.
 - [x] Fn-S = SysRq — works.
   - Curiously, it shows as Opt-F18. Probably intended to work as magic SysRq? Not remapping.
-- [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. Since you'll be using YogaSMC anyway... 
+- [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. we'll be using YogaSMC anyway. 
 - [x] Fn-Left/Right = Home/End — works.
 - [x] PrnScr — works, not used in system.
   - Remapped to RightCmd.
@@ -103,7 +103,7 @@ I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
 
 Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6 which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
 
-Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error — scary! As I've read somewhere, it's caused by key sending system into non-standard sleep mode. This can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. This can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
 ### Remapping
 
@@ -118,12 +118,10 @@ To recap, here are currently implemented key remappings (last two are disabled):
 | *PrtSc*  | *e037 0x69* | *F20*    | *0x5a*  |
 | *Insert* | *e052 0x92* | *NumIns* | *0x52*  |
 
-Set F16-120 as shortcuts to whatever you like in macOS keyboard settings.
+Set F16-F20 as shortcuts to whatever you like in macOS keyboard settings. If you need original function of e.g. Break, comment it out. Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
-
-Insert remap is not enabled by default, uncomment it if you need it. Likewise, if you need default functions of Break for some reason, comment it out, etc. Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
-
+ 
 ### Debugging information
 
 | Key    | PS2   | ADB | Comment                                   |
@@ -144,6 +142,8 @@ f17=40
 f18=4f
 f19=50
 f20=5a
+
+Full list of keycodes: https://github.com/acidanthera/VoodooPS2/blob/master/VoodooPS2Keyboard/ApplePS2ToADBMap.h
 
 ## Links
 

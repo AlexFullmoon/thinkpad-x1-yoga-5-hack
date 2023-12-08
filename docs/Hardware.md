@@ -2,21 +2,21 @@
 
 ## Video
 
-Whatever green obviously works, but we also need some extra framebuffer finetuning and more. Here are comments to DeviceProperties in config. Note that I have 4K internal display, for FHD/2K some options are not necessary.
+WhateverGreen obviously works, but we also need some extra framebuffer finetuning and more. Here are comments to DeviceProperties in config. Note that I have 4K internal display, for FHD/2K some options are not necessary.
 
 Some options may not be necessary, require testing.
 
-| property                          | value      | what it does                                            |
-| --------------------------------- | ---------- | ------------------------------------------------------- |
-| `AAPL,ig-platform-id`             | 0x00009b3e | Framebuffer IDs.                                        |
-| `device-id`                       | 0x93be0000 |                                                         |
-| `AAPL,GfxYTile`                   | 0x01000000 | fix for probable glitch on UHD 620 on 10.14+.           |
-| `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours is different, remove it. |
-| `enable-backlight-registers-fix`  | 0x01000000 | Backlight bug fix.                                      |
-| `enable-dpcd-max-link-rate-fix`   | 0x01000000 | DPCD divide/-by-zero fix. Just in case.                 |
-| `enable-max-pixel-clock-override` | 0x01000000 | Needed for 4K display.                                  |
-| `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.             |
-| `framebuffer-...`                 |            | Setting correct framebuffer connectors and values.      |
+| property                          | value      | what it does                                       |
+| --------------------------------- | ---------- | -------------------------------------------------- |
+| `AAPL,ig-platform-id`             | 0x00009b3e | Framebuffer IDs.                                   |
+| `device-id`                       | 0x93be0000 | Framebuffer IDs.                                   |
+| `AAPL,GfxYTile`                   | 0x01000000 | Fix for probable glitch on UHD 620 on 10.14+.      |
+| `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours isn't, remove it.   |
+| `enable-backlight-registers-fix`  | 0x01000000 | Backlight bug fix.                                 |
+| `enable-dpcd-max-link-rate-fix`   | 0x01000000 | DPCD divide-by-zero fix. Just in case.             |
+| `enable-max-pixel-clock-override` | 0x01000000 | Needed for 4K display.                             |
+| `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.        |
+| `framebuffer-...`                 |            | Setting correct framebuffer connectors and values. |
 
 ## Audio
 
@@ -30,20 +30,20 @@ Unfortunately, macOS can use only one device for output. One solution is to make
 
 Result of testing of different audio layouts.
 
-| ID | Speakers | Microphones | Jack out | Jack in | Comments                                       |
-| -- | -------- | ----------- | -------- | ------- | ---------------------------------------------- |
-| 11 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 21 | Top      | **NO**      | Yes      | Yes     | Jack in not detected as headphones.            |
-| 31 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 52 | Top      | **NO**      | Yes      | Broken? |                                                |
-| 61 | Top      | **NO**      | Yes      | Yes     |                                                |
-| 66 | Bottom   | **NO**      | Yes      | Yes     |                                                |
-| 71 | Both     | **NO**      | Yes      | Yes     | Best one. Requires aggregate device.           |
-| 88 | Top      | **NO**      | Yes      | Yes     | Headphones on separate channel without switch. |
+| ID | Speakers | Jack out | Jack in | Comments                                       |
+| -- | -------- | -------- | ------- | ---------------------------------------------- |
+| 11 | Top      | Yes      | Yes     |                                                |
+| 21 | Top      | Yes      | Yes     | Jack in not detected as headphones.            |
+| 31 | Top      | Yes      | Yes     |                                                |
+| 52 | Top      | Yes      | Broken? |                                                |
+| 61 | Top      | Yes      | Yes     |                                                |
+| 66 | Bottom   | Yes      | Yes     |                                                |
+| 71 | Both     | Yes      | Yes     | Best one. Requires aggregate device.           |
+| 88 | Top      | Yes      | Yes     | Headphones on separate channel without switch. |
 
 ## Ethernet
 
-Just in case — yes, Lenovo's ethernet adapters just work, they simply convert proprietary plug into 8P8C, no extra logic.
+Just in case you're wondering — yes, Lenovo's ethernet adapters just work, they simply convert proprietary plug into 8P8C, no extra logic.
 
 I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/N.
 
@@ -51,5 +51,5 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 
 Both variants — itlwm + HeliPort and AirportItlwm — work. 
 
-- itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made.
-- AirportItlwm itLatter is more native, but I had some cases when WiFi after sleep had no connection until I disabled and reenabled it. Further testing required.
+- itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made. 
+- AirportItlwm is more native, but I had some cases when WiFi after sleep had no connection until I disabled and reenabled it. Further testing required. Also, at time of writing there is no release for Sonoma.

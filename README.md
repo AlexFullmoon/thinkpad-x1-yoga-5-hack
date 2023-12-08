@@ -20,13 +20,13 @@ One exception is VoodooI2C — I had to build a newer version than was released 
 | WiFi        | Intel AX201         | itlwm *or* AirportItlwm                 |
 | Audio       | ALC 285             | AppleALC, layout 71, no internal mic    |
 | Bluetooth   | Intel AX201         | IntelBluetoothFirmware                  |
-| Keyboard    | Generic PS/2        | VoodooPS2Keyboard, see docs/Input.md    |
+| Keyboard    | Generic PS/2        | VoodooPS2Keyboard, see [docs/Input.md](docs/Input.md)    |
 | Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite            |
 | Trackpoint  | PS/2 mouse          | VoodooPS2Mouse                          |
 | Touchscreen | USB device          | VoodooI2C, VoodooRMI                    |
-| Wacom pen   | USB device          | VoodooI2C, see details in docs/Input.md |
+| Wacom pen   | USB device          | VoodooI2C, see details in [docs/Input.md](docs/Input.md) |
 
-See docs/Hardware.md for more details.
+See [docs/Hardware.md](docs/Hardware.md) for more details.
 
 ## 🚫 Final issues (won't ever work)
 
@@ -41,7 +41,8 @@ See docs/Hardware.md for more details.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
   - Unclear. YogaSMC supposed to do this.
 - Thunderbolt
-  - Controller appears in system and I can connect another monitor over TB/DP. Requires further testing, but as I have no hardware to test, it remains an unclosed issue.
+  - Controller appears in system and I can connect another monitor over TB/DP. 
+  - Requires further testing, but as I have no hardware to test, it remains an open issue.
 - Rare night-time sleep crashes. Hard to debug.
   - Simplest way is disabling hibernation and related features via usual `pmset` litany.
   - Check with *enabled* HibernationFixup. Though it might be unrelated to crash.
@@ -56,7 +57,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 
 Remaining keyboard buttons.
 
-Wacom pen fix.
+Wacom pen third-party drivers.
 
 Yoga conversion — if possible.
 
@@ -94,7 +95,7 @@ There is no DVMT Prealloc setting (it's inside engineering menu along with CFG L
 
 ## ACPI files
 
-See docs/ACPI.md for more details.
+See [docs/ACPI.md](docs/ACPI.md) for more details.
 
 | Name         | What it is                      |
 | ------------ | ------------------------------- |
@@ -160,7 +161,8 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Add all SSDTs, remember to drop DMAR table if using that method.
   - Quirks: none.
 - Booter/Quirks
-  - `ProvideCustomSlide` and `DevirtualiseMmio` are unnecessary.
+  - `DevirtualiseMmio` is unnecessary.
+  - `EnableSafeModeSlide` and probably `ProvideCustomSlide` seems necessary, long boot time if disabled?
 - DeviceProperties
   - Audio is at `PciRoot(0x0)/Pci(0x1f,0x3)`.
   - Video is at `PciRoot(0x0)/Pci(0x2,0x0)`, as usual.
@@ -171,11 +173,14 @@ Use provided config for reference, follow Dortania guide to build your own for c
     - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
     - `AppleCpuPmCfgLock` is apparently not necessary, though.
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
-    - `DisableIoMapper` is disabled because I replace DMAR table. See docs/ACPI.md.
+    - `DisableIoMapper` is disabled because I replace DMAR table. See [docs/ACPI.md](docs/ACPI.md).
 - Misc
-  - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB froves and only Apple FS, NTFS and EFI partition.
+  - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
+  - Boot/`LauncherOption` is Full for multiboot configuration. If using only macOS, set to Disabled.
 - PlatformInfo
   - `UpdateSMBIOSMode` is Custom for multiboot configuration. If using only macOS, set to Create
+
+Provided configs differ mostly in enabled debug options.
 
 ## Acknowledgements
 
@@ -183,7 +188,7 @@ Dortania, AcidAnthera team and other people from community.
 
 Authors of all drivers and software used here.
 
-Prebuilt configs I've usedol:
+Prebuilt configs I've used:
 
 - https://github.com/jsassu20/OpenCore-HotPatching-Guide
 - https://github.com/tylernguyen/x1c6-hackintosh
