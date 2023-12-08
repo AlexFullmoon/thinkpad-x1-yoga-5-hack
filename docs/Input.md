@@ -1,6 +1,6 @@
 # Information on input devices
 
-## Current state
+## Current status
 
 **Important!** Do not use Fn-4 without YogaSMC, it crashes the system.
 
@@ -19,13 +19,13 @@ VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No Vo
 Pen support is broken in VoodooI2C (in VoodooI2CHID satellite, to be specific) from version 2.7 to at least 2.8. See [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details. You can:
 
 - Roll back to v.2.6.5. Outdated.
-- Use the one I compiled. Probably would get outdated before long.
+- Use the one I compiled (December 2023). Probably would get outdated before long.
 - Wait for devs to release fixed version. Good luck with that.
 - Compile VoodooI2CHID from source. See short guide below.
 
 Pen support in VoodooI2C is limited — no pressure detection. (frankly, it's amazing it works so well). You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/). It is better but bloody expensive, so you might want to google for some other solution.
 
-### Building VoodooI2C
+### Building VoodooI2CHID
 
 Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
 
@@ -57,7 +57,7 @@ git submodule update --init --recursive --remote
 
 Then in XCode open VoodooI2C folder, go to root of project navigator in left panel, select Build Settings tab and switch Build active architecture from Debug to Release. Press ⌘B to build. Select Product in navigator, and open results folder in right panel.
 
-Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
+Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
 
 ## Keyboard Fn keys
 
@@ -69,13 +69,14 @@ Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
 - [x] Fn-F4 (mute mic). Fully works with YogaSMC.
 - [x] Fn-F5-F6 work with BrightnessKeys.
 - [ ] Fn-F7 (dual display). YogaSMC shows notification but doesn't seem to do anything.
+  - Might be something to do with my monitor configuration.
 - [x] Fn-F8 (airplane mode). Fully works with YogaSMC and AirportItlwm.
 - [ ] Fn-F9-F11 (custom Windows-only keys) — YogaSMC reports events 0x1317:0 to 0x1319:0.
   - No keyboard events.
 - [ ] Fn-F12 (custom key, star) — unclear, YogaSMC doesn't report anything.
   - No keyboard events.
   - Sometimes gets detected, YogaSMC shows special notification, opens settings. Requires debugging, apparently.
-- [ ] Fn-PrnScr (snipping tool) — YogaSMC reports event 0x1312:0.
+- [ ] Fn-PrtSc (snipping tool) — YogaSMC reports event 0x1312:0.
   - No keyboard events.
 - [ ] Fn-Tab (zoom) — YogaSMC reports event 0x1014:0.
   - No keyboard events.
@@ -89,19 +90,20 @@ Grab both VoodooI2C and VoodooI2CHID kexts (*not* kext.dSYM files). You're done.
 - [x] Fn-P = Pause — works, but VoodooPS2 maps it to brightness up.
   - Same, remapped to F16.
 - [x] Fn-S = SysRq — works.
-  - Curiously, it shows as Opt-F18. Probably intended to work as magic SysRq? Not remapping.
+  - Curiously, it shows as Opt-F18. Probably intended to work as Magic SysRq key? Not remapping.
 - [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. we'll be using YogaSMC anyway. 
 - [x] Fn-Left/Right = Home/End — works.
-- [x] PrnScr — works, not used in system.
+- [x] PrtSc — works, not used in system.
   - Remapped to RightCmd.
   - Optionally it can be remapped to high F key, e.g. F20, and used to take screenshots or whatever.
 - [x] Ctrl-Ins — for *some* reason works as power button?
-  - Actually this is correct behaviour. Insert doubles as Media Eject key, which is used in a bunch of [default Apple shortcuts](https://support.apple.com/en-us/HT201236) for sleep/reboot/power. Might be unexpected to user — e.g. Ctrl-Cmd-Insert will cause reboot.
+  - Actually this is correct behaviour. Insert doubles as Media Eject key, which is used in a bunch of [default Apple shortcuts](https://support.apple.com/en-us/HT201236) for sleep/reboot/power.
+  - Might be unexpected to user — e.g. Ctrl-Cmd-Insert will cause reboot.
   - One option (provided but commented out in SSDT-KEYMAP) is to remap it to Numpad Ins.
 
 I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
 
-Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6 which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
+Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6, which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
 
 Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. This can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
@@ -124,24 +126,25 @@ I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keybo
  
 ### Debugging information
 
-| Key    | PS2   | ADB | Comment                                   |
-| ------ | ----- | --- | ----------------------------------------- |
-| PrtSc  | e0 37 | 69  | Remap to RCmd                             |
-| RCmd   | e0 5c | 36  |                                           |
-| Fn     | e0 63 | 80  | note: ADB 0x80 = DEADKEY                  |
-| Insert | e0 52 | 92  | Remap to Numpad Ins?                      |
-| NumIns | 52    | 52  |                                           |
-| Break  | e0 46 | 80  | Works. Also adds Ctrl key for reasons     |
-| Pause  | e0 45 | 71  | Works, but mapped to brightness           |
-| ScrLck | 46    | 6b  | Works, but mapped to brightness           |
-| SysRq  | 54    | 44  | Works. Outputs Option-F18 for some reason |
+Some key codes:
+| Key    | PS2   | ADB |
+| ------ | ----- | --- |
+| PrtSc  | e0 37 | 69  |
+| RCmd   | e0 5c | 36  |
+| Fn     | e0 63 | 80  |
+| Insert | e0 52 | 92  |
+| NumIns | 52    | 52  |
+| Break  | e0 46 | 80  |
+| Pause  | e0 45 | 71  |
+| ScrLck | 46    | 6b  |
+| SysRq  | 54    | 44  |
+| F16    |       | 6a  |
+| F17    |       | 40  |
+| F18    |       | 4f  |
+| F19    |       | 50  |
+| F20    |       | 5a  |
 
-ADB codes for function keys:
-f16=6a
-f17=40
-f18=4f
-f19=50
-f20=5a
+Note: ADB 0x80 = DEADKEY
 
 Full list of keycodes: https://github.com/acidanthera/VoodooPS2/blob/master/VoodooPS2Keyboard/ApplePS2ToADBMap.h
 

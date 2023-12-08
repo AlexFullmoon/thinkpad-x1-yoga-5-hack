@@ -55,19 +55,15 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 
 ## Notes on work in progress
 
-Remaining keyboard buttons.
-
-Wacom pen third-party drivers.
-
-Yoga conversion — if possible.
-
-Check if GPRW fix is needed. Doesn't seem to be any sleep problems though.
-
-Final cleaning: ScanPolicy, removing serial, public repo, etc.
- 
-Cosmetic stuff injection in DeviceProperties.
-
-Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb or more?
+- [ ] Fix remaining keyboard buttons.
+- [ ] Try Wacom pen third-party drivers.
+- [ ] Fix Yoga conversion — if possible.
+- [ ] Check if GPRW fix is needed. Doesn't seem to be any sleep problems though.
+- [ ] Cosmetic stuff injection in DeviceProperties.
+- [ ] Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb or more?
+- [ ] LAlt works like RAlt — check keyboard events, remap if needed/possible.
+- [ ] Try to enable hibernation.
+- [ ] Final cleaning: removing serial, public repo, etc.
 
 ## BIOS settings
 
@@ -152,6 +148,8 @@ As it could change with BIOS update, **you must make it yourself**, so it is not
     - RestrictEvents
     - HibernationFixup ??
     - NVMEFix
+- *Debugging*
+  - DebugEnhancer
 
 ## Opencore config
 
@@ -171,7 +169,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Kext order: see comments to kext entries in config.
   - Quirks:
     - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
-    - `AppleCpuPmCfgLock` is apparently not necessary, though.
+    - `AppleCpuPmCfgLock` is apparently not necessary, though?
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
     - `DisableIoMapper` is disabled because I replace DMAR table. See [docs/ACPI.md](docs/ACPI.md).
 - Misc

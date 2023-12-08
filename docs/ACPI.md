@@ -1,5 +1,7 @@
 # ACPI files
 
+All files provided in decompiled form with comments, remember to compile them before use (Save as.. → ACPI Machine Language).
+
 ## SSDT-PLUG
 
 Adds PluginType for CPU power management. Pretty much a default one, you can grab sample from Dortania and edit as described there.
@@ -65,7 +67,7 @@ Adding a bunch of missing devices to IORegistry, most likely there are only cosm
 
 Replacement DMA Regions table with Protected regions removed. **Requires DMAC device from SSDT-FIXDEV.**
 
-**!!MAKE YOUR OWN!!** With SSDTTime, for example. These tables *may be* specific to BIOS version. If using it, you **have to drop original** DMAR table.
+⚠️ Not provided. **Make your own**, with SSDTTime, for example. This table *may be* specific to BIOS version. If using it, you **have to drop original** DMAR table.
 
 Choose between using it, using DisableIOMapper quirk, or disabling VT-d in BIOS. Latter variant is preferred if you don't need it for other OSes, e.g. for running VMs.
 
@@ -75,7 +77,7 @@ Which way (quirk or DMAR) is preferable is unclear. OpenCore manual recommends q
 
 ## OSI
 
-So, for *arcane* reasons certain functionality, most notably touchpad stuff, is disabled or enabled in ACPI depending on which OS version you run. To enable it fully, you need to set several flag variables that would mean you are running certain OS — specifically, we need `WNTF` (Windows 2000+), `WIN8` (Windows 8+) and `LNUX` (Linux, duh), as well as assign specific value to `OSYS` (the one for Windows 10). OS version is read with `_OSI` method, Operating System Interface.
+So, for *arcane* reasons certain functionality, most notably touchpad stuff, is disabled or enabled in ACPI depending on which OS version you run. To enable everything, we need to set several flag variables that would mean you are running certain OS — specifically, we need `WNTF` (Windows 2000+), `WIN8` (Windows 8+) and `LNUX` (Linux, duh), as well as assign specific value to `OSYS` (the one for Windows 10). OS version is read with `_OSI` method, Operating System Interface.
 
 A common way to deal with this is `XOSI` method (along with rename patch). Patch replaces all calls of `_OSI` in DSDT, of which most are in `\SB.PCI0._INI`, calling `XOSI` instead. `XOSI` returns true for all specified OS versions, and this results in setting all those variables.
 
