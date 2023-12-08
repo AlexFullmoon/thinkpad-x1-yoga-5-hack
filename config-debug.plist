@@ -24,7 +24,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>Backlight fix</string>
+				<string>Backlight patch</string>
 				<key>Enabled</key>
 				<true/>
 				<key>Path</key>
@@ -56,7 +56,7 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
-				<string>HPET _CRS (Needs _CRS to XCRS Rename)</string>
+				<string>HPET and IRQ fixes (Needs _CRS to XCRS Rename)</string>
 				<key>Enabled</key>
 				<true/>
 				<key>Path</key>
@@ -777,7 +777,7 @@
 				<key>BundlePath</key>
 				<string>VoodooRMI.kext/Contents/PlugIns/VoodooInput.kext</string>
 				<key>Comment</key>
-				<string>08-0 VoodooInput from VoodooRMI bundle</string>
+				<string>08-00 VoodooInput from VoodooRMI bundle</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -795,7 +795,7 @@
 				<key>BundlePath</key>
 				<string>VoodooRMI.kext</string>
 				<key>Comment</key>
-				<string>08-1 VoodooRMI - input improvements</string>
+				<string>08-01 VoodooRMI - input improvements</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -813,7 +813,7 @@
 				<key>BundlePath</key>
 				<string>VoodooPS2Controller.kext</string>
 				<key>Comment</key>
-				<string>08-3 PS2 Controller kext</string>
+				<string>08-03 PS2 Controller kext</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -831,7 +831,7 @@
 				<key>BundlePath</key>
 				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Keyboard.kext</string>
 				<key>Comment</key>
-				<string>08-4 PS2 Keyboard</string>
+				<string>08-04 PS2 Keyboard</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -849,7 +849,7 @@
 				<key>BundlePath</key>
 				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooPS2Mouse.kext</string>
 				<key>Comment</key>
-				<string>08-5 PS2 mouse - required for trackpoint</string>
+				<string>08-05 PS2 mouse - required for trackpoint</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -867,7 +867,7 @@
 				<key>BundlePath</key>
 				<string>VoodooI2C.kext/Contents/PlugIns/VoodooGPIO.kext</string>
 				<key>Comment</key>
-				<string>08-6 GPIO controller for I2C</string>
+				<string>08-06 GPIO controller for I2C</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -885,7 +885,7 @@
 				<key>BundlePath</key>
 				<string>VoodooI2C.kext/Contents/PlugIns/VoodooI2CServices.kext</string>
 				<key>Comment</key>
-				<string>08-7 I2C services</string>
+				<string>08-07 I2C services</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -903,7 +903,7 @@
 				<key>BundlePath</key>
 				<string>VoodooI2C.kext</string>
 				<key>Comment</key>
-				<string>08-8 I2C controller</string>
+				<string>08-08 I2C controller</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -921,7 +921,7 @@
 				<key>BundlePath</key>
 				<string>VoodooI2CHID.kext</string>
 				<key>Comment</key>
-				<string>08-9 I2C HID Trackpad, touchscreen and pen. Use 2.6.5 or build latest.</string>
+				<string>08-09 I2C HID Trackpad, touchscreen and pen. Use 2.6.5 or build latest.</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -937,27 +937,9 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>VoodooI2CSynaptics.kext</string>
-				<key>Comment</key>
-				<string>08-X I2C Synaptics - apparently doesn't work. Check again just in case...</string>
-				<key>Enabled</key>
-				<false/>
-				<key>ExecutablePath</key>
-				<string>Contents/MacOS/VoodooI2CSynaptics</string>
-				<key>MaxKernel</key>
-				<string></string>
-				<key>MinKernel</key>
-				<string></string>
-				<key>PlistPath</key>
-				<string>Contents/Info.plist</string>
-			</dict>
-			<dict>
-				<key>Arch</key>
-				<string>Any</string>
-				<key>BundlePath</key>
 				<string>VoodooRMI.kext/Contents/PlugIns/RMII2C.kext</string>
 				<key>Comment</key>
-				<string>08-A RMI I2C implementation.</string>
+				<string>08-10 RMI I2C implementation.</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -1103,7 +1085,7 @@
 				<key>Comment</key>
 				<string>14 Hibernation - test if this works</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/HibernationFixup</string>
 				<key>MaxKernel</key>
@@ -1119,7 +1101,7 @@
 				<key>BundlePath</key>
 				<string>DebugEnhancer.kext</string>
 				<key>Comment</key>
-				<string>Larger dmesg bugger. Add -dbgenhdbg to bootargs to use</string>
+				<string>Larger dmesg buffer. Add -dbgenhdbg to bootargs to use</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -1153,9 +1135,9 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooInput.kext</string>
+				<string>VoodooI2C.kext/Contents/PlugIns/VoodooInput.kext</string>
 				<key>Comment</key>
-				<string>08-X VoodooInput from VoodooPS2 - duplicate. Left here so it won't get reenabled.</string>
+				<string>08-X VoodooInput from VoodooI2C - duplicate. Left here so it won't get reenabled.</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>
@@ -1171,9 +1153,9 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>VoodooI2C.kext/Contents/PlugIns/VoodooInput.kext</string>
+				<string>VoodooPS2Controller.kext/Contents/PlugIns/VoodooInput.kext</string>
 				<key>Comment</key>
-				<string>08-X VoodooInput from VoodooI2C - duplicate. Left here so it won't get reenabled.</string>
+				<string>08-X VoodooInput from VoodooPS2 - duplicate. Left here so it won't get reenabled.</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>
@@ -1641,6 +1623,18 @@
 			</dict>
 			<dict>
 				<key>Arguments</key>
+				<string></string>
+				<key>Comment</key>
+				<string>OpenCanopy.efi</string>
+				<key>Enabled</key>
+				<true/>
+				<key>LoadEarly</key>
+				<false/>
+				<key>Path</key>
+				<string>OpenCanopy.efi</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
 				<string>--show-csr</string>
 				<key>Comment</key>
 				<string>ToggleSipEntry.efi</string>
@@ -1784,7 +1778,7 @@
 			<key>TscSyncTimeout</key>
 			<integer>0</integer>
 			<key>UnblockFsConnect</key>
-			<true/>
+			<false/>
 		</dict>
 		<key>ReservedMemory</key>
 		<array/>
