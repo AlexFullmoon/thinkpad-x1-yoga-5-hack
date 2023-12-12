@@ -6,9 +6,7 @@ OC 0.9.6 | macOS 13.6.1
 
 You must build it yourself.
 
-I am also not sure if packaging a bunch of precompiled files with different licenses is right and which license should *I* use for that.
-
-One exception is VoodooI2C — I had to build a newer version than was released at the moment.
+I am also not sure if packaging a bunch of outdated precompiled files is right.
 
 ## Hardware
 
@@ -41,11 +39,11 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
   - Unclear. YogaSMC supposed to do this.
 - Thunderbolt
-  - Controller appears in system and I can connect another monitor over TB/DP. 
+  - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
 - Rare night-time sleep crashes. Hard to debug.
   - Simplest way is disabling hibernation and related features via usual `pmset` litany.
-  - Check with *enabled* HibernationFixup. Though it might be unrelated to crash.
+  - Testing with HibernationFixup is planned.
 
 ## ⚠️ Warnings
 
@@ -56,12 +54,9 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 ## Notes on work in progress
 
 - [ ] Fix remaining keyboard buttons.
-- [ ] Try Wacom pen third-party drivers.
 - [ ] Fix Yoga conversion — if possible.
-- [ ] Check if GPRW fix is needed. Doesn't seem to be any sleep problems though.
 - [ ] Cosmetic stuff injection in DeviceProperties.
-- [ ] Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb or more?
-- [ ] LAlt works like RAlt — check keyboard events, remap if needed/possible.
+- [ ] Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb.
 - [ ] Try to enable hibernation.
 - [ ] Final cleaning: removing serial, public repo, etc.
 
@@ -113,17 +108,17 @@ DMAR is a replacement DMA Regions table with protected regions removed. Basicall
 
 1. Disable VT-d in BIOS. Probably best option if you don't need it in other OSes.
 2. Use DisableIOMapper quirk in OC. OC manual recommends this, but there are also reports that next option sometimes work better.
-3. Add DMAC device (in SSDT-FIXDEV), remove protected regions in DMAR table and reinject it while dropping original.
+3. Add DMAC device (in SSDT-FIXDEV), remove protected regions in DMAR table and reinject it while dropping original table.
 
 As it could change with BIOS update, **you must make it yourself**, so it is not provided. Use SSDTTime for that.
 
 ## Kexts
 
-[TODO] List current.
+I am providing UTBMap (USB mapping) and custom-built VoodooI2CHID (see [docs/Input.md](docs/Input.md) for details). For everything else you should grab latest versions.
 
 - Lilu
 - VirtualSMC
-  - SMCBattery
+  - SMCBatteryManager
   - SMCProcessor
   - SMCSuperIO
   - SMCLightSensor
@@ -132,11 +127,11 @@ As it could change with BIOS update, **you must make it yourself**, so it is not
 - IntelMausi
 - *Wireless*
   - itlwm + Heliport *or*
-  - AirportItlwm
+  - AirportItlwm (for specific macOS version)
 - *Bluetooth*
   - IntelBluetoothFirmware
   - IntelBTPatcher
-  - BlueToolFixup
+  - BlueToolFixup (from BrcmPatchRAM)
 - UsbToolbox + map
 - *Input*
     - VoodooPS2 for keyboard and trackpoint
@@ -146,8 +141,8 @@ As it could change with BIOS update, **you must make it yourself**, so it is not
 - *Other stuff*
     - ECEnabler
     - RestrictEvents
-    - HibernationFixup ??
     - NVMEFix
+    - *HibernationFixup*
 - *Debugging*
   - DebugEnhancer
 
@@ -160,7 +155,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Quirks: none.
 - Booter/Quirks
   - `DevirtualiseMmio` is unnecessary.
-  - `EnableSafeModeSlide` and probably `ProvideCustomSlide` seems necessary, long boot time if disabled?
+  - `EnableSafeModeSlide` and thus `ProvideCustomSlide` seems necessary, long boot time if disabled.
 - DeviceProperties
   - Audio is at `PciRoot(0x0)/Pci(0x1f,0x3)`.
   - Video is at `PciRoot(0x0)/Pci(0x2,0x0)`, as usual.
@@ -171,14 +166,14 @@ Use provided config for reference, follow Dortania guide to build your own for c
     - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
     - `AppleCpuPmCfgLock` is apparently not necessary, though?
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
-    - `DisableIoMapper` is disabled because I replace DMAR table. See [docs/ACPI.md](docs/ACPI.md).
+    - `DisableIoMapper` is disabled because I replace DMAR table. See above and [docs/ACPI.md](docs/ACPI.md).
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
   - Boot/`LauncherOption` is Full for multiboot configuration. If using only macOS, set to Disabled.
 - PlatformInfo
   - `UpdateSMBIOSMode` is Custom for multiboot configuration. If using only macOS, set to Create
 
-Provided configs differ mostly in enabled debug options.
+Provided configs differ in enabled debug options and boot picker interface.
 
 ## Acknowledgements
 
@@ -191,4 +186,4 @@ Prebuilt configs I've used:
 - https://github.com/jsassu20/OpenCore-HotPatching-Guide
 - https://github.com/tylernguyen/x1c6-hackintosh
 - https://github.com/Jamesxxx1997/thinkpad-x1-yoga-2018-hackintosh
-- User Balo77 from [OSXLatitude](https://osxlatitude.com/forums/topic/18146-lenovo-thinkpad-x1-yoga-gen-5-type-20ub-20uc/?do=findComment&comment=118324).
+- User Baio77 from [OSXLatitude](https://osxlatitude.com/forums/topic/18146-lenovo-thinkpad-x1-yoga-gen-5-type-20ub-20uc/?do=findComment&comment=118324).

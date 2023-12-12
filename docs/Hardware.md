@@ -4,8 +4,6 @@
 
 WhateverGreen obviously works, but we also need some extra framebuffer finetuning and more. Here are comments to DeviceProperties in config. Note that I have 4K internal display, for FHD/2K some options are not necessary.
 
-Some options may not be necessary, require testing.
-
 | property                          | value      | what it does                                       |
 | --------------------------------- | ---------- | -------------------------------------------------- |
 | `AAPL,ig-platform-id`             | 0x00009b3e | Framebuffer IDs.                                   |
@@ -43,7 +41,7 @@ Result of testing of different audio layouts.
 
 ## Ethernet
 
-Just in case you're wondering — yes, Lenovo's ethernet adapters just work, they simply convert proprietary plug into 8P8C, no extra logic.
+Just in case you're wondering — yes, Lenovo's ethernet adapters just work, they simply convert proprietary plug into 8P8C, there's no extra logic inside.
 
 I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/N.
 
@@ -51,5 +49,5 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 
 Both variants — itlwm + HeliPort and AirportItlwm — work. 
 
-- itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made. 
-- AirportItlwm is more native, but I had some cases when WiFi after sleep had no connection until I disabled and reenabled it. Further testing required. Also, at time of writing there is no release for Sonoma.
+- itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made.
+- AirportItlwm is more native, but I had some cases when WiFi after sleep had no connection until I disabled and reenabled it. Further testing required. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.

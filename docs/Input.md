@@ -8,11 +8,11 @@
 - VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen.
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
 - YogaSMC for most Fn keys and other functionality.
-- Pen doesn't have pressure detection with VoodooI2C. There are third-party drivers.
+- Pen doesn't have pressure detection.
 - Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
 - Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
 
-VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of [README.md](../README.md).
+Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of [README.md](../README.md).
 
 ## Pen
 
@@ -23,7 +23,9 @@ Pen support is broken in VoodooI2C (in VoodooI2CHID satellite, to be specific) f
 - Wait for devs to release fixed version. Good luck with that.
 - Compile VoodooI2CHID from source. See short guide below.
 
-Pen support in VoodooI2C is limited — no pressure detection. (frankly, it's amazing it works so well). You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/). It is better but bloody expensive, so you might want to google for some other solution.
+Pen support in VoodooI2C is also limited — no pressure detection. no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
+
+You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/), it is reported to work on X1Y3, and is supposedly more functional. Unfortunately it did not detect supported devices on my X1Y5, and is quite expensive, anyway.
 
 ### Building VoodooI2CHID
 
@@ -91,8 +93,9 @@ Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
   - Same, remapped to F16.
 - [x] Fn-S = SysRq — works.
   - Curiously, it shows as Opt-F18. Probably intended to work as Magic SysRq key? Not remapping.
-- [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. we'll be using YogaSMC anyway. 
+- [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. We'll be using YogaSMC anyway. 
 - [x] Fn-Left/Right = Home/End — works.
+- [x] Fn-H/M/L = Performance mode High/Med/Low — work. No notifications.
 - [x] PrtSc — works, not used in system.
   - Remapped to RightCmd.
   - Optionally it can be remapped to high F key, e.g. F20, and used to take screenshots or whatever.
@@ -124,7 +127,7 @@ Set F16-F20 as shortcuts to whatever you like in macOS keyboard settings. If you
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
  
-### Debugging information
+## Debugging information
 
 Some key codes:
 | Key    | PS2   | ADB |
@@ -147,6 +150,12 @@ Some key codes:
 Note: ADB 0x80 = DEADKEY
 
 Full list of keycodes: https://github.com/acidanthera/VoodooPS2/blob/master/VoodooPS2Keyboard/ApplePS2ToADBMap.h
+
+Some EC queries:
+
+LID method in: `_Q2A`, `_Q2B`
+
+Convertible button (?): `_Q2E`
 
 ## Links
 
