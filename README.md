@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga Gen5.
 
-OC 0.9.6 | macOS 13.6.1
+OC 0.9.7 | macOS 13.6.3
 
 ## Why isn't there an EFI folder that I can just drop in and use?
 
@@ -55,9 +55,8 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 
 - [ ] Fix remaining keyboard buttons.
 - [ ] Fix Yoga conversion — if possible.
-- [ ] Cosmetic stuff injection in DeviceProperties.
-- [ ] Increase max VRAM? Set `framebuffer-unifiedmem` to 0xFFFFFFFF or other. Default one is 1.5 Gb.
-- [ ] Try to enable hibernation.
+- [ ] Increase max VRAM?
+- [ ] → Try to enable hibernation.
 - [ ] Final cleaning: removing serial, public repo, etc.
 
 ## BIOS settings
@@ -159,7 +158,6 @@ Use provided config for reference, follow Dortania guide to build your own for c
 - DeviceProperties
   - Audio is at `PciRoot(0x0)/Pci(0x1f,0x3)`.
   - Video is at `PciRoot(0x0)/Pci(0x2,0x0)`, as usual.
-  - Rest are optional cosmetic patches to show devices in System Information.
 - Kernel
   - Kext order: see comments to kext entries in config.
   - Quirks:

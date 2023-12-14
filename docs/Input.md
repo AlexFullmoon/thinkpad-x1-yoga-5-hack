@@ -12,6 +12,8 @@
 - Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
 - Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
 
+VoodooRMI is not strictly required, everything works without it. It fixes an old issue (present both in windows an linux): pressing touchpoint buttons freezes touchpad for half a second.
+
 Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of [README.md](../README.md).
 
 ## Pen
@@ -108,7 +110,7 @@ I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
 
 Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6, which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
 
-Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. This can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](docs/Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
 ### Remapping
 
@@ -123,7 +125,9 @@ To recap, here are currently implemented key remappings (last two are disabled):
 | *PrtSc*  | *e037 0x69* | *F20*    | *0x5a*  |
 | *Insert* | *e052 0x92* | *NumIns* | *0x52*  |
 
-Set F16-F20 as shortcuts to whatever you like in macOS keyboard settings. If you need original function of e.g. Break, comment it out. Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
+Set F16-F20 as shortcuts to whatever you like in macOS keyboard settings. If you need original function of e.g. Break, comment it out. You can also disable any key by remapping it to ADB deadkey 0x80, e.g. `"e037=80"`.
+
+Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
  
