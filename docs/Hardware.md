@@ -16,6 +16,34 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.        |
 | `framebuffer-...`                 |            | Setting correct framebuffer connectors and values. |
 
+Optional: to increase max VRAM set `framebuffer-unifiedmem` to 0xFFFFFFFF or other value. Default one is 1.5 Gb. Test if this is stable.
+
+## 🚧 Sleep and hibernation
+
+Sleep mostly just works. One thing to consider is choosing between S3 and Modern standby modes in BIOS (Linux and Windows 10 respectively). Former is more battery-friendly (i.e. other option might drain your battery overnight) and is strictly preferred if you're running only macOS. Latter is better for Windows (helps with low-frequency-after-wake bug and generally improves responsiveness).
+
+[TODO] SSDT patch to switch sleep to S3 mode in macOS regardless of BIOS setting. There is one for 
+
+Hibernation easy mode: disable hibernation by executing `sudo pmset -a hibernatemode 0`.
+
+Hibernation hard mode:
+
+Enabling hibernation on this model is slightly trickier than usual due to Lenovo firmware using some memory blocks. Without fix you'll get CMOS errors on resume and fail. Current situation:
+
+- First we need to block some RTC memory addresses from writes because Lenovo uses them. I'm using range 0x80-0xAB found [here](https://github.com/tylernguyen/x1c6-hackintosh/issues/44). This range was found on X1 Carbon 6, but firmware logic seems similar enough. To protect, either:
+  - Add RTCMemoryFixup kext and bootarg `rtcfx_exclude=80-AB`. This way works, i.e. I do not get CMOS errors.
+  - Set NVRAM variable `rtc-blacklist=808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAAB`
+    - Or in reverse order?
+    - This does not work as-is, and seems to require something else (setting ProtocolOverride?)
+- Add HibernationFixup kext and set Misc/Boot/HibernateMode to Auto or NVRAM.
+- *Supposedly* add ReservedMemory region in UEFI block. this should fix black screen on resuming from hbernation.
+- *Supposedly* fiddle with Booter quirks, in particular DiscardHibernationMap.
+- Enable hibernation in-system with `sudo pmset -a hibernatemode 3` or `sudo pmset -a hibernatemode 25` for testing.
+
+Current state: entering hibernation works, resuming gets me to OC, choosing macOS shows me hibernation screen, but then it hangs up with garbled screen.
+
+Also fiddling with booter quirks seems to increase boot time for unclear reasons.
+
 ## Audio
 
 First of all, internal mic is **unsupported**, end of the line. It's a microphone array powered by Intel Smart Sound Technology.
