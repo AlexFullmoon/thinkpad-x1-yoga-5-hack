@@ -11,7 +11,6 @@
  *
  * PWRB - Power button. Required for detecting it in macOS.
  * Note: macOS detects button release, not press.
- * Note: also, for some reason Ctrl-Ins works as power button. Check this.
  *
  * DMAC - DMA controller
  * Required for dealing with replacement DMAR table

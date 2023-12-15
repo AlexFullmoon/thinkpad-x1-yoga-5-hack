@@ -21,11 +21,11 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
             //TPDM = Zero    // Does something with TPD0? Find specifics.
             
             // YogaSMC
-            LNUX = One     // Sets OS type to Linus
+            LNUX = One     // Sets OS type to Linux
                            // Initialze mute button mode like Linux when it's broken
                            // May be combined with MuteLEDFixup in prefpane.
             WNTF = One     // Sets OS version to Windows 2001
-                           // Enable DYTC thermal-management on newer Thinkpads.
+                           // Enable DYTC thermal management on newer Thinkpads.
                            // Requires specifically WNTF
             WIN8 = One     // Sets OS version to Windows 2015 just in case
         }

@@ -1,5 +1,5 @@
 //
-// SSDT to disable RHUB devices
+// SSDT to disable RHUB device
 //
 DefinitionBlock ("", "SSDT", 2, "CORP", "UsbReset", 0x00001000)
 {

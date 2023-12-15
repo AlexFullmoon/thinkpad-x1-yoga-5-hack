@@ -3,16 +3,12 @@
  *
  * MCHC - Host Bridge/DRAM Registers, part of SMBus stuff.
  *
- * PPMC - unclear? Not showing in IOReg
- * Check if we even have PCI device on 0x1F,0x2 in WIndows.
- *
  * PGMM - Core Processor Gaussian Mixture Model.
  * Something something speech recognition co-processor?
- * Need to change it to Comet Lake probably.
  *
  * BUS0 - Missing SMBus device.
  *
- * PMCR - (Coffee?) Comet Lake Thermal Controller.
+ * PMCR - Comet Lake Thermal Controller.
  *
  * XSPI - Comet Lake SPI controller
  *
@@ -43,28 +39,6 @@ DefinitionBlock ("", "SSDT", 2, "hack", "EXTRAS", 0x00000000)
                 }
             }
         }
-
-        // Unclear what exactly it does.  
-        // Doesn't seem that we even have 0x1F,0x2 device on PCI
-        // Remove.
-        /*
-        Device (PPMC)
-        {
-            Name (_ADR, 0x001F0002)
-            Method (_STA, 0, NotSerialized)
-            {
-                If (_OSI ("Darwin"))
-                {
-                    Return (0x0F)
-                }
-                Else
-                {
-                    Return (Zero)
-                }
-            }
-        }
-        */
-        
 
         Device (PGMM) 
         {
