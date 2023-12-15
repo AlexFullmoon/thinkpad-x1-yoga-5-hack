@@ -20,9 +20,11 @@ Optional: to increase max VRAM set `framebuffer-unifiedmem` to 0xFFFFFFFF or oth
 
 ## 🚧 Sleep and hibernation
 
-Sleep mostly just works. One thing to consider is choosing between S3 and Modern standby modes in BIOS (Linux and Windows 10 respectively). Former is more battery-friendly (i.e. other option might drain your battery overnight) and is strictly preferred if you're running only macOS. Latter is better for Windows (helps with low-frequency-after-wake bug and generally improves responsiveness).
+Sleep works. Just toggle sleep mode in BIOS to Linux and you're done.
 
-[TODO] SSDT patch to switch sleep to S3 mode in macOS regardless of BIOS setting. There is one for 
+Basically, there are two options in BIOS Config/Power: Linux and Windows 10. Former is standard S3 sleep, latter is Modern Standby aka S0 low power idle aka AOAC mode, a Microsoft-invented abomination that tries to make a smartphone out of your laptop. Meaning it doesn't really power down and due to various glitches might wake up and drain all battery. Supposedly Windows 10 mode helps with low-frequency-after-wake bug in Windows, so enable it only if you really need it.
+
+Only Fn key wakes laptop from sleep, rest of keyboard doesn't. This is normal behaviour and hard-wired in BIOS.
 
 Hibernation easy mode: disable hibernation by executing `sudo pmset -a hibernatemode 0`.
 
@@ -48,13 +50,13 @@ Also fiddling with booter quirks seems to increase boot time for unclear reasons
 
 First of all, internal mic is **unsupported**, end of the line. It's a microphone array powered by Intel Smart Sound Technology.
 
-In short, AppleALC works by explaining to native AppleHDA how to connect with audio layouts inside HDA chip that it doesn't know. What we have is a separate chip that has nothing to do with HDA, so neither AppleALC nor VoodooHDA support that. Unless someone writes a completely new driver, there's nothing to be done.
+In short, AppleALC works by explaining to native AppleHDA how to connect with audio layouts inside HDA chip that it doesn't know. What we have here is a separate chip that has nothing to do with HDA, so neither AppleALC nor VoodooHDA support that. Unless someone writes a completely new driver, there's nothing to be done.
 
 Out of available layouts the best one is **71**. Both sets of speakers work, jack is fully functional. Second best is 66, if you need it for some reason — other layouts use top speakers, which are tweeters and not usable alone.
 
 Unfortunately, macOS can use only one device for output. One solution is to make an aggregate device in MIDI settings, but then you lose some QoL like volume control and autoswitching to headphones. You can install third-party volume control, like [AggregateVolumeMenu](https://github.com/adaskar/AggregateVolumeMenu) or something more advanced like [SoundSource](https://rogueamoeba.com/soundsource/).
 
-Result of testing of different audio layouts.
+Result of testing different audio layouts.
 
 | ID | Speakers | Jack out | Jack in | Comments                                       |
 | -- | -------- | -------- | ------- | ---------------------------------------------- |
@@ -78,4 +80,4 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 Both variants — itlwm + HeliPort and AirportItlwm — work. 
 
 - itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made.
-- AirportItlwm is more native, but I had some cases when WiFi after sleep had no connection until I disabled and reenabled it. Further testing required. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.
+- AirportItlwm is more native, but I had some (rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.

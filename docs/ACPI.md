@@ -1,6 +1,6 @@
 # ACPI files
 
-All files provided in decompiled form with comments, remember to compile them before use (Save as.. → ACPI Machine Language).
+All files are provided in decompiled form with comments, remember to compile them before use (Save as.. → ACPI Machine Language).
 
 ## SSDT-PLUG
 

@@ -1,6 +1,8 @@
-# Yet another Opencore config for Lenovo Thinkpad X1 Yoga Gen5.
+# Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 0.9.7 | macOS 13.6.3
+OC 0.9.7 | macOS 13.6.3 | BIOS 1.33
+
+Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
 ## Why isn't there an EFI folder that I can just drop in and use?
 
@@ -10,19 +12,20 @@ I am also not sure if packaging a bunch of outdated precompiled files is right.
 
 ## Hardware
 
-| Part        | Model               | How to enable                           |
-| ----------- | ------------------- | --------------------------------------- |
-| CPU         | Comet Lake (10310U) | PluginType is enough                    |
-| GPU         | Intel UHD 620       | WhateverGreen with framebuffer patching |
-| Ethernet    | Intel i219LM        | IntelMausi. Just works™                 |
-| WiFi        | Intel AX201         | itlwm *or* AirportItlwm                 |
-| Audio       | ALC 285             | AppleALC, layout 71, no internal mic    |
-| Bluetooth   | Intel AX201         | IntelBluetoothFirmware                  |
+| Part        | Model               | How to enable                                            |
+| ----------- | ------------------- | -------------------------------------------------------- |
+| CPU         | Comet Lake (10310U) | PluginType is enough                                     |
+| GPU         | Intel UHD 620       | WhateverGreen with framebuffer patching                  |
+| Ethernet    | Intel i219LM        | IntelMausi. Just works™                                  |
+| WiFi        | Intel AX201         | itlwm *or* AirportItlwm                                  |
+| Audio       | ALC 285             | AppleALC, layout 71                                      |
+| Bluetooth   | Intel AX201         | IntelBluetoothFirmware                                   |
 | Keyboard    | Generic PS/2        | VoodooPS2Keyboard, see [docs/Input.md](docs/Input.md)    |
-| Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite            |
-| Trackpoint  | PS/2 mouse          | VoodooPS2Mouse                          |
-| Touchscreen | USB device          | VoodooI2C, VoodooRMI                    |
+| Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite, VoodooRMI                  |
+| Trackpoint  | PS/2 mouse          | VoodooPS2Mouse                                           |
+| Touchscreen | USB device          | VoodooI2C                                                |
 | Wacom pen   | USB device          | VoodooI2C, see details in [docs/Input.md](docs/Input.md) |
+
 
 See [docs/Hardware.md](docs/Hardware.md) for more details.
 
@@ -37,13 +40,11 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Wacom pen has limited functionality.
 - Fn keys. Most works with YogaSMC and Brightness keys. Some issues remain.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
-  - Unclear. YogaSMC supposed to do this.
+  - Apparently *Thinkpad* Yogas are not supported by YogaSMC. Consider remapping a key to disable keyboard.
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
-- Rare night-time sleep crashes. Hard to debug.
-  - Simplest way is disabling hibernation and related features via usual `pmset` litany.
-  - Testing with HibernationFixup is planned.
+- Hibernation mode isn't working. Yet.
 
 ## ⚠️ Warnings
 
@@ -54,32 +55,44 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 ## Notes on work in progress
 
 - [ ] Fix remaining keyboard buttons.
-- [ ] Fix Yoga conversion — if possible.
+- [ ] Fix Yoga conversion — if possible. ClamshellMode?
 - [ ] Increase max VRAM?
 - [ ] → Try to enable hibernation.
-- [ ] Final cleaning: removing serial, public repo, etc.
+- [ ] HPTE, TPDM in SSDT-OSI
+- [ ] Final cleaning and public repo.
 
 ## BIOS settings
 
-[TODO] Recheck
+[TODO] Recheck which options are needed
 
 - Config
+  - Network
+    - Wake-on-LAN → *Disabled* ?
+    - UEFI network stack → *Disabled* ?
+  - Power
+    - Sleep mode → *Linux*
   - Thunderbolt
     - BIOS Assist mode → *Disabled*
-    - Thunderbolt Device → *Enabled*
-  - Sleep mode → *Linux*
+    - Security → *Disabled* ?
+    - Thunderbolt Preboot → *Disabled* ?
+  - Intel AMT → *Disabled* ?
 - Security
-  - Security chip → *Disabled*
-  - Fingerprint predesktop → *Disabled*
-  - Secure Boot → *Disabled*; Clear all keys if needed
+  - Fingerprint predesktop → *Disabled* ?
+  - Secure Boot → *Disabled*; Clear all keys if needed.
+  - Virtualization
+    - Kernel DMA → *Disabled*
+    - Vt-d → see notes on DMAR in next section.
+    - Enhanced Windows Biometrics → *Disabled*
+  - IO ports
+    - I suggest disabling all devices you won't use. 
+    - I.e. disable WWAN (if you even have one), fingerprint if you're going to use only macOS.
   - Intel SGX → *Disabled*
-- Network
-  - WOL → *Disabled*
-  - UEFI IPv4,IPv6 stack → *Disabled*
+  - Device Guard → *Disabled*
 - Startup
+  - UEFI/Legacy → *UEFI*
   - CSM Support → *Disabled*
 
-There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
+There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things). Thus we have to use corresponding quirk in OC.
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
@@ -103,7 +116,7 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
 | DMAR         | See below. Requires SSDT-FIXDEV |
 
-DMAR is a replacement DMA Regions table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
+DMAR is a replacement DMA Remapping table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
 
 1. Disable VT-d in BIOS. Probably best option if you don't need it in other OSes.
 2. Use DisableIOMapper quirk in OC. OC manual recommends this, but there are also reports that next option sometimes work better.
@@ -113,7 +126,7 @@ As it could change with BIOS update, **you must make it yourself**, so it is not
 
 ## Kexts
 
-I am providing UTBMap (USB mapping) and custom-built VoodooI2CHID (see [docs/Input.md](docs/Input.md) for details). For everything else you should grab latest versions.
+I am providing UTBMap (USB mapping) and prebuilt VoodooI2CHID (see [docs/Input.md](docs/Input.md) for details). For everything else you should grab latest versions.
 
 - Lilu
 - VirtualSMC

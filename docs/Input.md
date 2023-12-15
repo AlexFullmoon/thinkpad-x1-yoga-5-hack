@@ -110,7 +110,7 @@ I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
 
 Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6, which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
 
-Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](docs/Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
 ### Remapping
 
