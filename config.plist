@@ -743,7 +743,7 @@
 				<key>Comment</key>
 				<string>07-A WiFi AirportItlwm - works directly, supposedly less stable. For Ventura</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/AirportItlwm</string>
 				<key>MaxKernel</key>
@@ -761,7 +761,7 @@
 				<key>Comment</key>
 				<string>07-B WiFi itlwm - works through eth1, requires HeliPort, supposedly more stable</string>
 				<key>Enabled</key>
-				<false/>
+				<true/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/itlwm</string>
 				<key>MaxKernel</key>
