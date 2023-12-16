@@ -18,7 +18,7 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 
 Optional: to increase max VRAM set `framebuffer-unifiedmem` to 0xFFFFFFFF or other value. Default one is 1.5 Gb. Test if this is stable.
 
-## 🚧 Sleep and hibernation
+## Sleep and hibernation
 
 Sleep works. Just toggle sleep mode in BIOS to Linux and you're done.
 
@@ -26,25 +26,23 @@ Basically, there are two options in BIOS Config/Power: Linux and Windows 10. For
 
 Only Fn key wakes laptop from sleep, rest of keyboard doesn't. This is normal behaviour and hard-wired in BIOS.
 
-Hibernation easy mode: disable hibernation by executing `sudo pmset -a hibernatemode 0`.
+Hibernation easy mode: disable hibernation by executing `sudo pmset -a hibernatemode 0` etc.
 
 Hibernation hard mode:
 
-Enabling hibernation on this model is slightly trickier than usual due to Lenovo firmware using some memory blocks. Without fix you'll get CMOS errors on resume and fail. Current situation:
+Enabling hibernation on this model is initially trickier than usual due to Lenovo firmware using some RTC memory blocks. Without fix you'll get CMOS errors on resume and fail. Current situation:
 
-- First we need to block some RTC memory addresses from writes because Lenovo uses them. I'm using range 0x80-0xAB found [here](https://github.com/tylernguyen/x1c6-hackintosh/issues/44). This range was found on X1 Carbon 6, but firmware logic seems similar enough. To protect, either:
+- First we need to block writes to some RTC memory addresses. I'm using range 0x80-0xAB found [here](https://github.com/tylernguyen/x1c6-hackintosh/issues/44). This range was found on X1 Carbon 6, but firmware logic seems same. Either:
   - Add RTCMemoryFixup kext and bootarg `rtcfx_exclude=80-AB`. This way works, i.e. I do not get CMOS errors.
-  - Set NVRAM variable `rtc-blacklist=808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAAB`
-    - Or in reverse order?
-    - This does not work as-is, and seems to require something else (setting ProtocolOverride?)
-- Add HibernationFixup kext and set Misc/Boot/HibernateMode to Auto or NVRAM.
-- *Supposedly* add ReservedMemory region in UEFI block. this should fix black screen on resuming from hbernation.
-- *Supposedly* fiddle with Booter quirks, in particular DiscardHibernationMap.
-- Enable hibernation in-system with `sudo pmset -a hibernatemode 3` or `sudo pmset -a hibernatemode 25` for testing.
+  - Set NVRAM variable `rtc-blacklist to 808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAAB`
+    - This does not seem to work work as-is, probably requires something else (UEFI/ProtocolOverride?)
+- Add HibernationFixup kext with at least `hbfx-ahbm=1` (refer to github readme for details) and set Misc/Boot/HibernateMode to NVRAM.
+- Add ReservedMemory region in UEFI block. this should fix black screen on resuming from hibernation. No idea where it is from.
+- Enable hibernation in OS with `sudo pmset -a hibernatemode 3`, `sudo pmset -a standby 1`.
 
-Current state: entering hibernation works, resuming gets me to OC, choosing macOS shows me hibernation screen, but then it hangs up with garbled screen.
+Hibernation mode 25 doesn't work. Resuming from it results in hang up with garbled screen.
 
-Also fiddling with booter quirks seems to increase boot time for unclear reasons.
+Probably requires further testing. Some glitches seem to happen after resuming from hibernation: Bluetooth requires switching off and on, YogaSMC glitches a bit...
 
 ## Audio
 
