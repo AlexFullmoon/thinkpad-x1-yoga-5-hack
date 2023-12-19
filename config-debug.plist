@@ -1434,7 +1434,7 @@
 				Rg==
 				</data>
 				<key>boot-args</key>
-				<string>-v keepsyms=1 debug=0x100 -dbgenhdbg hbfx-ahbm=45 rtcfx_exclude=80-AB</string>
+				<string>-v keepsyms=1 debug=0x100 -dbgenhdbg rtcfx_exclude=80-AB</string>
 				<key>csr-active-config</key>
 				<data>
 				AAAAAA==
@@ -1445,6 +1445,11 @@
 				</data>
 				<key>run-efi-updater</key>
 				<string>No</string>
+			</dict>
+			<key>E09B9297-7928-4440-9AAB-D1F8536FBF0A</key>
+			<dict>
+				<key>hbfx-ahbm</key>
+				<integer>56</integer>
 			</dict>
 		</dict>
 		<key>Delete</key>
@@ -1461,6 +1466,10 @@
 			<array>
 				<string>boot-args</string>
 				<string>ForceDisplayRotationInEFI</string>
+			</array>
+			<key>E09B9297-7928-4440-9AAB-D1F8536FBF0A</key>
+			<array>
+				<string>hbfx-ahbm</string>
 			</array>
 		</dict>
 		<key>LegacyOverwrite</key>
