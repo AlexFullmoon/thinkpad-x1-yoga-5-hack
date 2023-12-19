@@ -63,80 +63,86 @@ Then in XCode open VoodooI2C folder, go to root of project navigator in left pan
 
 Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
 
-## Keyboard Fn keys
+## Keyboard
 
 ### Current status
 
-- [x] Fn-Space works OOB, even outside of OS. YogaSMC adds notifications.
-- [x] Fn-Esc (FnLock) works OOB and independent of OS. YogaSMC adds notifications.
-- [x] Fn-F1 to F3 work OOB. Indicator on F1 works(?) with YogaSMC.
-- [x] Fn-F4 (mute mic). Fully works with YogaSMC.
-- [x] Fn-F5-F6 work with BrightnessKeys.
-- [ ] Fn-F7 (dual display). YogaSMC shows notification but doesn't seem to do anything.
-  - Might be something to do with my monitor configuration.
-- [x] Fn-F8 (airplane mode). Fully works with YogaSMC and AirportItlwm.
-- [ ] Fn-F9-F11 (custom Windows-only keys) — YogaSMC reports events 0x1317:0 to 0x1319:0.
-  - No keyboard events.
-- [ ] Fn-F12 (custom key, star) — unclear, YogaSMC doesn't report anything.
-  - No keyboard events.
-  - Sometimes gets detected, YogaSMC shows special notification, opens settings. Requires debugging, apparently.
-- [ ] Fn-PrtSc (snipping tool) — YogaSMC reports event 0x1312:0.
-  - No keyboard events.
-- [ ] Fn-Tab (zoom) — YogaSMC reports event 0x1014:0.
-  - No keyboard events.
-- [x] Fn-B = Break — outputs something weird.
-  - Correct keycode should be PS2:e046 ABD:0x80, output in log has extra Ctrl.
-  - Actually this is correct behaviour, it maps to Ctrl-Break by default.
-  - Remapped to F19.
-- [x] Fn-K = Scroll Lock — works, but VoodooPS2 maps it to brightness down.
-  - Unclear if it's possible to un-map it, as we already have Fn-F5/F6 for that.
-  - Remapped to F17.
-- [x] Fn-P = Pause — works, but VoodooPS2 maps it to brightness up.
-  - Same, remapped to F16.
-- [x] Fn-S = SysRq — works.
-  - Curiously, it shows as Opt-F18. Probably intended to work as Magic SysRq key? Not remapping.
-- [x] Fn-4 = Sleep — works, **requires YogaSMC** or certain SSDT patch. We'll be using YogaSMC anyway. 
-- [x] Fn-Left/Right = Home/End — works.
-- [x] Fn-H/M/L = Performance mode High/Med/Low — work. No notifications.
-- [x] PrtSc — works, not used in system.
-  - Remapped to RightCmd.
-  - Optionally it can be remapped to high F key, e.g. F20, and used to take screenshots or whatever.
-- [x] Ctrl-Ins — for *some* reason works as power button?
-  - Actually this is correct behaviour. Insert doubles as Media Eject key, which is used in a bunch of [default Apple shortcuts](https://support.apple.com/en-us/HT201236) for sleep/reboot/power.
-  - Might be unexpected to user — e.g. Ctrl-Cmd-Insert will cause reboot.
-  - One option (provided but commented out in SSDT-KEYMAP) is to remap it to Numpad Ins.
+| ?  | Key       | Comments                                                          | Kext           |
+| -- | --------- | ----------------------------------------------------------------- | -------------- |
+| ✔️ | Fn-Space  | Works OOB, even outside of OS.                                    |                |
+| ✔️ | Fn-Esc    | Works OOB, even outside of OS                                     |                |
+| ✔️ | Fn-F1-F3  | Media keys, work OOB.                                             |                |
+| ✔️ | Fn-F4     | Mute mic.                                                         | YogaSMC        |
+| ✔️ | Fn-F5-F6  | Brightness down/up.                                               | BrightnessKeys |
+| ❌  | Fn-F7     | Dual display. YogaSMC gives notification but doesn't do anything. | YogaSMC        |
+| ✔️ | Fn-F8     | Airplane mode. Works with AirportItlwm                            | YogaSMC        |
+| ❌  | Fn-F9-F11 | Windows-only keys. Output Event 0x1317:0 to 0x1319:0              | YogaSMC        |
+| ❌  | Fn-F12    | Custom key. Unclear. *Sometimes* detected, opens settings.        | YogaSMC        |
+| ❌  | Fn-Tab    | Windows HiDPI zoom. Outputs Event 0x1014:0                        | YogaSMC        |
+| ❌  | Fn-PrtSc  | Windows Snipping tool. Outputs Event 0x1312:0                     | YogaSMC        |
+| ✔️ | Fn-B      | Break. Hardwired to emit Ctrl-Pause. Non-remappable.              | VoodooPS2      |
+| ✔️ | Fn-S      | SysRq. Emits Alt-F18 by default. Non-remappable.                  | VoodooPS2      |
+| ✔️ | Fn-K      | ScrollLock. Mapped to F14 Brightness down. Remapped.              | VoodooPS2      |
+| ✔️ | Fn-P      | Pause. Mapped to F15 Brightness up. Remapped.                     | VoodooPS2      |
+| ✔️ | Fn-4      | Sleep. Requires fixing via YogaSMC or crashes the system.         | YogaSMC        |
+| ✔️ | Fn-H/M/L  | Performance mode High/Medium/Low.                                 | YogaSMC        |
+| ✔️ | Fn-←/→    | Home/End. Work OOB.                                               |                |
+| ✔️ | PrtSc     | By default mapped to F13. Remapped to RCmd.                       | VoodooPS2      |
+| ✔️ | Insert    | Doubles as Media Eject, used in several unexpected shortcuts. |                |
 
-I suspect that YogaSMC events can somehow be used, but how exactly is unclear.
+### Notes
 
-Display brightness stuff: BrightnessKeys kext connects to Fn-F5/F6, which output EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14).
+YogaSMC adds notifications to most Fn keys.
 
-Fn-4 — can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn- F9 to F12, Tab, PrtSc do not emit PS2 codes, probably they work via EC queries, caught by YogaSMC. I suspect that YogaSMC events can somehow be used, but how exactly is unclear. Additionally, Fn-F7 shows notification but doesn't seem to do anything. Might be something wrong with my display configuration, though.
+
+BrightnessKeys kext connects to Fn-F5/F6, which output standard EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14). I cannot unassign brigtness change from these without recompiling VoodooPS2Keyboard, so I remap them.
+
+Fn-4 can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+
+VoodooPS2 can optionally use PrtSc to disable touchpad and keyboard. This is useful for manually locking keyboard in tablet mode for Yoga. To enable that, set variable `RemapPrntScr` to true either in VoodooPS2Keyboard.kext/Info.plist, or via SSDT (recommended). This actually *disables* remapping PrtSc to F13. As PrtSc is so conveniently placed, I remap it to RCmd, and use one of other keys (Fn-P, currently) for keyboard lock.
+
+Keyboard lock works as follows:
+
+- PrtSc - toggles touchpad.
+- Win-PrtSc (i.e. LCmd-PrtSc) - toggles touchpad *and* keyboard.
+- Ctrl-Alt-PrtSc - reset and enable touchpad (don't know how useful is this).
+- Shift-PrtSc - SysRq interrupt.
+
+Toggling keyboard lock mapping can also be done in runtime via `ioio -s ApplePS2Keyboard RemapPrntScr true`. Likewise, logging keypresses can be done by executing `ioio -s ApplePS2Keyboard LogScanCodes 1`, and then reading dmesg output with `sudo dmesg | grep ApplePS2Keyboard`. `ioio` can be found [here](https://bitbucket.org/RehabMan/os-x-ioio/downloads/).
+
+Regarding SysRq and Break keys, from some Linux man page: 
+
+> The two keys PrintScrn/SysRq and Pause/Break are special in that they have two keycodes: the former has keycode 84 when Alt is pressed simultaneously, and keycode 99 otherwise; the latter has keycode 101 when Ctrl is pressed simultaneously, and keycode 119 otherwise. The Pause/Break key is also special in another way: it does not generate key-up scancodes, but generates the entire 6-scancode sequence on key-down.
+
+This seems to be emulated by VoodooPS2Keyboard, and that logic seems to execute before remapping. This means that SysRq and Break are not remappable (and not usable) because they always add Ctrl or Alt to (weird) keypresses. Unfortunate, because they are so conveniently placed.
+
+Insert doubles as Media Eject key, which is used in a bunch of [default Apple shortcuts](https://support.apple.com/en-us/HT201236) for sleep/reboot/power. This might be unexpected — e.g. Ctrl-Cmd-Insert will cause reboot. 
+
+Fn and Ctrl could be swapped in BIOS. Regardless of this, bottom left key by itself sends System Wake keycode, and is the only key on keyboard that wakes laptop.
 
 ### Remapping
 
-To recap, here are currently implemented key remappings (last two are disabled):
+To recap, here are currently implemented key remappings:
 
-| Key      | Keycodes    | Maps to  | Keycode |
-| -------- | ----------- | -------- | ------- |
-| PrtSc    | e037 0x69   | RCmd     | 0x36    |
-| Fn-P     | e045 0x71   | F16      | 0x6a    |
-| Fn-K     | 46 0x6b     | F17      | 0x40    |
-| Fn-B     | e046 0x80   | F19      | 0x50    |
-| *PrtSc*  | *e037 0x69* | *F20*    | *0x5a*  |
-| *Insert* | *e052 0x92* | *NumIns* | *0x52*  |
+| Key    | Keycodes | Maps to | Keycode |
+| ------ | -------- | ------- | ------- |
+| PrtSc  | e037     | RCmd    | e05c    |
+| Fn-P   | e045     | PrtSc   | e037    |
+| *Fn-P* | *e045*   | *F16*   | *67*    |
+| Fn-K   | 46       | F17     | 68      |
 
-Set F16-F20 as shortcuts to whatever you like in macOS keyboard settings. If you need original function of e.g. Break, comment it out. You can also disable any key by remapping it to ADB deadkey 0x80, e.g. `"e037=80"`.
-
-Unfortunately, I don't see how to remove brightness controls from Pause and ScrollLock outside of recompiling VoodooPS2Keyboard.
+Set F16-F17 as shortcuts to whatever you like in macOS keyboard settings.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
  
 ## Debugging information
 
 Some key codes:
+
 | Key    | PS2   | ADB |
 | ------ | ----- | --- |
-| PrtSc  | e0 37 | 69  |
+| PrtSc  | e0 37 |     |
 | RCmd   | e0 5c | 36  |
 | Fn     | e0 63 | 80  |
 | Insert | e0 52 | 92  |
@@ -145,13 +151,13 @@ Some key codes:
 | Pause  | e0 45 | 71  |
 | ScrLck | 46    | 6b  |
 | SysRq  | 54    | 44  |
-| F16    |       | 6a  |
-| F17    |       | 40  |
-| F18    |       | 4f  |
-| F19    |       | 50  |
-| F20    |       | 5a  |
+| F16    | 67    | 6a  |
+| F17    | 68    | 40  |
+| F18    | 69    | 4f  |
+| F19    | 70    | 50  |
+| F20    | 71    | 5a  |
 
-Note: ADB 0x80 = DEADKEY
+Note: ADB 0x80 = DEADKEY, keys caught by VoodooPS2Keyboard, e.g. PrtSc, report 0x0.
 
 Full list of keycodes: https://github.com/acidanthera/VoodooPS2/blob/master/VoodooPS2Keyboard/ApplePS2ToADBMap.h
 
