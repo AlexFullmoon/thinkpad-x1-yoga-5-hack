@@ -17,8 +17,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
     {
         If (_OSI ("Darwin")) 
         {
-            //HPTE = Zero    // Disables HPET?
-            //TPDM = Zero    // Does something with TPD0? Find specifics.
+            TPDM = Zero    // Does something with touchpad GPIO? Doesn't seem to change anything
+                           // but appears in other configs, sooo... just in case. 
             
             // YogaSMC
             LNUX = One     // Sets OS type to Linux
