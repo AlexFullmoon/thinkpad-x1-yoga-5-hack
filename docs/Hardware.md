@@ -2,7 +2,7 @@
 
 ## Video
 
-WhateverGreen obviously works, but we also need some extra framebuffer finetuning and more. Here are comments to DeviceProperties in config. Note that I have 4K internal display, for FHD/2K some options are not necessary.
+WhateverGreen obviously works, but we also need some extra framebuffer finetuning and more. Here are some comments to DeviceProperties in config. Note that I have 4K internal display, for FHD/2K some options are not necessary.
 
 | property                          | value      | what it does                                       |
 | --------------------------------- | ---------- | -------------------------------------------------- |
@@ -10,13 +10,13 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | `device-id`                       | 0x93be0000 | Framebuffer IDs.                                   |
 | `AAPL,GfxYTile`                   | 0x01000000 | Fix for probable glitch on UHD 620 on 10.14+.      |
 | `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours isn't, remove it.   |
+| `rps-control`                     | 0x01000000 | Supposedly improves performance.                   |
 | `enable-backlight-registers-fix`  | 0x01000000 | Backlight bug fix.                                 |
 | `enable-dpcd-max-link-rate-fix`   | 0x01000000 | DPCD divide-by-zero fix. Just in case.             |
 | `enable-max-pixel-clock-override` | 0x01000000 | Needed for 4K display.                             |
 | `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.        |
+| `framebuffer-unifiedmem`          | 0x00000080 | Raises VRAM to 2Gb. Recommended for 4K displays.   |
 | `framebuffer-...`                 |            | Setting correct framebuffer connectors and values. |
-
-Optional: to increase max VRAM set `framebuffer-unifiedmem` to 0xFFFFFFFF or other value. Default one is 1.5 Gb. Test if this is stable.
 
 ## Sleep and hibernation
 
@@ -42,7 +42,7 @@ Enabling hibernation on this model is initially trickier than usual due to Lenov
 
 Hibernation mode 25 doesn't work. Resuming from it results in hang up with garbled screen.
 
-Probably requires further testing. Some glitches seem to happen after resuming from hibernation: Bluetooth requires switching off and on, YogaSMC glitches a bit...
+Some glitches seem to happen after resuming from hibernation: Bluetooth requires switching off and on, YogaSMC preference pane glitches a bit...
 
 ## Audio
 
@@ -75,7 +75,7 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 
 ## WiFi
 
-Both variants — itlwm + HeliPort and AirportItlwm — work. 
+Both variants — itlwm + HeliPort and AirportItlwm — work. Caveats: 
 
-- itlwm lacks some minor QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made.
-- AirportItlwm is more native, but I had some (rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.
+- itlwm lacks some QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made, though.
+- AirportItlwm is more native, but I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.

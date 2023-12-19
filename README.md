@@ -38,7 +38,7 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 ## ❓ Lesser issues
 
 - Wacom pen has limited functionality.
-- Fn keys. Most works with YogaSMC and Brightness keys. Some issues remain.
+- Fn keys. Most works with YogaSMC and Brightness keys, but several are missing, mostly Windows-only functions.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
   - Apparently *Thinkpad* Yogas are not supported by YogaSMC. Consider remapping a key to disable keyboard.
 - Thunderbolt
@@ -52,18 +52,16 @@ Do not use Fn-4 without YogaSMC, it crashes the system.
 
 Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS versions. Might be unrelated to this model, but better not to risk that.
 
-## Notes on work in progress
+## 🚧 Remaining work
 
-- [ ] Fix remaining keyboard buttons.
-- [ ] Fix Yoga conversion — if possible. ClamshellMode?
+- [ ] Fixing remaining Fn keys — if possible.
+- [ ] Fixing Yoga conversion — if possible. ClamshellMode? At least we can disable keyboard.
 - [ ] Increase max VRAM?
-- [ ] → Try to enable hibernation.
-- [ ] HPTE, TPDM in SSDT-OSI
+- [ ] Recheck framebuffer configuration. Is everything there required?
+- [ ] Rechecking BIOS options.
 - [ ] Final cleaning and public repo.
 
 ## BIOS settings
-
-[TODO] Recheck which options are needed
 
 - Config
   - Network
@@ -175,14 +173,20 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Kext order: see comments to kext entries in config.
   - Quirks:
     - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
-    - `AppleCpuPmCfgLock` is apparently not necessary, though?
+    - `AppleCpuPmCfgLock` is apparently not necessary, though.
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
     - `DisableIoMapper` is disabled because I replace DMAR table. See above and [docs/ACPI.md](docs/ACPI.md).
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
   - Boot/`LauncherOption` is Full for multiboot configuration. If using only macOS, set to Disabled.
+- NVRAM/Bootargs:
+  - `rtcfx_exclude=80-AB` — required for hibernation.
+  - config_debug also has standard debugging bootargs.
+  - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
   - `UpdateSMBIOSMode` is Custom for multiboot configuration. If using only macOS, set to Create
+- UEFI/ReservedMemory
+  - One region apparently required for hibernation.
 
 Provided configs differ in enabled debug options and boot picker interface.
 

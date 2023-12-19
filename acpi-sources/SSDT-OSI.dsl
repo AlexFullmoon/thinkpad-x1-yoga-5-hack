@@ -11,6 +11,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
     External (LNUX, IntObj)
     External (WNTF, IntObj)
     External (WIN8, IntObj)
+    External (TPDM, IntObj)
     External (_SI_._SST, MethodObj)    // 1 Arguments
 
     Scope (\)
@@ -27,7 +28,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
             WNTF = One     // Sets OS version to Windows 2001
                            // Enable DYTC thermal management on newer Thinkpads.
                            // Requires specifically WNTF
-            WIN8 = One     // Sets OS version to Windows 2015 just in case
+            WIN8 = One     // Sets OS version to Windows 2015 just in case.
         }
         Scope (_SB)
         {
