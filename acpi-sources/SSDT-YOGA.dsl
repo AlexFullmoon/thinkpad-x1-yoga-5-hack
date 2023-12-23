@@ -6,6 +6,7 @@
  * RE1B,RECB,WE1B,WECB,NBAT: EC rw access for YogaSMC.
  *
  * CSSI: some LED control fixes.
+ *
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
 {

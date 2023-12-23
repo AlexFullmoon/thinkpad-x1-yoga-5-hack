@@ -2,8 +2,6 @@
 
 ## Current status
 
-**Important!** Do not use Fn-4 without YogaSMC, it crashes the system.
-
 - VoodooPS2 for keyboard and trackpoint.
 - VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen.
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
@@ -88,7 +86,8 @@ Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
 | ✔️ | Fn-H/M/L  | Performance mode High/Medium/Low.                                 | YogaSMC        |
 | ✔️ | Fn-←/→    | Home/End. Work OOB.                                               |                |
 | ✔️ | PrtSc     | By default mapped to F13. Remapped to RCmd.                       | VoodooPS2      |
-| ✔️ | Insert    | Doubles as Media Eject, used in several unexpected shortcuts. |                |
+| ✔️ | Insert    | Doubles as Media Eject, used in several unexpected shortcuts.     |                |
+
 
 ### Notes
 

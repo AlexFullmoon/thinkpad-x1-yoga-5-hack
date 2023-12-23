@@ -1,5 +1,6 @@
 /*
  * Direct setting of various OS version variables instead of depending on XOSI.
+ *
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
 {

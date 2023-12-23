@@ -1,5 +1,6 @@
 /*
  * USB power settings injection.
+ *
  */
 DefinitionBlock ("", "SSDT", 2, "DRTNIA", "SsdtUsbx", 0x00001000)
 {

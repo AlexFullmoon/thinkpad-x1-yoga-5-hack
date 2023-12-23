@@ -23,6 +23,7 @@
  *
  * Note: Fn-B (Break) and Fn-S (SysRq) are not remappable due to special logic.
  * Most other Fn keys do not emit PS2 codes.
+ *
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "KEYMAP", 0)
 {

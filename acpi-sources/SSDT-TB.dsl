@@ -2,6 +2,7 @@
  * A big Thunderbolt patch. I have absolutely no idea what it does.
  * Seems to work, in that I have Thunderbolt controller in PCI devices.
  * Requires further testing with actual Thundebolt devices.
+ *
  */
 
 DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)

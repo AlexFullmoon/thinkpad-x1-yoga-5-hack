@@ -31,7 +31,7 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 
 ## 🚫 Final issues (won't ever work)
 
-- Usual suspects: fingerprint, IR camera (if present), WWAN (if present).
+- Fingerprint, IR camera (if present), WWAN (if present).
 - Internal microphone.
 - [DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — broken on iGPU.
 
@@ -40,26 +40,24 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Wacom pen has limited functionality.
 - Fn keys. Most works with YogaSMC and Brightness keys, but several are missing, mostly Windows-only functions.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
-  - Apparently *Thinkpad* Yogas are not supported by YogaSMC. Consider remapping a key to disable keyboard.
+  - Apparently *Thinkpad* Yogas are not supported by YogaSMC.
+  - You can manually disable keyboard and touchpad (but not trackpoint, currently).
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
-- Hibernation mode isn't working. Yet.
 
 ## ⚠️ Warnings
 
 Do not use Fn-4 without YogaSMC, it crashes the system.
 
-Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS versions. Might be unrelated to this model, but better not to risk that.
+Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS versions. Might be completely unrelated to this model, but better not to risk that.
 
 ## 🚧 Remaining work
 
 - [ ] Fixing remaining Fn keys — if possible.
-- [ ] Fixing Yoga conversion — if possible. ClamshellMode? At least we can disable keyboard.
-- [ ] Increase max VRAM?
-- [ ] Recheck framebuffer configuration. Is everything there required?
+- [ ] Fixing Yoga conversion — if possible. ClamshellMode?
+- [ ] Disabling trackpoint along with keyboard/trackpad.
 - [ ] Rechecking BIOS options.
-- [ ] Final cleaning and public repo.
 
 ## BIOS settings
 
@@ -100,19 +98,19 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 
 | Name         | What it is                      |
 | ------------ | ------------------------------- |
-| SSDT-PLUG    | CPU PluginType enabler          |
+| SSDT-PLUG    | CPU power management            |
 | SSDT-USBX    | USB power injection             |
 | SSDT-PNLF    | Backlight fix                   |
 | SSDT-RTCAWAC | RTC fix                         |
 | SSDT-RHUB    | USB hub fix                     |
 | SSDT-OSI     | OS version patches              |
 | SSDT‑HPET    | IRQ patches                     |
-| SSDT-FIXDEV  | Fixes to some devices           |
+| SSDT-FIXDEV  | Fixes for some devices          |
 | SSDT-YOGA    | Supplementary SSDT for YogaSMC  |
 | SSDT-TB      | Thunderbolt fixes               |
-| SSDT-KEYMAP  | Keyboard remaps. Optional       |
+| SSDT-KEYMAP  | Keyboard remaps                 |
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
-| DMAR         | See below. Requires SSDT-FIXDEV |
+| DMAR         | See below                       |
 
 DMAR is a replacement DMA Remapping table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
 
@@ -152,7 +150,8 @@ I am providing UTBMap (USB mapping) and prebuilt VoodooI2CHID (see [docs/Input.m
     - ECEnabler
     - RestrictEvents
     - NVMEFix
-    - *HibernationFixup*
+    - HibernationFixup
+    - RTCMemoryFixup
 - *Debugging*
   - DebugEnhancer
 
@@ -178,15 +177,15 @@ Use provided config for reference, follow Dortania guide to build your own for c
     - `DisableIoMapper` is disabled because I replace DMAR table. See above and [docs/ACPI.md](docs/ACPI.md).
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
-  - Boot/`LauncherOption` is Full for multiboot configuration. If using only macOS, set to Disabled.
+  - Boot/`LauncherOption` is `Full` for multiboot configuration. If using only macOS, set to `Disabled`.
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
   - config_debug also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
-  - `UpdateSMBIOSMode` is Custom for multiboot configuration. If using only macOS, set to Create
+  - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`
 - UEFI/ReservedMemory
-  - One region apparently required for hibernation.
+  - One region that is apparently required for hibernation.
 
 Provided configs differ in enabled debug options and boot picker interface.
 

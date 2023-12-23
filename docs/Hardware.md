@@ -18,6 +18,13 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | `framebuffer-unifiedmem`          | 0x00000080 | Raises VRAM to 2Gb. Recommended for 4K displays.   |
 | `framebuffer-...`                 |            | Setting correct framebuffer connectors and values. |
 
+For a little extra fluff you can grab stock Lenovo color profiles (so it won't show Unknown Display). 
+
+- Go to Lenovo support, grab "Monitor INF driver", unpack it (in Windows), you'll get a bunch of .icm files.
+- Check Hardware IDs in device manager, it'll be something like LEN4168 (depending on panel type). 
+- Find .icm files with those numbers, e.g. TPLCD_4168_SDR.icm, etc.
+- In macOS copy them to /Library/ColorSync/Profiles/Displays. You can also open them with ColorSync and edit description. 
+
 ## Sleep and hibernation
 
 Sleep works. Just toggle sleep mode in BIOS to Linux and you're done.
