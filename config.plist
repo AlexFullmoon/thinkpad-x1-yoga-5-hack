@@ -757,9 +757,9 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>AirportItlwm.kext</string>
+				<string>AirportItlwmVentura.kext</string>
 				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works directly, supposedly less stable. For Ventura</string>
+				<string>07-A WiFi AirportItlwm - works natively, less stable. Ventura v2.2.0.</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>
@@ -767,7 +767,25 @@
 				<key>MaxKernel</key>
 				<string>22.99.99</string>
 				<key>MinKernel</key>
-				<string>22.00.00</string>
+				<string>22.0.0</string>
+				<key>PlistPath</key>
+				<string>Contents/Info.plist</string>
+			</dict>
+			<dict>
+				<key>Arch</key>
+				<string>Any</string>
+				<key>BundlePath</key>
+				<string>AirportItlwmSonoma.kext</string>
+				<key>Comment</key>
+				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma v2.3.0a.</string>
+				<key>Enabled</key>
+				<false/>
+				<key>ExecutablePath</key>
+				<string>Contents/MacOS/AirportItlwm</string>
+				<key>MaxKernel</key>
+				<string>23.99.99</string>
+				<key>MinKernel</key>
+				<string>23.0.0</string>
 				<key>PlistPath</key>
 				<string>Contents/Info.plist</string>
 			</dict>
@@ -777,7 +795,7 @@
 				<key>BundlePath</key>
 				<string>itlwm.kext</string>
 				<key>Comment</key>
-				<string>07-B WiFi itlwm - works through eth1, requires HeliPort, supposedly more stable</string>
+				<string>07-B WiFi itlwm - works through eth1, requires HeliPort (so not usable for installer), more stable</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
