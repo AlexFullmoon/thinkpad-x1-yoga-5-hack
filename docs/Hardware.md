@@ -29,7 +29,7 @@ For a little extra fluff you can grab stock Lenovo color profiles (so it won't s
 
 Sleep works. Just toggle sleep mode in BIOS to Linux and you're done.
 
-Basically, there are two options in BIOS Config/Power: Linux and Windows 10. Former is standard S3 sleep, latter is Modern Standby aka S0 low power idle aka AOAC mode, a Microsoft-invented abomination that tries to make a smartphone out of your laptop. Meaning it doesn't really power down and due to various glitches might wake up and drain all battery. Supposedly Windows 10 mode helps with low-frequency-after-wake bug in Windows, so enable it only if you really need it.
+Basically, there are two options in BIOS Config/Power: Linux and Windows 10. Former is standard S3 sleep, latter is Modern Standby aka S0 low power idle aka AOAC mode, a Microsoft-invented abomination that tries to make a smartphone out of your laptop. Meaning it doesn't really power down and due to various glitches might wake up and drain all battery. On the other hand, Windows 10 mode helps with low-frequency-after-wake bug in Windows 10+ (irony!), so enable it only if you're dualbooting.
 
 Only Fn key wakes laptop from sleep, rest of keyboard doesn't. This is normal behaviour and hard-wired in BIOS.
 
