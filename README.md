@@ -45,12 +45,13 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
+- Graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 
 ## ⚠️ Warnings
 
 Do not use Fn-4 without YogaSMC, it crashes the system.
 
-Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS versions. Might be completely unrelated to this model, but better not to risk that.
+Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?) with certain BIOS versions. Most likely completely unrelated to this model, and other users report no issues, so take this warning as additional disclaimer of warranty. 
 
 ## 🚧 Remaining work
 
@@ -68,10 +69,10 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
   - Power
     - Sleep mode → *Linux*
   - Thunderbolt
-    - BIOS Assist mode → *Disabled*
+    - BIOS Assist mode → *Disabled* ↓ see below
     - Security → *Disabled* ?
     - Thunderbolt Preboot → *Disabled* ?
-  - Intel AMT → *Disabled* ?
+  - Intel AMT → *Disabled* ↓
 - Security
   - Fingerprint predesktop → *Disabled* ?
   - Secure Boot → *Disabled*; Clear all keys if needed.
@@ -91,6 +92,13 @@ Resetting NVRAM is reported to **brick** certain Thinkpads with certain BIOS ver
 There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things). Thus we have to use corresponding quirk in OC.
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
+
+According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* results in Thunderbolt hotplug not working but decreased battery consumption.
+
+Intel AMT is remote admisintration for enterprise. You do not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disable management interface.
+
+Secure boot can theoretically be enabled, as OpenCore has required keys, just unneeded extra trouble to do.
+
 
 ## ACPI files
 
@@ -200,4 +208,4 @@ Prebuilt configs I've used:
 - https://github.com/jsassu20/OpenCore-HotPatching-Guide
 - https://github.com/tylernguyen/x1c6-hackintosh
 - https://github.com/Jamesxxx1997/thinkpad-x1-yoga-2018-hackintosh
-- User Baio77 from [OSXLatitude](https://osxlatitude.com/forums/topic/18146-lenovo-thinkpad-x1-yoga-gen-5-type-20ub-20uc/?do=findComment&comment=118324).
+- User Baio77 from [OSXLatitude](bio).
