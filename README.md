@@ -89,7 +89,9 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - UEFI/Legacy → *UEFI*
   - CSM Support → *Disabled*
 
-There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things). Thus we have to use corresponding quirk in OC.
+There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
+
+Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490. I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
@@ -179,8 +181,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
 - Kernel
   - Kext order: see comments to kext entries in config.
   - Quirks:
-    - `AppleXcpmCfgLock` is required, CFG lock cannot be disabled in firmware.
-    - `AppleCpuPmCfgLock` is apparently not necessary, though.
+    - `AppleXcpmCfgLock` and `AppleCpuPmCfgLock` — see BIOS section. You can try disabling both.
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
     - `DisableIoMapper` is disabled because I replace DMAR table. See above and [docs/ACPI.md](docs/ACPI.md).
 - Misc
