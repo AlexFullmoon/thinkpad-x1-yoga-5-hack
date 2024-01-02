@@ -8,15 +8,24 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | --------------------------------- | ---------- | -------------------------------------------------- |
 | `AAPL,ig-platform-id`             | 0x00009b3e | Framebuffer IDs.                                   |
 | `device-id`                       | 0x93be0000 | Framebuffer IDs.                                   |
-| `AAPL,GfxYTile`                   | 0x01000000 | Fix for probable glitch on UHD 620 on 10.14+.      |
 | `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours isn't, remove it.   |
 | `rps-control`                     | 0x01000000 | Supposedly improves performance.                   |
-| `enable-backlight-registers-fix`  | 0x01000000 | Backlight bug fix.                                 |
+| `enable-backlight-registers-alternative-fix`  | 0x01000000 | Backlight smoothing fix, alternative is required for Sonoma.                                 |
 | `enable-dpcd-max-link-rate-fix`   | 0x01000000 | DPCD divide-by-zero fix. Just in case.             |
 | `enable-max-pixel-clock-override` | 0x01000000 | Needed for 4K display.                             |
 | `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.        |
-| `framebuffer-unifiedmem`          | 0x00000080 | Raises VRAM to 2Gb. Recommended for 4K displays.   |
-| `framebuffer-...`                 |            | Setting correct framebuffer connectors and values. |
+| `framebuffer-unifiedmem`          | 0x00000080 | Raises VRAM to 2Gb. Might be useful for 4K displays.   |
+| `framebuffer-...`                 |            | Setting correct framebuffer connectors and values for HDMI output. |
+
+There are some GPU glitches in Ventura related to HDR, if your display has that option. Noticeable when playing HDR videos and some screensavers (including stock Drift one). Possibly they could be resolved via EDID injection or similar black magic (feel free to make PR if you know how to do that). Easier option is to disable automatic switching to HDR (GPU struggles with 4K HDR anyway):
+
+- Holding Alt, launch System Settings.
+- Still holding Alt, open Displays tab.
+- You'll get a new option, *Allow using dynamic range*. **Disable** it.
+
+This does not disable HDR completely, only automatic switching.
+
+⚠️ There are major GPU issues in Sonoma — many third-party apps, mostly those using some advanced rendering engines, are unusable due to glitches. Examples: Alacritty terminal (messed up fonts), Firefox (completely messed up UI), SublimeText (completely messed up). As of yet, solution is unknown. Stay on Ventura.
 
 For a little extra fluff you can grab stock Lenovo color profiles (so it won't show Unknown Display). 
 

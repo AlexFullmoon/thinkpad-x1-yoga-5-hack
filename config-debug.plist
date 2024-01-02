@@ -424,10 +424,6 @@
 			</dict>
 			<key>PciRoot(0x0)/Pci(0x2,0x0)</key>
 			<dict>
-				<key>AAPL,GfxYTile</key>
-				<data>
-				AQAAAA==
-				</data>
 				<key>AAPL,ig-platform-id</key>
 				<data>
 				AACbPg==
@@ -444,7 +440,7 @@
 				<data>
 				FAAAAA==
 				</data>
-				<key>enable-backlight-registers-fix</key>
+				<key>enable-backlight-registers-alternative-fix</key>
 				<data>
 				AQAAAA==
 				</data>

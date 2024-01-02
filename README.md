@@ -37,6 +37,7 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 
 ## ❓ Lesser issues
 
+- Major graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 - Wacom pen has limited functionality.
 - Fn keys. Most works with YogaSMC and Brightness keys, but several are missing, mostly Windows-only functions.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
@@ -45,7 +46,6 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
-- Graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 
 ## ⚠️ Warnings
 
