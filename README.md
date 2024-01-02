@@ -46,6 +46,7 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
+- Graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 
 ## ⚠️ Warnings
 
