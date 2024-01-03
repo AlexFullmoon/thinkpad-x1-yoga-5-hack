@@ -1,8 +1,8 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 0.9.7 | macOS 13.6.3 | BIOS 1.33
+OC 0.9.7 | macOS Sonoma 14.2.1 | BIOS 1.33
 
-Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
+Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
 ## Why isn't there an EFI folder that I can just drop in and use?
 
@@ -15,7 +15,7 @@ I am also not sure if packaging a bunch of outdated precompiled files is right.
 | Part        | Model               | How to enable                                            |
 | ----------- | ------------------- | -------------------------------------------------------- |
 | CPU         | Comet Lake (10310U) | PluginType is enough                                     |
-| GPU         | Intel UHD 620       | WhateverGreen with framebuffer patching                  |
+| GPU         | Intel UHD 620       | WhateverGreen, see [docs/Hardware.md](docs/Hardware.md)  |
 | Ethernet    | Intel i219LM        | IntelMausi. Just works™                                  |
 | WiFi        | Intel AX201         | itlwm *or* AirportItlwm                                  |
 | Audio       | ALC 285             | AppleALC, layout 71                                      |
@@ -25,7 +25,6 @@ I am also not sure if packaging a bunch of outdated precompiled files is right.
 | Trackpoint  | PS/2 mouse          | VoodooPS2Mouse                                           |
 | Touchscreen | USB device          | VoodooI2C                                                |
 | Wacom pen   | USB device          | VoodooI2C, see details in [docs/Input.md](docs/Input.md) |
-
 
 See [docs/Hardware.md](docs/Hardware.md) for more details.
 
@@ -37,7 +36,6 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 
 ## ❓ Lesser issues
 
-- Major graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 - Wacom pen has limited functionality.
 - Fn keys. Most works with YogaSMC and Brightness keys, but several are missing, mostly Windows-only functions.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
@@ -46,7 +44,6 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Thunderbolt
   - Controller appears in system and I can hotplug another monitor over TB/DP.
   - Requires further testing, but as I have no hardware to test, it remains an open issue.
-- Graphical glitches in several apps with third-party rendering in Sonoma (from SublimeText to Firefox). Investigating.
 
 ## ⚠️ Warnings
 
@@ -92,7 +89,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490. I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
+Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidnathera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
@@ -190,6 +187,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Boot/`LauncherOption` is `Full` for multiboot configuration. If using only macOS, set to `Disabled`.
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
+  - `revpatch=auto,sbvmm` — sbvmm is required for system upgrades to Sonoma and above.
   - config_debug also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo

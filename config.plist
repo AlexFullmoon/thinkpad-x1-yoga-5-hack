@@ -518,6 +518,10 @@
 				</data>
 				<key>hda-gfx</key>
 				<string>onboard-1</string>
+				<key>igfxfw</key>
+				<data>
+				AgAAAA==
+				</data>
 				<key>model</key>
 				<string>Intel Graphics UHD 620</string>
 				<key>rps-control</key>
@@ -1309,9 +1313,9 @@
 			<key>ConsoleAttributes</key>
 			<integer>0</integer>
 			<key>HibernateMode</key>
-			<string>Auto</string>
+			<string>NVRAM</string>
 			<key>HibernateSkipsPicker</key>
-			<false/>
+			<true/>
 			<key>HideAuxiliary</key>
 			<true/>
 			<key>InstanceIdentifier</key>
@@ -1448,7 +1452,7 @@
 				Rg==
 				</data>
 				<key>boot-args</key>
-				<string>rtcfx_exclude=80-AB</string>
+				<string>rtcfx_exclude=80-AB revpatch=auto,sbvmm</string>
 				<key>csr-active-config</key>
 				<data>
 				AAAAAA==
