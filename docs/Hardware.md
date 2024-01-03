@@ -8,7 +8,6 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | --------------------------------- | ---------- | -------------------------------------------------- |
 | `AAPL,ig-platform-id`             | 0x00009b3e | Framebuffer IDs.                                   |
 | `device-id`                       | 0x93be0000 | Framebuffer IDs.                                   |
-| `igfxfw`                          | 0x02000000 | Force Apple firmware. Required for Sonoma.         |
 | `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours isn't, remove it.   |
 | `rps-control`                     | 0x01000000 | Supposedly improves performance.                   |
 | `enable-backlight-registers-alternative-fix`  | 0x01000000 | Backlight smoothing fix, alternative is required for Sonoma.                                 |

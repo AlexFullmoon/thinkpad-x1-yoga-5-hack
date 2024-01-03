@@ -63,16 +63,6 @@ Adding a bunch of missing devices to IORegistry, most likely there are only cosm
 - SRAM — Comet Lake Shared SRAM.
 - XSPI — Comet Lake SPI controller.
 
-## DMAR
-
-Replacement DMA Regions table with Protected regions removed. **Requires DMAC device from SSDT-FIXDEV.**
-
-⚠️ Not provided. **Make your own**, with SSDTTime, for example. This table *may be* specific to BIOS version. If using it, you **have to drop original** DMAR table.
-
-Choose between using it, using DisableIOMapper quirk, or disabling VT-d in BIOS. Latter variant is preferred if you don't need it for other OSes, e.g. for running VMs.
-
-Which way (quirk or DMAR) is preferable is unclear. OpenCore manual recommends quirk, but there are reports that cleaned DMAR table is better in some cases.
-
 # Some theory
 
 ## OSI

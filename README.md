@@ -76,7 +76,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - Secure Boot → *Disabled*; Clear all keys if needed.
   - Virtualization
     - Kernel DMA → *Disabled*
-    - Vt-d → see notes on DMAR in next section.
+    - Vt-d → Disable this or enable DisableIOMapper quirk. Disabling in BIOS recommended for macOS-only configuration.
     - Enhanced Windows Biometrics → *Disabled*
   - IO ports
     - I suggest disabling all devices you won't use. 
@@ -118,15 +118,10 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 | SSDT-TB      | Thunderbolt fixes               |
 | SSDT-KEYMAP  | Keyboard remaps                 |
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
-| DMAR         | See below                       |
 
-DMAR is a replacement DMA Remapping table with protected regions removed. Basically, macOS is incompatible with VT-d without some fix, and you have three options:
 
 1. Disable VT-d in BIOS. Probably best option if you don't need it in other OSes.
 2. Use DisableIOMapper quirk in OC. OC manual recommends this, but there are also reports that next option sometimes work better.
-3. Add DMAC device (in SSDT-FIXDEV), remove protected regions in DMAR table and reinject it while dropping original table.
-
-As it could change with BIOS update, **you must make it yourself**, so it is not provided. Use SSDTTime for that.
 
 ## Kexts
 
@@ -181,7 +176,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Quirks:
     - `AppleXcpmCfgLock` and `AppleCpuPmCfgLock` — see BIOS section. You can try disabling both.
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
-    - `DisableIoMapper` is disabled because I replace DMAR table. See above and [docs/ACPI.md](docs/ACPI.md).
+    - `DisableIoMapper` is required unless you disable Vt-d in BIOS. Quirk recommended for multiboot configuration.
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
   - Boot/`LauncherOption` is `Full` for multiboot configuration. If using only macOS, set to `Disabled`.
