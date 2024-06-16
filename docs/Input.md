@@ -95,9 +95,9 @@ YogaSMC adds notifications to most Fn keys.
 
 Fn- F9 to F12, Tab, PrtSc do not emit PS2 codes, probably they work via EC queries, caught by YogaSMC. I suspect that YogaSMC events can somehow be used, but how exactly is unclear. Additionally, Fn-F7 shows notification but doesn't seem to do anything. Might be something wrong with my display configuration, though.
 
-BrightnessKeys kext connects to Fn-F5/F6, which output standard EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14). I cannot unassign brigtness change from these without recompiling VoodooPS2Keyboard, so I remap them.
+BrightnessKeys kext connects to Fn-F5/F6, which output standard EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14). I cannot unassign brightness change from these without recompiling VoodooPS2Keyboard, so I remap them.
 
-Fn-4 can crash system without patches. System shuts down and on start gives CMOS checksum error. Probably related to RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. As I've read somewhere, it's caused by key sending system into non-standard sleep mode. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
+Fn-4 can crash system without patches. System shuts down and on start gives CMOS checksum error. Seems to be due to writes into restricted RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
 VoodooPS2 can optionally use PrtSc to disable touchpad and keyboard. This is useful for manually locking keyboard in tablet mode for Yoga. To enable that, set variable `RemapPrntScr` to true either in VoodooPS2Keyboard.kext/Info.plist, or via SSDT (recommended). This actually *disables* remapping PrtSc to F13. As PrtSc is so conveniently placed, I remap it to RCmd, and use one of other keys (Fn-P, currently) for keyboard lock.
 

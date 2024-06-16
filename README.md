@@ -53,11 +53,9 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 ## ⚠️ Sonoma notes
 
-1. Sonoma requires specific version of AirportItlwm. Also, above version 14.3? it requires yet another version. See this thread to get correct version.
+1. Sonoma requires specific version of AirportItlwm. Also, version 14.4 and above require yet another version.
 
-2. Installing Sonoma above certain version requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required only at installation time, and should be set to `Default` afterwards.
-
-3. Sonoma has buggy autoHDR mode on my hardware, resulting in lags and visual artifacts while starting or stopping video playback. This is probably not an issue on non-HDR models. To deal with that: while holding Alt, open Settings app, then, still holding Alt, open Displays tab. There will be additional option "Allow HDR". Disable it.  
+2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` afterwards.
 
 ## 🚧 Remaining work
 
@@ -88,7 +86,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - Virtualization
     - Kernel DMA → *Disabled*
     - Vt-d → **Disable** this or enable DisableIOMapper quirk. Disabling in BIOS recommended for macOS-only configuration.
-    - Enhanced Windows Biometrics → *Disabled*
+    - Enhanced Windows Biometrics → **Disabled**
   - IO ports
     - I suggest disabling all devices you won't use. 
     - I.e. disable WWAN (if you even have one), fingerprint if you're going to use only macOS.
@@ -189,15 +187,15 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `Default` for normal use. 
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
-  - `revpatch=auto,sbvmm` — RestrictEvent options, sbvmm is required for system upgrades to Sonoma and above.
-  - config_debug also has standard debugging bootargs.
+  - `revpatch=sbvmm` — RestrictEvent options, sbvmm is required for system upgrades to Sonoma and above.
+  - config_installer also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
   - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`. Supposedly `Custom` mode is more buggy.
 - UEFI/ReservedMemory
   - One region that is apparently required for hibernation.
 
-Provided configs differ in enabled debug options and boot picker interface.
+Provided configs differ mainly in enabled debug options and boot picker interface.
 
 ## Acknowledgements
 
