@@ -15,7 +15,7 @@
  * DMAC - DMA controller
  * Required for dealing with replacement DMAR table
  * as a replacement for DisableIOMapper quirk.
- * Which way (quirk or DMAR) is preferable is unclear.
+ * Not used currently.
  *
  */
 

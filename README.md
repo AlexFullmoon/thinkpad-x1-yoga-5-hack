@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 0.9.7 | macOS Sonoma 14.2.1 | BIOS 1.33
+OC 1.0.0 | macOS Sonoma 14.5 / Ventura 13.6.7 | BIOS 1.33
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -51,45 +51,56 @@ Do not use Fn-4 without YogaSMC, it crashes the system.
 
 Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?) with certain BIOS versions. Most likely completely unrelated to this model, and other users report no issues, so take this warning as additional disclaimer of warranty. 
 
+## ⚠️ Sonoma notes
+
+1. Sonoma requires specific version of AirportItlwm. Also, above version 14.3? it requires yet another version. See this thread to get correct version.
+
+2. Installing Sonoma above certain version requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required only at installation time, and should be set to `Default` afterwards.
+
+3. Sonoma has buggy autoHDR mode on my hardware, resulting in lags and visual artifacts while starting or stopping video playback. This is probably not an issue on non-HDR models. To deal with that: while holding Alt, open Settings app, then, still holding Alt, open Displays tab. There will be additional option "Allow HDR". Disable it.  
+
 ## 🚧 Remaining work
 
 - [ ] Fixing remaining Fn keys — if possible.
 - [ ] Fixing Yoga conversion — if possible. ClamshellMode?
 - [ ] Disabling trackpoint along with keyboard/trackpad.
-- [ ] Rechecking BIOS options.
 
 ## BIOS settings
 
+*Italics* — supposed to work either way, but recommended setting should reduce debugging surface
+
+**Bold** — required settings
+
 - Config
   - Network
-    - Wake-on-LAN → *Disabled* ?
-    - UEFI network stack → *Disabled* ?
+    - Wake-on-LAN → *Disabled*
+    - UEFI network stack → *Disabled*
   - Power
-    - Sleep mode → *Linux*
+    - Sleep mode → **Linux**
   - Thunderbolt
     - BIOS Assist mode → *Disabled* ↓ see below
-    - Security → *Disabled* ?
-    - Thunderbolt Preboot → *Disabled* ?
+    - Security → *Disabled*
+    - Thunderbolt Preboot → *Disabled*
   - Intel AMT → *Disabled* ↓
 - Security
-  - Fingerprint predesktop → *Disabled* ?
-  - Secure Boot → *Disabled*; Clear all keys if needed.
+  - Fingerprint predesktop → *Disabled*
+  - Secure Boot → **Disabled**; Clear all keys if needed.
   - Virtualization
     - Kernel DMA → *Disabled*
-    - Vt-d → Disable this or enable DisableIOMapper quirk. Disabling in BIOS recommended for macOS-only configuration.
+    - Vt-d → **Disable** this or enable DisableIOMapper quirk. Disabling in BIOS recommended for macOS-only configuration.
     - Enhanced Windows Biometrics → *Disabled*
   - IO ports
     - I suggest disabling all devices you won't use. 
     - I.e. disable WWAN (if you even have one), fingerprint if you're going to use only macOS.
-  - Intel SGX → *Disabled*
-  - Device Guard → *Disabled*
+  - Intel SGX → **Disabled**
+  - Device Guard → **Disabled**
 - Startup
-  - UEFI/Legacy → *UEFI*
-  - CSM Support → *Disabled*
+  - UEFI/Legacy → **UEFI**
+  - CSM Support → **Disabled**
 
 There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidnathera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
+Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
@@ -97,8 +108,7 @@ According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* result
 
 Intel AMT is remote admisintration for enterprise. You do not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disable management interface.
 
-Secure boot can theoretically be enabled, as OpenCore has required keys, just unneeded extra trouble to do.
-
+Secure boot can theoretically be enabled, as OpenCore has required keys, just unneeded extra trouble to do so.
 
 ## ACPI files
 
@@ -118,10 +128,6 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 | SSDT-TB      | Thunderbolt fixes               |
 | SSDT-KEYMAP  | Keyboard remaps                 |
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
-
-
-1. Disable VT-d in BIOS. Probably best option if you don't need it in other OSes.
-2. Use DisableIOMapper quirk in OC. OC manual recommends this, but there are also reports that next option sometimes work better.
 
 ## Kexts
 
@@ -179,14 +185,15 @@ Use provided config for reference, follow Dortania guide to build your own for c
     - `DisableIoMapper` is required unless you disable Vt-d in BIOS. Quirk recommended for multiboot configuration.
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
-  - Boot/`LauncherOption` is `Full` for multiboot configuration. If using only macOS, set to `Disabled`.
+  - Boot/`LauncherOption` is `Full` for multiboot configuration. For installer or when using only macOS, it should be set to `Disabled`.
+  - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `Default` for normal use. 
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
-  - `revpatch=auto,sbvmm` — sbvmm is required for system upgrades to Sonoma and above.
+  - `revpatch=auto,sbvmm` — RestrictEvent options, sbvmm is required for system upgrades to Sonoma and above.
   - config_debug also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
-  - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`
+  - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`. Supposedly `Custom` mode is more buggy.
 - UEFI/ReservedMemory
   - One region that is apparently required for hibernation.
 

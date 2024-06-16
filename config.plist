@@ -728,7 +728,7 @@
 				<key>BundlePath</key>
 				<string>AirportItlwmVentura.kext</string>
 				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works natively, less stable. Ventura v2.2.0.</string>
+				<string>07-A WiFi AirportItlwm - works natively, less stable. Ventura v2.3.0.</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>
@@ -744,9 +744,27 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>AirportItlwmSonoma.kext</string>
+				<string>AirportItlwmSonoma14.kext</string>
 				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma v2.3.0a.</string>
+				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.0-14.3 v2.3.0.</string>
+				<key>Enabled</key>
+				<false/>
+				<key>ExecutablePath</key>
+				<string>Contents/MacOS/AirportItlwm</string>
+				<key>MaxKernel</key>
+				<string>23.3.99</string>
+				<key>MinKernel</key>
+				<string>23.0.0</string>
+				<key>PlistPath</key>
+				<string>Contents/Info.plist</string>
+			</dict>
+			<dict>
+				<key>Arch</key>
+				<string>Any</string>
+				<key>BundlePath</key>
+				<string>AirportItlwmSonoma144.kext</string>
+				<key>Comment</key>
+				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.4+ v2.3.0.</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>
@@ -754,7 +772,7 @@
 				<key>MaxKernel</key>
 				<string>23.99.99</string>
 				<key>MinKernel</key>
-				<string>23.0.0</string>
+				<string>23.4.0</string>
 				<key>PlistPath</key>
 				<string>Contents/Info.plist</string>
 			</dict>
@@ -1381,7 +1399,7 @@
 				<key>Enabled</key>
 				<true/>
 				<key>Flavour</key>
-				<string>Auto</string>
+				<string>OpenShell:UEFIShell:Shell</string>
 				<key>FullNvramAccess</key>
 				<false/>
 				<key>Name</key>
@@ -1421,7 +1439,7 @@
 				Rg==
 				</data>
 				<key>boot-args</key>
-				<string>rtcfx_exclude=80-AB revpatch=auto,sbvmm</string>
+				<string>rtcfx_exclude=80-AB revpatch=sbvmm</string>
 				<key>csr-active-config</key>
 				<data>
 				AAAAAA==
@@ -1658,6 +1676,30 @@
 				<false/>
 				<key>Path</key>
 				<string>ToggleSipEntry.efi</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<string></string>
+				<key>Comment</key>
+				<string>ResetNvramEntry.efi</string>
+				<key>Enabled</key>
+				<true/>
+				<key>LoadEarly</key>
+				<false/>
+				<key>Path</key>
+				<string>ResetNvramEntry.efi</string>
+			</dict>
+			<dict>
+				<key>Arguments</key>
+				<string></string>
+				<key>Comment</key>
+				<string>FirmwareSettingsEntry.efi</string>
+				<key>Enabled</key>
+				<true/>
+				<key>LoadEarly</key>
+				<false/>
+				<key>Path</key>
+				<string>FirmwareSettingsEntry.efi</string>
 			</dict>
 		</array>
 		<key>Input</key>
