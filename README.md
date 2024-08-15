@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.0 | macOS Sonoma 14.5 / Ventura 13.6.7 | BIOS 1.33
+OC 1.0.0 | macOS Sonoma 14.6.1 / Ventura 13.6.7 | BIOS 1.36
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -55,7 +55,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 1. Sonoma requires specific version of AirportItlwm. Also, version 14.4 and above require yet another version.
 
-2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` afterwards.
+2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
 
 ## 🚧 Remaining work
 
@@ -184,7 +184,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
 - Misc
   - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
   - Boot/`LauncherOption` is `Full` for multiboot configuration. For installer or when using only macOS, it should be set to `Disabled`.
-  - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `Default` for normal use. 
+  - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `j223` for normal use (value for this SMBios only, see [Dortania article](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#securebootmodel)). 
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
   - `revpatch=sbvmm` — RestrictEvent options, sbvmm is required for system upgrades to Sonoma and above.
