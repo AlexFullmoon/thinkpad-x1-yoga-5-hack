@@ -92,6 +92,6 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 Both variants — itlwm + HeliPort and AirportItlwm — work. Caveats: 
 
 - itlwm lacks some QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made, though.
-- AirportItlwm is more native, but I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. At time of writing the latest supported by stable version was Ventura.
+- AirportItlwm is more native, but (with older beta version) I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. As it seems stable nowadays, i recommend using it.
 
 Since you don't have access to Heliport during installation, AirportItlwm is the only option for installer.

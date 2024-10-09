@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.0 | macOS Sonoma 14.6.1 / Ventura 13.6.7 | BIOS 1.36
+OC 1.0.2 | macOS Sonoma 14.6.1 / Ventura 13.7 | BIOS 1.36
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -57,12 +57,6 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
 
-## 🚧 Remaining work
-
-- [ ] Fixing remaining Fn keys — if possible.
-- [ ] Fixing Yoga conversion — if possible. ClamshellMode?
-- [ ] Disabling trackpoint along with keyboard/trackpad.
-
 ## BIOS settings
 
 *Italics* — supposed to work either way, but recommended setting should reduce debugging surface
@@ -79,7 +73,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
     - BIOS Assist mode → *Disabled* ↓ see below
     - Security → *Disabled*
     - Thunderbolt Preboot → *Disabled*
-  - Intel AMT → *Disabled* ↓
+  - Intel AMT → *Disabled* ↓ see below
 - Security
   - Fingerprint predesktop → *Disabled*
   - Secure Boot → **Disabled**; Clear all keys if needed.
@@ -89,24 +83,24 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
     - Enhanced Windows Biometrics → **Disabled**
   - IO ports
     - I suggest disabling all devices you won't use. 
-    - I.e. disable WWAN (if you even have one), fingerprint if you're going to use only macOS.
+    - In particular, disable WWAN (if you even have one), fingerprint if you're going to use only macOS.
   - Intel SGX → **Disabled**
   - Device Guard → **Disabled**
 - Startup
   - UEFI/Legacy → **UEFI**
   - CSM Support → **Disabled**
 
-There is no CFG lock in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
+There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-Surprisingly, system boots just fine with both CfgLock quirks disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't test long-term system stability with both quirks off, but disabling AppleCpuPmCfgLock doesn't seem to have any ill effects. 
+Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't notice any system stability with this quirk off, but YMMV. AppleCpuPmCfgLock is not required on modern macOS. 
 
 There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
 According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* results in Thunderbolt hotplug not working but decreased battery consumption.
 
-Intel AMT is remote admisintration for enterprise. You do not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disable management interface.
+Intel AMT is remote admisintration for enterprise. This switch does not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disables management interface.
 
-Secure boot can theoretically be enabled, as OpenCore has required keys, just unneeded extra trouble to do so.
+Secure boot can theoretically be enabled, as OpenCore has required keys, it's just unneeded extra trouble to do so.
 
 ## ACPI files
 

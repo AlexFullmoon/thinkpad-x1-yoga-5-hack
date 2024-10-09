@@ -730,7 +730,7 @@
 				<key>Comment</key>
 				<string>07-A WiFi AirportItlwm - works natively, less stable. Ventura v2.3.0.</string>
 				<key>Enabled</key>
-				<false/>
+				<true/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/AirportItlwm</string>
 				<key>MaxKernel</key>
@@ -748,7 +748,7 @@
 				<key>Comment</key>
 				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.0-14.3 v2.3.0.</string>
 				<key>Enabled</key>
-				<false/>
+				<true/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/AirportItlwm</string>
 				<key>MaxKernel</key>
@@ -766,7 +766,7 @@
 				<key>Comment</key>
 				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.4+ v2.3.0.</string>
 				<key>Enabled</key>
-				<false/>
+				<true/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/AirportItlwm</string>
 				<key>MaxKernel</key>
@@ -784,7 +784,7 @@
 				<key>Comment</key>
 				<string>07-B WiFi itlwm - works through eth1, requires HeliPort (so not usable for installer), more stable</string>
 				<key>Enabled</key>
-				<true/>
+				<false/>
 				<key>ExecutablePath</key>
 				<string>Contents/MacOS/itlwm</string>
 				<key>MaxKernel</key>
@@ -1233,7 +1233,7 @@
 		<key>Quirks</key>
 		<dict>
 			<key>AppleCpuPmCfgLock</key>
-			<true/>
+			<false/>
 			<key>AppleXcpmCfgLock</key>
 			<true/>
 			<key>AppleXcpmExtraMsrs</key>
@@ -1312,7 +1312,7 @@
 			<key>LauncherPath</key>
 			<string>Default</string>
 			<key>PickerAttributes</key>
-			<integer>17</integer>
+			<integer>129</integer>
 			<key>PickerAudioAssist</key>
 			<false/>
 			<key>PickerMode</key>
@@ -1851,6 +1851,8 @@
 				<string>RuntimeCode</string>
 			</dict>
 		</array>
+		<key>Unload</key>
+		<array/>
 	</dict>
 </dict>
 </plist>
