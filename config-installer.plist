@@ -336,6 +336,8 @@
 			<false/>
 			<key>AvoidRuntimeDefrag</key>
 			<true/>
+			<key>ClearTaskSwitchBit</key>
+			<false/>
 			<key>DevirtualiseMmio</key>
 			<false/>
 			<key>DisableSingleUser</key>
@@ -728,7 +730,7 @@
 				<key>BundlePath</key>
 				<string>AirportItlwmVentura.kext</string>
 				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works natively, less stable. Ventura v2.3.0.</string>
+				<string>07-A WiFi AirportItlwm. Ventura v2.3.0.</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -744,27 +746,9 @@
 				<key>Arch</key>
 				<string>Any</string>
 				<key>BundlePath</key>
-				<string>AirportItlwmSonoma14.kext</string>
+				<string>AirportItlwmSonoma.kext</string>
 				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.0-14.3 v2.3.0.</string>
-				<key>Enabled</key>
-				<true/>
-				<key>ExecutablePath</key>
-				<string>Contents/MacOS/AirportItlwm</string>
-				<key>MaxKernel</key>
-				<string>23.3.99</string>
-				<key>MinKernel</key>
-				<string>23.0.0</string>
-				<key>PlistPath</key>
-				<string>Contents/Info.plist</string>
-			</dict>
-			<dict>
-				<key>Arch</key>
-				<string>Any</string>
-				<key>BundlePath</key>
-				<string>AirportItlwmSonoma144.kext</string>
-				<key>Comment</key>
-				<string>07-A WiFi AirportItlwm - works natively, less stable. Sonoma 14.4+ v2.3.0.</string>
+				<string>07-A WiFi AirportItlwm. Sonoma 14.4+ v2.3.0.</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>
@@ -782,7 +766,7 @@
 				<key>BundlePath</key>
 				<string>itlwm.kext</string>
 				<key>Comment</key>
-				<string>07-B WiFi itlwm - works through eth1, requires HeliPort (so not usable for installer), more stable</string>
+				<string>07-B WiFi itlwm - works through eth1, requires HeliPort (not usable for installer)</string>
 				<key>Enabled</key>
 				<false/>
 				<key>ExecutablePath</key>

@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.2 | macOS Sonoma 14.6.1 / Ventura 13.7 | BIOS 1.36
+OC 1.0.4 | macOS Ventura 13.7.4 | BIOS 1.38
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -57,6 +57,8 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
 
+3. Overall I find Sonoma to be less performant; Ventura is recommended version.
+
 ## BIOS settings
 
 *Italics* — supposed to work either way, but recommended setting should reduce debugging surface
@@ -70,10 +72,10 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - Power
     - Sleep mode → **Linux**
   - Thunderbolt
-    - BIOS Assist mode → *Disabled* ↓ see below
+    - BIOS Assist mode → *Disabled*
     - Security → *Disabled*
     - Thunderbolt Preboot → *Disabled*
-  - Intel AMT → *Disabled* ↓ see below
+  - Intel AMT → *Disabled*
 - Security
   - Fingerprint predesktop → *Disabled*
   - Secure Boot → **Disabled**; Clear all keys if needed.
@@ -92,9 +94,9 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't notice any system stability with this quirk off, but YMMV. AppleCpuPmCfgLock is not required on modern macOS. 
+Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't notice any system stability issues with this quirk disabled, but YMMV. AppleCpuPmCfgLock is not required on modern macOS at all. 
 
-There is no DVMT Prealloc setting (it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
+There is no DVMT Prealloc setting (rather, it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
 According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* results in Thunderbolt hotplug not working but decreased battery consumption.
 
@@ -123,7 +125,7 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 
 ## Kexts
 
-I am providing UTBMap (USB mapping) and prebuilt VoodooI2CHID (see [docs/Input.md](docs/Input.md) for details). For everything else you should grab latest versions.
+I am providing UTBMap (USB mapping). For everything else you should grab latest versions.
 
 - Lilu
 - VirtualSMC
@@ -176,7 +178,8 @@ Use provided config for reference, follow Dortania guide to build your own for c
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
     - `DisableIoMapper` is required unless you disable Vt-d in BIOS. Quirk recommended for multiboot configuration.
 - Misc
-  - I use `ScanPolicy` 0x00280F03, which means only NVMe and USB drives and only Apple FS, NTFS and EFI partition.
+  - I use `ScanPolicy` 0x00280703, which means only NVMe and USB drives and only Apple FS and EFI partition.
+    - For OpenLinuxBoot 0x00284703 adds bootloader partition.
   - Boot/`LauncherOption` is `Full` for multiboot configuration. For installer or when using only macOS, it should be set to `Disabled`.
   - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `j223` for normal use (value for this SMBios only, see [Dortania article](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#securebootmodel)). 
 - NVRAM/Bootargs:
@@ -185,7 +188,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
   - config_installer also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
-  - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`. Supposedly `Custom` mode is more buggy.
+  - `UpdateSMBIOSMode` is `Custom` for multiboot configuration. If using only macOS, set to `Create`.
 - UEFI/ReservedMemory
   - One region that is apparently required for hibernation.
 

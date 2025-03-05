@@ -26,6 +26,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
             LNUX = One     // Sets OS type to Linux
                            // Initialze mute button mode like Linux when it's broken
                            // May be combined with MuteLEDFixup in prefpane.
+                           // AFAIK adds Fn-H/M/L keys for performance modes
             WNTF = One     // Sets OS version to Windows 2001
                            // Enable DYTC thermal management on newer Thinkpads.
                            // Requires specifically WNTF

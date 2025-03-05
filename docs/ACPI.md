@@ -36,13 +36,13 @@ Recommended fixes for some devices: AC adapter, fake ambient light sensor, power
 
 ## SSDT‑HPET
 
-IRQ patches for legacy devices. Traditional stuff, might not be necessary nowadays.
+IRQ patches for legacy devices. Traditional stuff, might be unnecessary nowadays.
 
 ## SSDT-TB
 
-One big thunderbolt patch. I honestly have no idea what it does.
+One big Thunderbolt patch. I honestly have no idea what it does.
 
-Currently controller appear in system, and display connection over Thunderbolt/DisplayPort works for both ports. As I have no other Thunderbolt devices, this is all I can and would do. Feel free to PR corrections.
+Currently controller appear in system, and display connection over Thunderbolt/DisplayPort works for both ports. As I have no other Thunderbolt devices, this is all I can test. Feel free to PR corrections.
 
 ## SSDT-YOGA
 

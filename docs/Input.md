@@ -16,50 +16,9 @@ Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts.
 
 ## Pen
 
-Pen support is broken in VoodooI2C (in VoodooI2CHID satellite, to be specific) from version 2.7 to at least 2.8. See [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details. You can:
-
-- Roll back to v.2.6.5. Outdated.
-- Use the one I compiled (December 2023). Probably would get outdated before long.
-- Wait for devs to release fixed version. Good luck with that.
-- Compile VoodooI2CHID from source. See short guide below.
-
-Pen support in VoodooI2C is also limited — no pressure detection. no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
+Pen support in VoodooI2C is limited — no pressure detection. no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
 
 You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/), it is reported to work on X1Y3, and is supposedly more functional. Unfortunately it did not detect supported devices on my X1Y5, and is quite expensive, anyway.
-
-### Building VoodooI2CHID
-
-Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
-
-```sh
-# This uses Python 3 instead of 2, but works fine.
-pip3 install cpplint
-
-# You might jump in the rabbit hole that is installing special version of cldoc.
-# It requires coffeescript and sass, which require Node 16 and Python 2, and
-# still fails when building the project. Luckily there is no need for all that.
-# It is needed for documentation only, and kexts are compiled successfully. 
-# You can even try installing it from pip3 and ignore Python 2 altogether.
-
-git clone --recursive https://github.com/VoodooI2C/VoodooI2C.git
-cd VoodooI2C
-
-# Dependencies
-git clone https://github.com/acidanthera/MacKernelSDK
-
-src=$(/usr/bin/curl -Lfs \
-    https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) \
-    && eval "$src" \
-    && mv VoodooInput Dependencies
-
-# Update VoodooI2CHID to _latest_ commit. This is what we're here for.
-git submodule sync
-git submodule update --init --recursive --remote
-```
-
-Then in XCode open VoodooI2C folder, go to root of project navigator in left panel, select Build Settings tab and switch Build active architecture from Debug to Release. Press ⌘B to build. Select Product in navigator, and open results folder in right panel.
-
-Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
 
 ## Keyboard
 
@@ -135,7 +94,7 @@ Set F16-F17 as shortcuts to whatever you like in macOS keyboard settings.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
  
-## Debugging information
+## Extras
 
 Some key codes:
 
@@ -166,9 +125,43 @@ LID method in: `_Q2A`, `_Q2B`
 
 Convertible button (?): `_Q2E`
 
-## Links
+### Building VoodooI2CHID
 
-[TODO] Add more.
+Ths was a workaround for broken pen support in VoodooI2C versions 2.7-2.8 (see [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details). It's been fixed, so i'm leaving this information here just in case. 
+
+Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
+
+```sh
+# This uses Python 3 instead of 2, but works fine.
+pip3 install cpplint
+
+# You might jump in the rabbit hole that is installing special version of cldoc.
+# It requires coffeescript and sass, which require Node 16 and Python 2, and
+# still fails when building the project. Luckily there is no need for all that.
+# It is needed for documentation only, and kexts are compiled successfully. 
+# You can even try installing it from pip3 and ignore Python 2 altogether.
+
+git clone --recursive https://github.com/VoodooI2C/VoodooI2C.git
+cd VoodooI2C
+
+# Dependencies
+git clone https://github.com/acidanthera/MacKernelSDK
+
+src=$(/usr/bin/curl -Lfs \
+    https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) \
+    && eval "$src" \
+    && mv VoodooInput Dependencies
+
+# Update VoodooI2CHID to _latest_ commit. This is what we're here for.
+git submodule sync
+git submodule update --init --recursive --remote
+```
+
+Then in XCode open VoodooI2C folder, go to root of project navigator in left panel, select Build Settings tab and switch Build active architecture from Debug to Release. Press ⌘B to build. Select Product in navigator, and open results folder in right panel.
+
+Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
+
+## Links
 
 https://www.insanelymac.com/forum/topic/330440-beginners-guide-fix-keyboard-hot-keys-functional-keys/
 
