@@ -94,7 +94,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
 
-Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. Either something is wrong with ControlMsrE2 utility, or there is some peculiarity with Thinkpad firmware. There are similar reports about T490, see [acidanthera/bugtracker#2355](https://github.com/acidanthera/bugtracker/issues/2355). I didn't notice any system stability issues with this quirk disabled, but YMMV. AppleCpuPmCfgLock is not required on modern macOS at all. 
+Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. As [Voice of God](https://github.com/acidanthera/bugtracker/issues/2355#issuecomment-2779677232) said, *On some newer CPUs macOS can work even with Cfg Lock. Depending on the BIOS performance may be suboptimal, however.* AppleCpuPmCfgLock is not required on modern macOS at all. 
 
 There is no DVMT Prealloc setting (rather, it's inside engineering menu along with CFG Lock), but fortunately it's already 64Mb by default, enough for framebuffer.
 
