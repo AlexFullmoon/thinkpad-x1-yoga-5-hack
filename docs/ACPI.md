@@ -1,6 +1,6 @@
 # ACPI files
 
-All files are provided in decompiled form with comments, remember to compile them before use (Save as.. → ACPI Machine Language).
+All files are provided in decompiled form with comments, as well as compiled. If you want to change anything, remember to compile them before use (in MaciASL Save as... → ACPI Machine Language).
 
 ## SSDT-PLUG
 
