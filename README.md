@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.4 | macOS Ventura 13.7.4 | BIOS 1.38
+OC 1.0.5 | macOS Sonoma 14.8.1 | BIOS 1.39
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -8,7 +8,7 @@ Build is considered complete. Should work for X1 Carbon 8, possibly also would b
 
 You must build it yourself.
 
-I am also not sure if packaging a bunch of outdated precompiled files is right.
+Also, I don't think that packaging a bunch of outdated precompiled files is right.
 
 ## Hardware
 
@@ -47,7 +47,7 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 
 ## ⚠️ Warnings
 
-Do not use Fn-4 without YogaSMC, it crashes the system.
+Do not press Fn-4 without installing YogaSMC, it crashes the system.
 
 Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?) with certain BIOS versions. Most likely completely unrelated to this model, and other users report no issues, so take this warning as additional disclaimer of warranty. 
 
@@ -57,7 +57,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
 
-3. Overall I find Sonoma to be less performant; Ventura is recommended version.
+3. Overall I find Sonoma to be less performant than Ventura, but it has one more year of support from brew.
 
 ## BIOS settings
 
@@ -92,7 +92,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - UEFI/Legacy → **UEFI**
   - CSM Support → **Disabled**
 
-There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, with corresponding dangers (doing that breaks TPM, among other things).
+There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, and with corresponding dangers (doing that breaks TPM, among other things).
 
 Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. As [Voice of God](https://github.com/acidanthera/bugtracker/issues/2355#issuecomment-2779677232) said, *On some newer CPUs macOS can work even with Cfg Lock. Depending on the BIOS performance may be suboptimal, however.* AppleCpuPmCfgLock is not required on modern macOS at all. 
 
@@ -100,9 +100,10 @@ There is no DVMT Prealloc setting (rather, it's inside engineering menu along wi
 
 According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* results in Thunderbolt hotplug not working but decreased battery consumption.
 
-Intel AMT is remote admisintration for enterprise. This switch does not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disables management interface.
+Intel AMT is remote administration for enterprise. This switch does not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disables management interface.
 
-Secure boot can theoretically be enabled, as OpenCore has required keys, it's just unneeded extra trouble to do so.
+Secure boot can be enabled, but requires signing Opencore binaries and adding your signing key to Secureboot db. You can use my [sbsign script](https://github.com/AlexFullmoon/sbsign).
+**DO NOT wipe stock Secureboot keys**, this has been reported to brick Thinkpads; add single key into db instead (minimal mode in sbsign).
 
 ## ACPI files
 
@@ -158,7 +159,7 @@ I am providing UTBMap (USB mapping). For everything else you should grab latest 
 - *Debugging*
   - DebugEnhancer
 
-## Opencore config
+## OpenCore config
 
 Use provided config for reference, follow Dortania guide to build your own for current OpenCore version. Here are some notes:
 
@@ -174,12 +175,12 @@ Use provided config for reference, follow Dortania guide to build your own for c
 - Kernel
   - Kext order: see comments to kext entries in config.
   - Quirks:
-    - `AppleXcpmCfgLock` and `AppleCpuPmCfgLock` — see BIOS section. You can try disabling both.
+    - `AppleXcpmCfgLock` and `AppleCpuPmCfgLock` — see BIOS section.
     - `CustomSMBIOSGuid` is used for multiboot configuration. If you use only macOS, disable it.
     - `DisableIoMapper` is required unless you disable Vt-d in BIOS. Quirk recommended for multiboot configuration.
 - Misc
-  - I use `ScanPolicy` 0x00280703, which means only NVMe and USB drives and only Apple FS and EFI partition.
-    - For OpenLinuxBoot 0x00284703 adds bootloader partition.
+  - I use `ScanPolicy` 0x00280303, which means only NVMe and USB drives and only Apple FS partitions.
+    - For OpenLinuxBoot 0x00284303 adds Linux bootloader partition (you still need corresponding driver for it).
   - Boot/`LauncherOption` is `Full` for multiboot configuration. For installer or when using only macOS, it should be set to `Disabled`.
   - Security/`SecureBootModel` should be set to `Disabled` for installing/updating Sonoma above certain version, and to `j223` for normal use (value for this SMBios only, see [Dortania article](https://dortania.github.io/OpenCore-Post-Install/universal/security/applesecureboot.html#securebootmodel)). 
 - NVRAM/Bootargs:

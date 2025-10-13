@@ -10,13 +10,13 @@
 - Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
 - Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
 
-VoodooRMI is not strictly required, everything works without it. It fixes an old issue (present both in windows an linux): pressing touchpoint buttons freezes touchpad for half a second.
+VoodooRMI is not strictly required, everything works without it. It fixes an old issue (present both in Windows and Linux): pressing touchpoint buttons freezes touchpad for half a second.
 
 Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts. No VoodooSMBus parts. See kexts part of [README.md](../README.md).
 
 ## Pen
 
-Pen support in VoodooI2C is limited — no pressure detection. no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
+Pen support in VoodooI2C is limited — no pressure detection, no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
 
 You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/), it is reported to work on X1Y3, and is supposedly more functional. Unfortunately it did not detect supported devices on my X1Y5, and is quite expensive, anyway.
 
@@ -127,7 +127,7 @@ Convertible button (?): `_Q2E`
 
 ### Building VoodooI2CHID
 
-Ths was a workaround for broken pen support in VoodooI2C versions 2.7-2.8 (see [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details). It's been fixed, so i'm leaving this information here just in case. 
+This was a workaround for broken pen support in VoodooI2C versions 2.7-2.8 (see [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details). It's been fixed, so I'm leaving this information here just in case. 
 
 Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
 

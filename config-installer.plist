@@ -928,7 +928,7 @@
 				<key>BundlePath</key>
 				<string>VoodooI2CHID.kext</string>
 				<key>Comment</key>
-				<string>08-09 I2C HID Trackpad, touchscreen and pen. Use 2.6.5 or build latest.</string>
+				<string>08-09 I2C HID Trackpad, touchscreen and pen.</string>
 				<key>Enabled</key>
 				<true/>
 				<key>ExecutablePath</key>

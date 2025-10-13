@@ -49,9 +49,9 @@ Enabling hibernation on this model is initially trickier than usual due to Lenov
 - First we need to block writes to some RTC memory addresses. I'm using range 0x80-0xAB found [here](https://github.com/tylernguyen/x1c6-hackintosh/issues/44). This range was found on X1 Carbon 6, but firmware logic seems same. Either:
   - Add RTCMemoryFixup kext and bootarg `rtcfx_exclude=80-AB`. This way works, i.e. I do not get CMOS errors.
   - Set NVRAM variable `rtc-blacklist to 808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAAB`
-    - This does not seem to work work as-is, probably requires something else (UEFI/ProtocolOverride?)
+    - This does not seem to work as-is, probably requires something else (UEFI/ProtocolOverride?)
 - Add HibernationFixup kext with at least `hbfx-ahbm=1` (refer to github readme for details) and set Misc/Boot/HibernateMode to NVRAM.
-- Add ReservedMemory region in UEFI block. this should fix black screen on resuming from hibernation. No idea where it is from.
+- Add ReservedMemory region in UEFI block. This should fix black screen on resuming from hibernation. No idea where it is from.
 - Enable hibernation in OS with `sudo pmset -a hibernatemode 3`, `sudo pmset -a standby 1`.
 
 Hibernation mode 25 doesn't work. Resuming from it results in hang up with garbled screen.
@@ -92,6 +92,6 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 Both variants — itlwm + HeliPort and AirportItlwm — work. Caveats: 
 
 - itlwm lacks some QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made, though.
-- AirportItlwm is more native, but (with older beta version) I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. As it seems stable nowadays, i recommend using it.
+- AirportItlwm is more native, but (with older beta version) I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. As it seems stable nowadays, I recommend using it.
 
 Since you don't have access to Heliport during installation, AirportItlwm is the only option for installer.

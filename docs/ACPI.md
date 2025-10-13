@@ -42,7 +42,7 @@ IRQ patches for legacy devices. Traditional stuff, might be unnecessary nowadays
 
 One big Thunderbolt patch. I honestly have no idea what it does.
 
-Currently controller appear in system, and display connection over Thunderbolt/DisplayPort works for both ports. As I have no other Thunderbolt devices, this is all I can test. Feel free to PR corrections.
+Currently, controller appear in system, and display connection over Thunderbolt/DisplayPort works for both ports. As I have no other Thunderbolt devices, this is all I can test. Feel free to PR corrections.
 
 ## SSDT-YOGA
 
@@ -57,7 +57,7 @@ Remapping several keys, configuration for VoodooPS2Keyboard. See details in [doc
 Adding a bunch of missing devices to IORegistry, most likely there are only cosmetic fixes and don't do anything significant.
 
 - MCHC — Host Bridge/DRAM Registers, part of older SMBus patch stuff. Supposedly not necessary nowadays.
-- PGMM — Core Processor Gaussian Mixture Model. Something something speech recognition co-processor?
+- PGMM — Core Processor Gaussian Mixture Model. Something something speech recognition coprocessor?
 - BUS0 — Missing SMBus device. Supposedly not necessary nowadays.
 - PMCR — Comet Lake Thermal Controller.
 - SRAM — Comet Lake Shared SRAM.
@@ -77,6 +77,6 @@ In this case we instead set those variables directly.
 
 (information from somewhere on reddit)
 
-DTGP is a method that passes through calls to `_DSM` methods on various Device objects, unless a specific UUID is provided that indicates macOS is the OS calling the `_DSM` method. macOS has non standard device enumeration behavior. Specifically, macOS first probes each ACPI Device's DSM by passing only 2 arguments (one of which is the UUID). macOS then expects (as real macs behave this way) that the `_DSM` method will return the number of additional arguments that can be used with it's `_DSM` method. It's fine if the device says more arguments than expected, but not less, so its best to just return the maximum, which is 3...
+DTGP is a method that passes through calls to `_DSM` methods on various Device objects, unless a specific UUID is provided that indicates macOS is the OS calling the `_DSM` method. macOS has non-standard device enumeration behavior. Specifically, macOS first probes each ACPI Device's DSM by passing only 2 arguments (one of which is the UUID). macOS then expects (as real macs behave this way) that the `_DSM` method will return the number of additional arguments that can be used with it's `_DSM` method. It's fine if the device says more arguments than expected, but not less, so it's best to just return the maximum, which is 3...
 
 The fact is that `DTGP` method is present in all real Mac's DSDT I have seen. I would say it's added by Apple to handle Windows (under BootCamp).
