@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.7 | macOS Ventura 13.7.8 | BIOS 1.39
+OC 1.0.7 | macOS Ventura 13.7.8 | BIOS 1.39 | **EOL**
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -52,7 +52,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 1. Sonoma requires specific version of AirportItlwm. (technically, different versions for 14.0 and 14.4+, but who cares now).
 
-2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
+2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards. Reportedly, you must also disable AirportItlwm kext during update/installation.
 
 3. Overall I find Sonoma to be less performant than Ventura, but it might have support for more apps, so it's your pick.
 
