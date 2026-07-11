@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.5 | macOS Sonoma 14.8.1 | BIOS 1.39
+OC 1.0.7 | macOS Ventura 13.7.8 | BIOS 1.39
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
@@ -41,9 +41,6 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 - Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
   - Apparently *Thinkpad* Yogas are not supported by YogaSMC.
   - You can manually disable keyboard and touchpad (but not trackpoint, currently).
-- Thunderbolt
-  - Controller appears in system and I can hotplug another monitor over TB/DP.
-  - Requires further testing, but as I have no hardware to test, it remains an open issue.
 
 ## ⚠️ Warnings
 
@@ -53,11 +50,11 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
 
 ## ⚠️ Sonoma notes
 
-1. Sonoma requires specific version of AirportItlwm. Also, version 14.4 and above require yet another version.
+1. Sonoma requires specific version of AirportItlwm. (technically, different versions for 14.0 and 14.4+, but who cares now).
 
 2. Installing Sonoma above 14.4 requires setting Misc/Security/SecureBootModel to 'Disabled'. This is required *only* at installation time, and should be set to `Default` or to SMBios-specific value (j223 for MacBookPro16,3) afterwards.
 
-3. Overall I find Sonoma to be less performant than Ventura, but it has one more year of support from brew.
+3. Overall I find Sonoma to be less performant than Ventura, but it might have support for more apps, so it's your pick.
 
 ## BIOS settings
 
@@ -78,7 +75,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - Intel AMT → *Disabled*
 - Security
   - Fingerprint predesktop → *Disabled*
-  - Secure Boot → **Disabled**; Clear all keys if needed.
+  - Secure Boot → *Disabled*; Clear all keys if needed.
   - Virtualization
     - Kernel DMA → *Disabled*
     - Vt-d → **Disable** this or enable DisableIOMapper quirk. Disabling in BIOS recommended for macOS-only configuration.
@@ -92,7 +89,7 @@ Resetting NVRAM is reported to **brick** certain Thinkpads (X1 Extreme 1 and 2?)
   - UEFI/Legacy → **UEFI**
   - CSM Support → **Disabled**
 
-There is no CFG lock available in BIOS (it's inside engineering menu), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, and with corresponding dangers (doing that breaks TPM, among other things).
+There is no CFG lock available in BIOS (it's inside engineering menu, which is unaccessible by users), and usual ways of switching it (modified GRUB, RU) **do not work**. Reportedly, the only way to toggle it or enable engineering menu is through direct BIOS write, with programmer clip and all, and with corresponding dangers (doing that breaks TPM, among other things).
 
 Surprisingly, system boots just fine with AppleXcpmCfgLock quirk disabled. As [Voice of God](https://github.com/acidanthera/bugtracker/issues/2355#issuecomment-2779677232) said, *On some newer CPUs macOS can work even with Cfg Lock. Depending on the BIOS performance may be suboptimal, however.* AppleCpuPmCfgLock is not required on modern macOS at all. 
 
@@ -186,6 +183,7 @@ Use provided config for reference, follow Dortania guide to build your own for c
 - NVRAM/Bootargs:
   - `rtcfx_exclude=80-AB` — required for hibernation.
   - `revpatch=sbvmm` — RestrictEvent options, sbvmm is required for system upgrades to Sonoma and above.
+  - pair of `bluetooth...` values — for BleToolFixup kext 
   - config_installer also has standard debugging bootargs.
   - Additional UUID E09B... contains HibernationFixup configuration.
 - PlatformInfo
@@ -207,4 +205,3 @@ Prebuilt configs I've used:
 - https://github.com/tylernguyen/x1c6-hackintosh
 - https://github.com/Jamesxxx1997/thinkpad-x1-yoga-2018-hackintosh
 - User Baio77 from [OSXLatitude](bio).
-

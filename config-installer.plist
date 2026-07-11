@@ -401,13 +401,13 @@
 			<dict>
 				<key>AAPL,ig-platform-id</key>
 				<data>
-				AACbPg==
+				CQClPg==
 				</data>
 				<key>AAPL,slot-name</key>
 				<string>Internal@0,2,0</string>
 				<key>device-id</key>
 				<data>
-				mz4AAA==
+				pT4AAA==
 				</data>
 				<key>device_type</key>
 				<string>Display controller</string>
@@ -487,18 +487,12 @@
 				<data>
 				AQAAAA==
 				</data>
-				<key>framebuffer-unifiedmem</key>
-				<data>
-				AAAAgA==
-				</data>
 				<key>hda-gfx</key>
 				<string>onboard-1</string>
 				<key>model</key>
 				<string>Intel Graphics UHD 620</string>
 				<key>rps-control</key>
-				<data>
-				AQAAAA==
-				</data>
+				<integer>1</integer>
 			</dict>
 		</dict>
 		<key>Delete</key>
