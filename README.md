@@ -120,6 +120,7 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 | SSDT-TB      | Thunderbolt fixes               |
 | SSDT-KEYMAP  | Keyboard remaps                 |
 | SSDT-EXTRAS  | Cosmetic device fixes, optional |
+| SSDT-OSDW    | Helper method for OS detection  | 
 
 ## Kexts
 

@@ -15,45 +15,46 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
     External(_SB_.PCI0.LPCB.EC__.HKEY, DeviceObj)
     External(_SB_.PCI0.LPCB.EC__.BAT1, DeviceObj)
     External(_SI_._SST, MethodObj)
+    External (OSDW, MethodObj)
 
     Scope (_SB.PCI0.LPCB.EC)
     {
 
     /*
      * Sensor access for YogaSMC
-     * 
+     *
      * Double check name of FieldUnit for collision
-     * Registers return 0x00 for non-implemented, 
+     * Registers return 0x00 for non-implemented,
      * and return 0x80 when not available.
      */
-        If (_OSI ("Darwin")) 
+        If (OSDW())
         {
             OperationRegion (ESEN, EmbeddedControl, Zero, 0x0100)
             Field (ESEN, ByteAcc, Lock, Preserve)
             {
                 Offset (0x78), // TP_EC_THERMAL_TMP0
                 EST0,   8, // CPU
-                EST1,   8, 
-                EST2,   8, 
+                EST1,   8,
+                EST2,   8,
                 EST3,   8, // GPU ?
                 EST4,   8, // Battery ?
                 EST5,   8, // Battery ?
                 EST6,   8, // Battery ?
                 EST7,   8, // Battery ?
                 Offset (0xC0), // TP_EC_THERMAL_TMP8
-                EST8,   8, 
-                EST9,   8, 
-                ESTA,   8, 
-                ESTB,   8, 
-                ESTC,   8, 
-                ESTD,   8, 
-                ESTE,   8, 
+                EST8,   8,
+                EST9,   8,
+                ESTA,   8,
+                ESTB,   8,
+                ESTC,   8,
+                ESTD,   8,
+                ESTE,   8,
                 ESTF,   8
             }
         }
 
         // EC RW methods
-        
+
         Method (RE1B, 1, NotSerialized)
         {
             OperationRegion (ERAM, EmbeddedControl, Arg0, One)
@@ -106,16 +107,16 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
                 Local0++
             }
         }
-        
+
         // Optional: Notify battery on conservation mode change
-        
+
         Method (NBAT, 0, Serialized)
         {
             If (CondRefOf (BAT1))
             {
                 Notify (BAT1, 0x80)
             }
-        }   
+        }
 
     }
 
@@ -126,7 +127,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
 
         Method (CSSI, 1, NotSerialized)
         {
-            If (_OSI ("Darwin"))
+            If (OSDW())
             {
                 \_SI._SST (Arg0)
             }

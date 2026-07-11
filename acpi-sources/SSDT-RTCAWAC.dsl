@@ -8,11 +8,13 @@
 DefinitionBlock ("", "SSDT", 2, "CORP", "RTCAWAC", 0x00000000)
 {
     External (STAS, IntObj)
+    External (OSDW, MethodObj)
+
     Scope (\)
     {
         Method (_INI, 0, NotSerialized)  // _INI: Initialize
         {
-            If (_OSI ("Darwin"))
+            If (OSDW())
             {
                 Store (One, STAS)
             }

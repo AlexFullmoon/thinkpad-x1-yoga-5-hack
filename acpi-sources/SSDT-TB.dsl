@@ -12,6 +12,8 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
     External (_SB_.PCI0.RP13, DeviceObj)
     External (_SB_.PCI0.RP13.PXSX, DeviceObj)
     External (HRUS, IntObj)
+    External (OSDW, MethodObj)
+
     Scope (\)
     {
         Method (DTGP, 5, NotSerialized) //DGTP
@@ -46,7 +48,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
     }
     Scope (\_SB_.PCI0)
     {
-        If (_OSI ("Darwin"))
+        If (OSDW())
         {
             Scope (RP13) // Thunderbolt
             {
@@ -71,14 +73,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                     OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                     Field (A1E0, ByteAcc, NoLock, Preserve)
                     {
-                        AVND,   32, 
-                        BMIE,   3, 
-                        Offset (0x18), 
-                        PRIB,   8, 
-                        SECB,   8, 
-                        SUBB,   8, 
-                        Offset (0x1E), 
-                            ,   13, 
+                        AVND,   32,
+                        BMIE,   3,
+                        Offset (0x18),
+                        PRIB,   8,
+                        SECB,   8,
+                        SUBB,   8,
+                        Offset (0x1E),
+                            ,   13,
                         MABT,   1
                     }
 
@@ -103,31 +105,31 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         {
                             Local0 = Package (0x0A)
                                 {
-                                    "AAPL,slot-name", 
+                                    "AAPL,slot-name",
                                     Buffer (0x0C)
                                     {
                                         "Thunderbolt"
-                                    }, 
+                                    },
 
-                                    "built-in", 
+                                    "built-in",
                                     Buffer (One)
                                     {
                                          0x00                                             // .
-                                    }, 
+                                    },
 
-                                    "model", 
+                                    "model",
                                     Buffer (0x41)
                                     {
                                         "Intel JHL6540 Alpine Ridge Thunderbolt 3 UPSB Bridge (Low Power)"
-                                    }, 
+                                    },
 
-                                    "device_type", 
+                                    "device_type",
                                     Buffer (0x0B)
                                     {
                                         "PCI Bridge"
-                                    }, 
+                                    },
 
-                                    "PCI-Thunderbolt", 
+                                    "PCI-Thunderbolt",
                                     One
                                 }
                             DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -143,14 +145,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                         Field (A1E0, ByteAcc, NoLock, Preserve)
                         {
-                            AVND,   32, 
-                            BMIE,   3, 
-                            Offset (0x18), 
-                            PRIB,   8, 
-                            SECB,   8, 
-                            SUBB,   8, 
-                            Offset (0x1E), 
-                                ,   13, 
+                            AVND,   32,
+                            BMIE,   3,
+                            Offset (0x18),
+                            PRIB,   8,
+                            SECB,   8,
+                            SUBB,   8,
+                            Offset (0x1E),
+                                ,   13,
                             MABT,   1
                         }
 
@@ -175,31 +177,31 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                             {
                                 Local0 = Package (0x0A)
                                     {
-                                        "AAPL,slot-name", 
+                                        "AAPL,slot-name",
                                         Buffer (0x0C)
                                         {
                                             "Thunderbolt"
-                                        }, 
+                                        },
 
-                                        "built-in", 
+                                        "built-in",
                                         Buffer (One)
                                         {
                                              0x00                                             // .
-                                        }, 
+                                        },
 
-                                        "model", 
+                                        "model",
                                         Buffer (0x41)
                                         {
                                             "Intel JHL6540 Alpine Ridge Thunderbolt 3 DSB0 Bridge (Low Power)"
-                                        }, 
+                                        },
 
-                                        "device_type", 
+                                        "device_type",
                                         Buffer (0x0B)
                                         {
                                             "PCI Bridge"
-                                        }, 
+                                        },
 
-                                        "PCIHotplugCapable", 
+                                        "PCIHotplugCapable",
                                         Zero
                                     }
                                 DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -222,31 +224,31 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                             {
                                 Local0 = Package (0x1B)
                                     {
-                                        "AAPL,slot-name", 
+                                        "AAPL,slot-name",
                                         Buffer (0x0C)
                                         {
                                             "Thunderbolt"
-                                        }, 
+                                        },
 
-                                        "name", 
+                                        "name",
                                         Buffer (0x24)
                                         {
                                             "Alpine Ridge Thunderbolt Controller"
-                                        }, 
+                                        },
 
-                                        "model", 
+                                        "model",
                                         Buffer (0x3A)
                                         {
                                             "Intel JHL6540 Alpine Ridge Thunderbolt 3 NHI0 (Low Power)"
-                                        }, 
+                                        },
 
-                                        "device_type", 
+                                        "device_type",
                                         Buffer (0x12)
                                         {
                                             "System Peripheral"
-                                        }, 
+                                        },
 
-                                        "ThunderboltDROM", 
+                                        "ThunderboltDROM",
                                         Buffer (0x75)
                                         {
                                             /* 0000 */  0x13, 0x00, 0xDD, 0x10, 0x88, 0xF1, 0xBC, 0x2A,  // .......*
@@ -264,18 +266,18 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                             /* 0060 */  0x65, 0x20, 0x49, 0x6E, 0x63, 0x2E, 0x00, 0x0E,  // e Inc...
                                             /* 0068 */  0x02, 0x4D, 0x61, 0x63, 0x42, 0x6F, 0x6F, 0x6B,  // .MacBook
                                             /* 0070 */  0x20, 0x50, 0x72, 0x6F, 0x00                     //  Pro.
-                                        }, 
+                                        },
 
-                                        "ThunderboltConfig", 
+                                        "ThunderboltConfig",
                                         Buffer (0x20)
                                         {
                                             /* 0000 */  0x00, 0x02, 0x1C, 0x00, 0x02, 0x00, 0x05, 0x03,  // ........
                                             /* 0008 */  0x01, 0x00, 0x04, 0x00, 0x05, 0x03, 0x02, 0x00,  // ........
                                             /* 0010 */  0x03, 0x00, 0x05, 0x03, 0x01, 0x00, 0x00, 0x00,  // ........
                                             /* 0018 */  0x03, 0x03, 0x02, 0x00, 0x01, 0x00, 0x02, 0x00   // ........
-                                        }, 
+                                        },
 
-                                        "pathcr", 
+                                        "pathcr",
                                         Buffer (0x50)
                                         {
                                             /* 0000 */  0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
@@ -288,36 +290,36 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                             /* 0038 */  0x00, 0x00, 0x04, 0x00, 0x02, 0x00, 0x01, 0x00,  // ........
                                             /* 0040 */  0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
                                             /* 0048 */  0x00, 0x00, 0x07, 0x00, 0x02, 0x00, 0x01, 0x00   // ........
-                                        }, 
+                                        },
 
-                                        "linkDetails", 
+                                        "linkDetails",
                                         Buffer (0x08)
                                         {
                                              0x08, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00   // ........
-                                        }, 
+                                        },
 
-                                        "TBTFlags", 
+                                        "TBTFlags",
                                         Buffer (0x04)
                                         {
                                              0x03, 0x00, 0x00, 0x00                           // ....
-                                        }, 
+                                        },
 
-                                        "sscOffset", 
+                                        "sscOffset",
                                         Buffer (0x02)
                                         {
                                              0x00, 0x07                                       // ..
-                                        }, 
+                                        },
 
-                                        "TBTDPLowToHigh", 
+                                        "TBTDPLowToHigh",
                                         Buffer (0x04)
                                         {
                                              0x01, 0x00, 0x00, 0x00                           // ....
-                                        }, 
+                                        },
 
-                                        "ThunderboltUUID", 
-                                        ToUUID ("95e6bcfa-5a4a-5f81-b3d2-f0e4bd35cf1e") /* Unknown UUID */, 
-                                        "power-save", 
-                                        One, 
+                                        "ThunderboltUUID",
+                                        ToUUID ("95e6bcfa-5a4a-5f81-b3d2-f0e4bd35cf1e") /* Unknown UUID */,
+                                        "power-save",
+                                        One,
                                         Buffer (One)
                                         {
                                              0x00                                             // .
@@ -336,53 +338,53 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                         Field (A1E0, ByteAcc, NoLock, Preserve)
                         {
-                            AVND,   32, 
-                            BMIE,   3, 
-                            Offset (0x18), 
-                            PRIB,   8, 
-                            SECB,   8, 
-                            SUBB,   8, 
-                            Offset (0x1E), 
-                                ,   13, 
+                            AVND,   32,
+                            BMIE,   3,
+                            Offset (0x18),
+                            PRIB,   8,
+                            SECB,   8,
+                            SUBB,   8,
+                            Offset (0x1E),
+                                ,   13,
                             MABT,   1
                         }
 
                         OperationRegion (A1E1, PCI_Config, 0xC0, 0x40)
                         Field (A1E1, ByteAcc, NoLock, Preserve)
                         {
-                            Offset (0x01), 
-                            Offset (0x02), 
-                            Offset (0x04), 
-                            Offset (0x08), 
-                            Offset (0x0A), 
-                                ,   5, 
-                            TPEN,   1, 
-                            Offset (0x0C), 
-                            SSPD,   4, 
-                                ,   16, 
-                            LACR,   1, 
-                            Offset (0x10), 
-                                ,   4, 
-                            LDIS,   1, 
-                            LRTN,   1, 
-                            Offset (0x12), 
-                            CSPD,   4, 
-                            CWDT,   6, 
-                                ,   1, 
-                            LTRN,   1, 
-                                ,   1, 
-                            LACT,   1, 
-                            Offset (0x14), 
-                            Offset (0x30), 
+                            Offset (0x01),
+                            Offset (0x02),
+                            Offset (0x04),
+                            Offset (0x08),
+                            Offset (0x0A),
+                                ,   5,
+                            TPEN,   1,
+                            Offset (0x0C),
+                            SSPD,   4,
+                                ,   16,
+                            LACR,   1,
+                            Offset (0x10),
+                                ,   4,
+                            LDIS,   1,
+                            LRTN,   1,
+                            Offset (0x12),
+                            CSPD,   4,
+                            CWDT,   6,
+                                ,   1,
+                            LTRN,   1,
+                                ,   1,
+                            LACT,   1,
+                            Offset (0x14),
+                            Offset (0x30),
                             TSPD,   4
                         }
 
                         OperationRegion (A1E2, PCI_Config, 0x80, 0x08)
                         Field (A1E2, ByteAcc, NoLock, Preserve)
                         {
-                            Offset (0x01), 
-                            Offset (0x02), 
-                            Offset (0x04), 
+                            Offset (0x01),
+                            Offset (0x02),
+                            Offset (0x04),
                             PSTA,   2
                         }
 
@@ -405,25 +407,25 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         {
                             Local0 = Package (0x08)
                                 {
-                                    "AAPL,slot-name", 
+                                    "AAPL,slot-name",
                                     Buffer (0x0C)
                                     {
                                         "Thunderbolt"
-                                    }, 
+                                    },
 
-                                    "model", 
+                                    "model",
                                     Buffer (0x41)
                                     {
                                         "Intel JHL6540 Alpine Ridge Thunderbolt 3 DSB1 Bridge (Low Power)"
-                                    }, 
+                                    },
 
-                                    "device_type", 
+                                    "device_type",
                                     Buffer (0x0B)
                                     {
                                         "PCI Bridge"
-                                    }, 
+                                    },
 
-                                    "Thunderbolt Entry ID", 
+                                    "Thunderbolt Entry ID",
                                     0x0490
                                 }
                             DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -450,17 +452,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
-                                    MABT,   1, 
-                                    Offset (0x3E), 
-                                        ,   6, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
+                                    MABT,   1,
+                                    Offset (0x3E),
+                                        ,   6,
                                     SBRS,   1
                                 }
 
@@ -500,14 +502,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -546,17 +548,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
-                                            MABT,   1, 
-                                            Offset (0x3E), 
-                                                ,   6, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
+                                            MABT,   1,
+                                            Offset (0x3E),
+                                                ,   6,
                                             SBRS,   1
                                         }
 
@@ -586,14 +588,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -633,14 +635,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -680,14 +682,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -713,14 +715,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -748,14 +750,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -794,17 +796,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
-                                            MABT,   1, 
-                                            Offset (0x3E), 
-                                                ,   6, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
+                                            MABT,   1,
+                                            Offset (0x3E),
+                                                ,   6,
                                             SBRS,   1
                                         }
 
@@ -839,14 +841,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -886,14 +888,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -933,14 +935,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -966,14 +968,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1001,14 +1003,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -1034,14 +1036,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -1069,14 +1071,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                         Field (A1E0, ByteAcc, NoLock, Preserve)
                         {
-                            AVND,   32, 
-                            BMIE,   3, 
-                            Offset (0x18), 
-                            PRIB,   8, 
-                            SECB,   8, 
-                            SUBB,   8, 
-                            Offset (0x1E), 
-                                ,   13, 
+                            AVND,   32,
+                            BMIE,   3,
+                            Offset (0x18),
+                            PRIB,   8,
+                            SECB,   8,
+                            SUBB,   8,
+                            Offset (0x1E),
+                                ,   13,
                             MABT,   1
                         }
 
@@ -1101,25 +1103,25 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                             {
                                 Local0 = Package (0x08)
                                     {
-                                        "AAPL,slot-name", 
+                                        "AAPL,slot-name",
                                         Buffer (0x0C)
                                         {
                                             "Thunderbolt"
-                                        }, 
+                                        },
 
-                                        "model", 
+                                        "model",
                                         Buffer (0x41)
                                         {
                                             "Intel JHL6540 Alpine Ridge Thunderbolt 3 DSB2 Bridge (Low Power)"
-                                        }, 
+                                        },
 
-                                        "device_type", 
+                                        "device_type",
                                         Buffer (0x0B)
                                         {
                                             "PCI Bridge"
-                                        }, 
+                                        },
 
-                                        "PCIHotplugCapable", 
+                                        "PCIHotplugCapable",
                                         Zero
                                     }
                                 DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -1148,7 +1150,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                             {
                                 Return (Package (0x02)
                                 {
-                                    0x69, 
+                                    0x69,
                                     0x03
                                 })
                             }
@@ -1157,41 +1159,41 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                             {
                                 Local0 = Package (0x10)
                                     {
-                                        "AAPL,slot-name", 
+                                        "AAPL,slot-name",
                                         Buffer (0x0C)
                                         {
                                             "Thunderbolt"
-                                        }, 
+                                        },
 
-                                        "built-in", 
+                                        "built-in",
                                         Buffer (One)
                                         {
                                              0x00                                             // .
-                                        }, 
+                                        },
 
-                                        "name", 
+                                        "name",
                                         Buffer (0x20)
                                         {
                                             "Alpine Ridge USB 3.1 Controller"
-                                        }, 
+                                        },
 
-                                        "model", 
+                                        "model",
                                         Buffer (0x47)
                                         {
                                             "Intel JHL6540 Alpine Ridge Thunderbolt 3 Type C Controller (Low Power)"
-                                        }, 
+                                        },
 
-                                        "device_type", 
+                                        "device_type",
                                         Buffer (0x0F)
                                         {
                                             "USB controller"
-                                        }, 
+                                        },
 
-                                        "USBBusNumber", 
-                                        Zero, 
-                                        "UsbCompanionControllerPresent", 
-                                        One, 
-                                        "AAPL,XHC-clock-id", 
+                                        "USBBusNumber",
+                                        Zero,
+                                        "UsbCompanionControllerPresent",
+                                        One,
+                                        "AAPL,XHC-clock-id",
                                         One
                                     }
                                 DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -1206,9 +1208,9 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                     Name (_ADR, 0x03)  // _ADR: Address
                                     Name (_UPC, Package (0x04)  // _UPC: USB Port Capabilities
                                     {
-                                        0xFF, 
-                                        0x0A, 
-                                        Zero, 
+                                        0xFF,
+                                        0x0A,
+                                        Zero,
                                         Zero
                                     })
                                     Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
@@ -1247,9 +1249,9 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                     {
                                         Local0 = Package (0x04)
                                             {
-                                                "UsbCPortNumber", 
-                                                One, 
-                                                "UsbCompanionPortPresent", 
+                                                "UsbCPortNumber",
+                                                One,
+                                                "UsbCompanionPortPresent",
                                                 One
                                             }
                                         DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -1262,9 +1264,9 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                     Name (_ADR, 0x04)  // _ADR: Address
                                     Name (_UPC, Package (0x04)  // _UPC: USB Port Capabilities
                                     {
-                                        0xFF, 
-                                        0x0A, 
-                                        Zero, 
+                                        0xFF,
+                                        0x0A,
+                                        Zero,
                                         Zero
                                     })
                                     Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
@@ -1303,9 +1305,9 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                     {
                                         Local0 = Package (0x04)
                                             {
-                                                "UsbCPortNumber", 
-                                                0x02, 
-                                                "UsbCompanionPortPresent", 
+                                                "UsbCPortNumber",
+                                                0x02,
+                                                "UsbCompanionPortPresent",
                                                 One
                                             }
                                         DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -1323,53 +1325,53 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                         Field (A1E0, ByteAcc, NoLock, Preserve)
                         {
-                            AVND,   32, 
-                            BMIE,   3, 
-                            Offset (0x18), 
-                            PRIB,   8, 
-                            SECB,   8, 
-                            SUBB,   8, 
-                            Offset (0x1E), 
-                                ,   13, 
+                            AVND,   32,
+                            BMIE,   3,
+                            Offset (0x18),
+                            PRIB,   8,
+                            SECB,   8,
+                            SUBB,   8,
+                            Offset (0x1E),
+                                ,   13,
                             MABT,   1
                         }
 
                         OperationRegion (A1E1, PCI_Config, 0xC0, 0x40)
                         Field (A1E1, ByteAcc, NoLock, Preserve)
                         {
-                            Offset (0x01), 
-                            Offset (0x02), 
-                            Offset (0x04), 
-                            Offset (0x08), 
-                            Offset (0x0A), 
-                                ,   5, 
-                            TPEN,   1, 
-                            Offset (0x0C), 
-                            SSPD,   4, 
-                                ,   16, 
-                            LACR,   1, 
-                            Offset (0x10), 
-                                ,   4, 
-                            LDIS,   1, 
-                            LRTN,   1, 
-                            Offset (0x12), 
-                            CSPD,   4, 
-                            CWDT,   6, 
-                                ,   1, 
-                            LTRN,   1, 
-                                ,   1, 
-                            LACT,   1, 
-                            Offset (0x14), 
-                            Offset (0x30), 
+                            Offset (0x01),
+                            Offset (0x02),
+                            Offset (0x04),
+                            Offset (0x08),
+                            Offset (0x0A),
+                                ,   5,
+                            TPEN,   1,
+                            Offset (0x0C),
+                            SSPD,   4,
+                                ,   16,
+                            LACR,   1,
+                            Offset (0x10),
+                                ,   4,
+                            LDIS,   1,
+                            LRTN,   1,
+                            Offset (0x12),
+                            CSPD,   4,
+                            CWDT,   6,
+                                ,   1,
+                            LTRN,   1,
+                                ,   1,
+                            LACT,   1,
+                            Offset (0x14),
+                            Offset (0x30),
                             TSPD,   4
                         }
 
                         OperationRegion (A1E2, PCI_Config, 0x80, 0x08)
                         Field (A1E2, ByteAcc, NoLock, Preserve)
                         {
-                            Offset (0x01), 
-                            Offset (0x02), 
-                            Offset (0x04), 
+                            Offset (0x01),
+                            Offset (0x02),
+                            Offset (0x04),
                             PSTA,   2
                         }
 
@@ -1392,25 +1394,25 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                         {
                             Local0 = Package (0x08)
                                 {
-                                    "AAPL,slot-name", 
+                                    "AAPL,slot-name",
                                     Buffer (0x0C)
                                     {
                                         "Thunderbolt"
-                                    }, 
+                                    },
 
-                                    "model", 
+                                    "model",
                                     Buffer (0x41)
                                     {
                                         "Intel JHL6540 Alpine Ridge Thunderbolt 3 DSB4 Bridge (Low Power)"
-                                    }, 
+                                    },
 
-                                    "device_type", 
+                                    "device_type",
                                     Buffer (0x0B)
                                     {
                                         "PCI Bridge"
-                                    }, 
+                                    },
 
-                                    "Thunderbolt Entry ID", 
+                                    "Thunderbolt Entry ID",
                                     0x0491
                                 }
                             DTGP (Arg0, Arg1, Arg2, Arg3, RefOf (Local0))
@@ -1437,17 +1439,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
-                                    MABT,   1, 
-                                    Offset (0x3E), 
-                                        ,   6, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
+                                    MABT,   1,
+                                    Offset (0x3E),
+                                        ,   6,
                                     SBRS,   1
                                 }
 
@@ -1487,14 +1489,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -1533,17 +1535,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
-                                            MABT,   1, 
-                                            Offset (0x3E), 
-                                                ,   6, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
+                                            MABT,   1,
+                                            Offset (0x3E),
+                                                ,   6,
                                             SBRS,   1
                                         }
 
@@ -1573,14 +1575,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1620,14 +1622,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1667,14 +1669,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1700,14 +1702,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1735,14 +1737,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -1781,17 +1783,17 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
-                                            MABT,   1, 
-                                            Offset (0x3E), 
-                                                ,   6, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
+                                            MABT,   1,
+                                            Offset (0x3E),
+                                                ,   6,
                                             SBRS,   1
                                         }
 
@@ -1826,14 +1828,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1873,14 +1875,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1920,14 +1922,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1953,14 +1955,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                         OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                         Field (A1E0, ByteAcc, NoLock, Preserve)
                                         {
-                                            AVND,   32, 
-                                            BMIE,   3, 
-                                            Offset (0x18), 
-                                            PRIB,   8, 
-                                            SECB,   8, 
-                                            SUBB,   8, 
-                                            Offset (0x1E), 
-                                                ,   13, 
+                                            AVND,   32,
+                                            BMIE,   3,
+                                            Offset (0x18),
+                                            PRIB,   8,
+                                            SECB,   8,
+                                            SUBB,   8,
+                                            Offset (0x1E),
+                                                ,   13,
                                             MABT,   1
                                         }
 
@@ -1988,14 +1990,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -2021,14 +2023,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
                                 OperationRegion (A1E0, PCI_Config, Zero, 0x40)
                                 Field (A1E0, ByteAcc, NoLock, Preserve)
                                 {
-                                    AVND,   32, 
-                                    BMIE,   3, 
-                                    Offset (0x18), 
-                                    PRIB,   8, 
-                                    SECB,   8, 
-                                    SUBB,   8, 
-                                    Offset (0x1E), 
-                                        ,   13, 
+                                    AVND,   32,
+                                    BMIE,   3,
+                                    Offset (0x18),
+                                    PRIB,   8,
+                                    SECB,   8,
+                                    SUBB,   8,
+                                    Offset (0x1E),
+                                        ,   13,
                                     MABT,   1
                                 }
 
@@ -2054,5 +2056,5 @@ DefinitionBlock ("", "SSDT", 2, "hack", "ThunderB", 0x00000000)
         }
 
 
-    }   
+    }
 }

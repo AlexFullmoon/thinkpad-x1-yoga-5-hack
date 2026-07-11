@@ -4,6 +4,8 @@
  */
 DefinitionBlock ("", "SSDT", 2, "DRTNIA", "SsdtUsbx", 0x00001000)
 {
+    External (OSDW, MethodObj)
+
     Scope (\_SB)
     {
         Device (USBX)
@@ -21,20 +23,20 @@ DefinitionBlock ("", "SSDT", 2, "DRTNIA", "SsdtUsbx", 0x00001000)
 
                 Return (Package (0x08)
                 {
-                    "kUSBSleepPowerSupply", 
-                    0x13EC, 
-                    "kUSBSleepPortCurrentLimit", 
-                    0x0834, 
-                    "kUSBWakePowerSupply", 
-                    0x13EC, 
-                    "kUSBWakePortCurrentLimit", 
+                    "kUSBSleepPowerSupply",
+                    0x13EC,
+                    "kUSBSleepPortCurrentLimit",
+                    0x0834,
+                    "kUSBWakePowerSupply",
+                    0x13EC,
+                    "kUSBWakePortCurrentLimit",
                     0x0834
                 })
             }
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (_OSI ("Darwin"))
+                If (OSDW())
                 {
                     Return (0x0F)
                 }
@@ -46,4 +48,3 @@ DefinitionBlock ("", "SSDT", 2, "DRTNIA", "SsdtUsbx", 0x00001000)
         }
     }
 }
-

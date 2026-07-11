@@ -7,6 +7,7 @@ DefinitionBlock ("", "SSDT", 2, "CORP", "HPET", 0x00000000)
     External (\_SB.PCI0.LPCB.HPET, DeviceObj)
     External (\_SB.PCI0.LPCB.HPET.XCRS, MethodObj)
     External (\_SB.PCI0.LPCB.HPET.XSTA, MethodObj)
+    External (OSDW, MethodObj)
 
     Scope (\_SB.PCI0.LPCB.HPET)
     {
@@ -24,7 +25,7 @@ DefinitionBlock ("", "SSDT", 2, "CORP", "HPET", 0x00000000)
         {
             // Return our buffer if booting macOS or the XCRS method
             // no longer exists for some reason
-            If (LOr (_OSI ("Darwin"), LNot(CondRefOf (\_SB.PCI0.LPCB.HPET.XCRS))))
+            If (LOr (OSDW(), LNot(CondRefOf (\_SB.PCI0.LPCB.HPET.XCRS))))
             {
                 Return (BUFX)
             }
@@ -35,7 +36,7 @@ DefinitionBlock ("", "SSDT", 2, "CORP", "HPET", 0x00000000)
         {
             // Return 0x0F if booting macOS or the XSTA method
             // no longer exists for some reason
-            If (LOr (_OSI ("Darwin"), LNot (CondRefOf (\_SB.PCI0.LPCB.HPET.XSTA))))
+            If (LOr (OSDW(), LNot (CondRefOf (\_SB.PCI0.LPCB.HPET.XSTA))))
             {
                 Return (0x0F)
             }

@@ -64,6 +64,14 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
+				<string>Helper method for OS detection.</string>
+				<key>Enabled</key>
+				<true/>
+				<key>Path</key>
+				<string>SSDT-OSDW.aml</string>
+			</dict>
+			<dict>
+				<key>Comment</key>
 				<string>Fixes for several devices</string>
 				<key>Enabled</key>
 				<true/>
