@@ -1422,6 +1422,14 @@
 				<data>
 				Rg==
 				</data>
+				<key>bluetoothExternalDongleFailed</key>
+				<data>
+				AA==
+				</data>
+				<key>bluetoothInternalControllerInfo</key>
+				<data>
+				AAAAAAAAAAAAAAAAAAA=
+				</data>
 				<key>boot-args</key>
 				<string>rtcfx_exclude=80-AB revpatch=sbvmm</string>
 				<key>csr-active-config</key>
@@ -1455,6 +1463,9 @@
 			<array>
 				<string>boot-args</string>
 				<string>ForceDisplayRotationInEFI</string>
+				<string>csr-active-config</string>
+				<string>bluetoothInternalControllerInfo</string>
+				<string>bluetoothExternalDongleFailed</string>
 			</array>
 			<key>E09B9297-7928-4440-9AAB-D1F8536FBF0A</key>
 			<array>
