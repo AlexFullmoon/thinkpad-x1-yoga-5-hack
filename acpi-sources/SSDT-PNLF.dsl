@@ -25,9 +25,8 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "PNLF", 0)
     External (RMCF.GRAN, IntObj)
     External (RMCF.FBTP, IntObj)
     External (_SB_.PCI0.GFX0, DeviceObj)
-    External (OSDW, MethodObj)
-
-    If (OSDW()) {
+    
+    If (_OSI ("Darwin")) {
         Scope (\_SB.PCI0.GFX0)
         {
             OperationRegion (RMP3, PCI_Config, Zero, 0x14)
@@ -47,7 +46,7 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "PNLF", 0)
                 // 99: Other (requires custom profile using WhateverGreen.kext via DeviceProperties applbkl-name and applbkl-data)
                 Name (_UID, 0)
                 Name (_STA, 0x0B)
-
+        
                 Field (^RMP3, AnyAcc, NoLock, Preserve)
                 {
                     Offset (0x02), GDID,16,
@@ -176,9 +175,9 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "PNLF", 0)
                     ElseIf (FBTYPE_CFL == Local3 || Ones != Match(Package()
                     {
                         // CoffeeLake and Whiskey Lake and CometLake and IceLake
-                        0x3e9b, 0x3ea5, 0x3e92, 0x3e91, 0x3EA0, 0x3EA6, 0x3E98,
-                        0x9BC8, 0x9BC5, 0x9BC4, 0xFF05, 0x8A70, 0x8A71, 0x8A51,
-                        0x8A5C, 0x8A5D, 0x8A52, 0x8A53, 0x8A56, 0x8A5A, 0x8A5B,
+                        0x3e9b, 0x3ea5, 0x3e92, 0x3e91, 0x3EA0, 0x3EA6, 0x3E98, 
+                        0x9BC8, 0x9BC5, 0x9BC4, 0xFF05, 0x8A70, 0x8A71, 0x8A51, 
+                        0x8A5C, 0x8A5D, 0x8A52, 0x8A53, 0x8A56, 0x8A5A, 0x8A5B, 
                         0x9B41, 0x9B21, 0x9BCA, 0x9BA4,
                     }, MEQ, Local0, MTR, 0, 0))
                     {
@@ -230,7 +229,7 @@ DefinitionBlock ("", "SSDT", 2, "ACDT", "PNLF", 0)
                     ElseIf (Local2 == CUSTOM_PWMMAX_07a1) { _UID = 17 }
                     ElseIf (Local2 == CUSTOM_PWMMAX_1499) { _UID = 18 }
                     ElseIf (Local2 == COFFEELAKE_PWMMAX) { _UID = 19 }
-                    Else { _UID = 99 }
+                    Else { _UID = 99 } 
                 }
             }
         }

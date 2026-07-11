@@ -1,6 +1,6 @@
 /*
  * Several required device fixes:
- *
+ * 
  * AC: Patching AC Device so that AppleACPIACAdapter driver loads.
  * Device named ADP1 on Mac. Might not be as necessary as it seems.
  *
@@ -25,7 +25,6 @@ DefinitionBlock ("", "SSDT", 2, "hack", "FIXDEV", 0x00001000)
     External (_SB_.PCI0.LPCB, DeviceObj)
     External (_SB_.PCI0.LPCB.EC__, DeviceObj)
     External (_SB_.PCI0.LPCB.EC__.AC__, DeviceObj)
-    External (OSDW, MethodObj)
 
     Scope (_SB)
     {
@@ -38,13 +37,13 @@ DefinitionBlock ("", "SSDT", 2, "hack", "FIXDEV", 0x00001000)
             {
                 Package (0x02)
                 {
-                    0x64,
+                    0x64, 
                     0x012C
                 }
             })
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (OSDW())
+                If (_OSI ("Darwin"))
                 {
                     Return (0x0F)
                 }
@@ -60,7 +59,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "FIXDEV", 0x00001000)
             Name (_HID, EisaId ("PNP0C0C"))
             Method (_STA, 0, NotSerialized)
             {
-                If (OSDW())
+                If (_OSI ("Darwin"))
                 {
                     Return (0x0F)
                 }
@@ -108,7 +107,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "FIXDEV", 0x00001000)
             })
             Method (_STA, 0, NotSerialized)
             {
-                If (OSDW())
+                If (_OSI ("Darwin"))
                 {
                     Return (0x0F)
                 }
@@ -124,11 +123,11 @@ DefinitionBlock ("", "SSDT", 2, "hack", "FIXDEV", 0x00001000)
     {
         Scope (AC) // AC fix
         {
-            If (OSDW())
+            If (_OSI ("Darwin"))
             {
                 Name (_PRW, Package (0x02)  // _PRW: Power Resources for Wake
                 {
-                    0x17,
+                    0x17, 
                     0x03
                 })
             }

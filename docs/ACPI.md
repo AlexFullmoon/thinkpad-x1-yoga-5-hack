@@ -63,10 +63,6 @@ Adding a bunch of missing devices to IORegistry, most likely there are only cosm
 - SRAM — Comet Lake Shared SRAM.
 - XSPI — Comet Lake SPI controller.
 
-## SSDT-OSDW
-
-Shared helper method for macOS detection. See [here](https://github.com/5T33Z0/OC-Little-Translated/tree/main/Content/01_Adding_missing_Devices_and_enabling_Features/SSDT-OSDW) for explanation.
-
 # Some theory
 
 ## OSI

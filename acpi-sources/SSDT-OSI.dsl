@@ -14,15 +14,14 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
     External (WIN8, IntObj)
     External (TPDM, IntObj)
     External (_SI_._SST, MethodObj)    // 1 Arguments
-    External (OSDW, MethodObj)
 
     Scope (\)
     {
-        If (OSDW())
+        If (_OSI ("Darwin")) 
         {
             TPDM = Zero    // Does something with touchpad GPIO? Doesn't seem to change anything
-                           // but appears in other configs, sooo... just in case.
-
+                           // but appears in other configs, sooo... just in case. 
+            
             // YogaSMC
             LNUX = One     // Sets OS type to Linux
                            // Initialze mute button mode like Linux when it's broken
@@ -41,7 +40,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
                 {
                     Scope (TPD0) // Touchpad stub
                     {
-                        If (OSDW())
+                        If (_OSI ("Darwin"))
                         {
                             Name (OSYS, 0x07DF) // Windows 2015 again
                         }
@@ -51,9 +50,9 @@ DefinitionBlock ("", "SSDT", 2, "hack", "OSI", 0x00000000)
         }
         Scope (\_SB.PCI0.LPCB.EC)
         {
-            Scope (HKEY)
+            Scope (HKEY) 
             {
-                If (OSDW())
+                If (_OSI ("Darwin"))
                 {
                     Name (OSYS, 0x07DF)
                 }
