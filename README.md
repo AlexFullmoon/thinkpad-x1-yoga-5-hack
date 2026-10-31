@@ -99,8 +99,8 @@ According to one source, setting Thunderbolt / BIOS Assist mode *Enabled* result
 
 Intel AMT is remote administration for enterprise. This switch does not actually turn it off (it's built in CPU, see [1](https://www.reddit.com/r/thinkpad/comments/ae9qsy/permanently_disabled_intel_amt_did_i_fuck_up/) [2](https://libreboot.org/faq.html#intel)), just disables management interface.
 
-Secure boot can be enabled, but requires signing Opencore binaries and adding your signing key to Secureboot db. You can use my [sbsign script](https://github.com/AlexFullmoon/sbsign).
-**DO NOT wipe stock Secureboot keys**, this has been reported to brick Thinkpads; add single key into db instead (minimal mode in sbsign).
+Secure boot can be enabled, but requires signing Opencore binaries and adding your signing key to Secureboot db. You can use [Mosby](https://github.com/pbatard/Mosby) to change SecureBoot keys, or manually add only single signing key. Also see [my script](https://github.com/AlexFullmoon/sbsign).
+**DO NOT wipe stock Secureboot keys**, this has been reported to brick Thinkpads; to be sure, add single key into db instead.
 
 ## ACPI files
 

@@ -10,17 +10,21 @@ WhateverGreen obviously works, but we also need some extra framebuffer finetunin
 | `device-id`                       | 0xA53E0000 | Spoofed framebuffer ID.                            |
 | `dpcd-max-link-rate`              | 0x14000000 | Value for 4K display. If yours isn't, remove it.   |
 | `rps-control`                     | 0x01000000 | Probably improves performance. See below.          |
+| `enable-backlight-smoother`       | 0x01000000 | Smooth brightness transitions.                     |
 | `enable-backlight-registers-alternative-fix`  | 0x01000000 | Backlight smoothing fix, alternative is required for Sonoma. |
 | `enable-dpcd-max-link-rate-fix`   | 0x01000000 | DPCD divide-by-zero fix. Just in case.             |
 | `enable-max-pixel-clock-override` | 0x01000000 | Needed for 4K display.                             |
 | `force-online`                    | 0x01000000 | Fix for black screen on boot. Just in case.        |
 | `framebuffer-...`                 |            | Setting correct framebuffer connectors and values for HDMI output. |
 
-Picking correct framebuffer is an art of trial and error. Specified IDs work for me; for more details see [WhateverGreen](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) and [OcLittletranslated](https://github.com/5T33Z0/OC-Little-Translated/blob/main/Content/11_Graphics/iGPU/iGPU_DeviceProperties.md#coffee-lake-and-whiskey-lake) docs.
+Picking correct framebuffer is an art of trial and error. Specified IDs work for me; there's [short list](GPU-test-ids.md) of other IDs to try.
+for more details see [WhateverGreen](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) and [OcLittletranslated](https://github.com/5T33Z0/OC-Little-Translated/blob/main/Content/11_Graphics/iGPU/iGPU_DeviceProperties.md#coffee-lake-and-whiskey-lake) docs. 
 
 See explanations on `rps-control` [here](https://github.com/5T33Z0/OC-Little-Translated/blob/main/Content/11_Graphics/iGPU/RPS-Control.md). In short, it force-enables iGPU power control.
 
-`framebuffer-unifiedmem` = 0x00000080 — Raises VRAM to 2Gb. Might be useful for 4K displays, but decreases stability and officially not recommended.   
+`framebuffer-unifiedmem` = 0x00000080 — Raises VRAM to 2Gb. Might be useful for 4K displays, but decreases stability and officially not recommended. It is not set in the shipped config; add it manually if you want to try.
+
+The `framebuffer-con1`/`con2` entries are there for changing connector type to HDMI.
 
 There are some GPU glitches related to HDR, if your display has that option. Noticeable when playing HDR videos and some screensavers (including stock Drift one). Possibly they could be resolved via EDID injection or similar black magic (feel free to make PR if you know how to do that). Easier option is to disable automatic switching to HDR (GPU struggles with 4K HDR anyway):
 
@@ -56,7 +60,7 @@ Enabling hibernation on this model is initially trickier than usual due to Lenov
   - Set NVRAM variable `rtc-blacklist to 808182838485868788898A8B8C8D8E8F909192939495969798999A9B9C9D9E9FA0A1A2A3A4A5A6A7A8A9AAAB`
     - This does not seem to work as-is, probably requires something else (UEFI/ProtocolOverride?)
 - Add HibernationFixup kext with at least `hbfx-ahbm=1` (refer to github readme for details) and set Misc/Boot/HibernateMode to NVRAM.
-- Add ReservedMemory region in UEFI block. This should fix black screen on resuming from hibernation. No idea where it is from.
+- Add ReservedMemory region in UEFI block. This should fix black screen on resuming from hibernation. No idea where those values are from.
 - Enable hibernation in OS with `sudo pmset -a hibernatemode 3`, `sudo pmset -a standby 1`.
 
 Hibernation mode 25 doesn't work. Resuming from it results in hang up with garbled screen.
