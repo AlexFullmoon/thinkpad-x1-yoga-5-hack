@@ -1,6 +1,6 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.7 | macOS Ventura 13.7.8 | BIOS 1.39 | **EOL**
+OC 1.0.8 | macOS Ventura 13.7.8 | BIOS 1.39 | **EOL**
 
 Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
