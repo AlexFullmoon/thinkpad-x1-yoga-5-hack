@@ -123,7 +123,8 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 
 ## Kexts
 
-I am providing UTBMap (USB mapping). For everything else you should grab latest versions.
+I am providing UTBMap (USB mapping) and CPUFriendDataProvider for convenience. For everything else you should grab latest versions.
+CPUFriendDataProvider is set to rather aggressive power saving — default Apple settings are designed to MBP, as set in SMBIOS, and this laptop is more like MBA in thermals nad power throttling. 
 
 - Lilu
 - VirtualSMC
@@ -131,6 +132,7 @@ I am providing UTBMap (USB mapping). For everything else you should grab latest 
   - SMCProcessor
   - SMCSuperIO
   - SMCLightSensor
+- CPUFriend + data
 - WhateverGreen
 - AppleALC
 - IntelMausi
