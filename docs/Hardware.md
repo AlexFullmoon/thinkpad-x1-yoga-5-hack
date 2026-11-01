@@ -69,10 +69,6 @@ Some glitches seem to happen after resuming from hibernation: Bluetooth requires
 
 ## Audio
 
-First of all, internal mic is **unsupported**, end of the line. It's a microphone array powered by Intel Smart Sound Technology.
-
-In short, AppleALC works by explaining to native AppleHDA how to connect with audio layouts inside HDA chip that it doesn't know. What we have here is a separate chip that has nothing to do with HDA, so neither AppleALC nor VoodooHDA support that. Unless someone writes a completely new driver, there's nothing to be done.
-
 Out of available layouts the best one is **71**. Both sets of speakers work, jack is fully functional. Second best is 66, if you need it for some reason — other layouts use top speakers, which are tweeters and not usable alone.
 
 Unfortunately, macOS can use only one device for output. One solution is to make an aggregate device in MIDI settings, but then you lose some QoL like volume control and autoswitching to headphones. You can install third-party volume control, like [AggregateVolumeMenu](https://github.com/adaskar/AggregateVolumeMenu) or something more advanced like [SoundSource](https://rogueamoeba.com/soundsource/).
@@ -89,6 +85,19 @@ Result of testing different audio layouts.
 | 66 | Bottom   | Yes      | Yes     |                                                |
 | 71 | Both     | Yes      | Yes     | Best one. Requires aggregate device.           |
 | 88 | Top      | Yes      | Yes     | Headphones on separate channel without switch. |
+
+## Internal microphone
+
+Microphone is complicated. It's a digital microphone array powered by Intel Smart Sound Technology. It is not related to HDA chip, so AppleHDA (and AppleALC and VoodooHDA) can't use it at all.
+
+Fortunately, there's recent development of LatSOFAudio. Unfortunately, due to firmware license, you have to compile it yourself. [My fork](https://github.com/AlexFullmoon/LatSOF-Audio) is preconfigured for this laptop (including support of all four mics), all you need is 
+- grab specific firmware blob (sof-cml.ri v. 2.2.0)
+  - Most certain way is to boot some Linux LiveUSB, e.g. Ubuntu 26.04, check that mics are working, and grab firmware from `/lib/firmware/intel/sof`
+- install Xcode
+- build kext (see instructions in repo)
+- copy it to /Library/Extensions , allow loading in System settings and reboot
+
+**NOTE**: Yes, this kext installs into /Library/Extensions, **do not** load it through OC/Lilu.
 
 ## Ethernet
 

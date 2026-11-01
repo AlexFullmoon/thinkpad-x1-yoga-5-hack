@@ -19,6 +19,7 @@ Also, I don't think that packaging a bunch of outdated precompiled files is righ
 | Ethernet    | Intel i219LM        | IntelMausi. Just works™                                  |
 | WiFi        | Intel AX201         | itlwm *or* AirportItlwm                                  |
 | Audio       | ALC 285             | AppleALC, layout 71                                      |
+| Microphone  | Intel CML cAVS array| LatSOFAudio, see [docs/Hardware.md](docs/Hardware.md)    |
 | Bluetooth   | Intel AX201         | IntelBluetoothFirmware                                   |
 | Keyboard    | Generic PS/2        | VoodooPS2Keyboard, see [docs/Input.md](docs/Input.md)    |
 | Trackpad    | I2C, SYNA8006       | VoodooI2C with HID satellite, VoodooRMI                  |
@@ -31,7 +32,6 @@ See [docs/Hardware.md](docs/Hardware.md) for more details.
 ## 🚫 Final issues (won't ever work)
 
 - Fingerprint, IR camera (if present), WWAN (if present).
-- Internal microphone.
 - [DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — broken on iGPU.
 
 ## ❓ Lesser issues
