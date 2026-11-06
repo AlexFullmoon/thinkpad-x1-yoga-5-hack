@@ -4,10 +4,10 @@
 
 - VoodooPS2 for keyboard and trackpoint.
 - VoodooI2C for trackpad (works without need for GPIO pinning).
-- VoodooI2CHID for touchscreen.
+- Patched VoodooI2CHID for touchscreen (see [Pen](#pen)).
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
 - YogaSMC for most Fn keys and other functionality.
-- Pen doesn't have pressure detection.
+- Pen works natively in macOS (basic pointer), pressure and tilt via OpenTabletDriver, see [Pen](#pen).
 - Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
 - Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
 
@@ -17,13 +17,44 @@ Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts.
 
 ## Pen
 
-Stock VoodooI2CHID provides touchscreen as well as pen support, but it is very limited — no pressure detection, essentially a mouse.
+The pen is part of the same USB HID digitizer as the touchscreen (Wacom `056A:5229`), so macOS handles it natively without any kexts — as a basic pointer, without pressure or tilt.
 
-A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Install it, add configuration and parser from [extras](../extras) to ~/Library/Application Support/OpenTabletDriver, and you'll get fully functional digitizer.
+Stock VoodooI2CHID attaches to this USB device as well: its event drivers match any HID interface with digitizer usage, not only I2C ones. Since [VoodooI2CHID#72](https://github.com/VoodooI2C/VoodooI2CHID/pull/72) (see also [VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500)) it also parses the pen, so you get duplicate readings: one from macOS, one from the kext. Touchscreen only works through VoodooI2CHID, so just disabling it is not an option.
 
-One big caveat — stock VoodooI2CHID also reads pen input, so you get duplicate readings. I've attached patched VoodooI2CHID that disables pen reading, as well as patch file if you'd want to build it yourself. With this kext pen won't be detected until you launch OpenTabletDriver.
+The fix is a patched VoodooI2CHID that does not parse pen elements (the patch reverts #72). Ready kext and patch file are in [extras](../extras). With this kext pen won't be detected until you launch OpenTabletDriver.
 
-BTW, stock pen doesn't have tilt detection, but digitizer supports it.
+### OpenTabletDriver
+
+A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Copy files from [extras/OTD 0.6.8](../extras/OTD%200.6.8) into `~/Library/Application Support/OpenTabletDriver` (configuration to `Configurations/Wacom`, plugin to `Plugins/WacomHidPlugin`), restart OpenTabletDriver, and you'll get fully functional digitizer: pressure (up to 4095), two pen buttons, eraser, tool type and serial number.
+
+- OpenTabletDriver has no parser for this device, so the plugin supplies one (`WacomHidPlugin.WacomHidPenReportParser`). It is built against the Plugin API of this OpenTabletDriver version, so after an update of OpenTabletDriver it might stop loading and need a rebuild.
+- `InputReportLength: 59` in the configuration is the value macOS reports for this interface, it can differ on other systems.
+- Pen reports use Report ID 6 (18 bytes), touch reports use Report ID 12 (40 bytes). The plugin parses touch too, but OpenTabletDriver cannot pass touch input to the system, so it is only visible in Tablet Debugger.
+- Tilt: the bundled pen does not report tilt, but digitizer does — a pen that supports it works (tested up to ±65°).
+- Do **not** add the generic Wacom `FeatureInitReport` (`AgI=`) that most Wacom configurations in OpenTabletDriver use. It switches the digitizer to a legacy mode with a different product ID (`056A:0094`) and no usable HID reports, so both OpenTabletDriver and macOS lose the pen until the device is reset (a reboot should do it).
+- Byte 15 of the pen report is declared as "battery strength", but it jumps between 0 and 128/255 independently of pen state. Its meaning is not confirmed, so it is not used.
+
+### Building patched VoodooI2CHID
+
+Only the HID satellite is rebuilt. The documentation toolchain of VoodooI2C (cpplint, cldoc, Python 2, Node) is not needed, and neither is VoodooInput — the build doesn't use them. Tested with Xcode 15.2 on macOS 13.7.8; deployment target warnings are harmless.
+
+```sh
+git clone --depth 1 https://github.com/VoodooI2C/VoodooI2C.git
+cd VoodooI2C
+git submodule update --init --depth 1 "VoodooI2C Satellites/VoodooI2CHID" Dependencies/VoodooGPIO
+git clone --depth 1 https://github.com/acidanthera/MacKernelSDK.git
+
+cd "VoodooI2C Satellites/VoodooI2CHID"
+# Skip this to build stock VoodooI2CHID
+git apply /path/to/extras/revert-pr72-pen-parse.patch
+
+xcodebuild -project VoodooI2CHID.xcodeproj -scheme VoodooI2CHID \
+    -configuration Release -derivedDataPath /tmp/voodoo-build CODE_SIGNING_ALLOWED=NO
+```
+
+The kext appears in `/tmp/voodoo-build/Build/Products/Release/VoodooI2CHID.kext` (x86_64, unsigned — fine for OpenCore).
+
+Provided kext was built from the VoodooI2CHID commit pinned by VoodooI2C master at the time (`2727793`). The patch also applies to the current VoodooI2CHID master (`16f765d`, not built). To use the latest HID commit, run `git checkout origin/master` (after `git fetch`) inside the HID folder before applying the patch.
 
 ## Keyboard
 
@@ -129,40 +160,6 @@ Some EC queries:
 LID method in: `_Q2A`, `_Q2B`
 
 Convertible button (?): `_Q2E`
-
-### Building VoodooI2CHID
-
-Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
-
-```sh
-# This uses Python 3 instead of 2, but works fine.
-pip3 install cpplint
-
-# You might jump in the rabbit hole that is installing special version of cldoc.
-# It requires coffeescript and sass, which require Node 16 and Python 2, and
-# still fails when building the project. Luckily there is no need for all that.
-# It is needed for documentation only, and kexts are compiled successfully. 
-# You can even try installing it from pip3 and ignore Python 2 altogether.
-
-git clone --recursive https://github.com/VoodooI2C/VoodooI2C.git
-cd VoodooI2C
-
-# Dependencies
-git clone https://github.com/acidanthera/MacKernelSDK
-
-src=$(/usr/bin/curl -Lfs \
-    https://raw.githubusercontent.com/acidanthera/VoodooInput/master/VoodooInput/Scripts/bootstrap.sh) \
-    && eval "$src" \
-    && mv VoodooInput Dependencies
-
-# Update VoodooI2CHID to _latest_ commit. This is what we're here for.
-git submodule sync
-git submodule update --init --recursive --remote
-```
-
-Then in XCode open VoodooI2C folder, go to root of project navigator in left panel, select Build Settings tab and switch Build active architecture from Debug to Release. Press ⌘B to build. Select Product in navigator, and open results folder in right panel.
-
-Grab VoodooI2CHID kext (*not* kext.dSYM). You're done.
 
 ## Links
 

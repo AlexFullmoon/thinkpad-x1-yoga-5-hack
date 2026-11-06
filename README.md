@@ -25,7 +25,7 @@ Also, I don't think that packaging a bunch of outdated precompiled files is righ
 | Trackpad    | I2C, SYNA8006       | VoodooI2C, VoodooRMI    |
 | Trackpoint  | PS/2 mouse          | VoodooPS2Mouse          |
 | Touchscreen | USB device          | Patched VoodooI2CHID    |
-| Wacom pen   | USB device          | OpenTabletDriver, see   |
+| Wacom pen   | USB device          | OpenTabletDriver        |
 
 See [docs/Hardware.md](docs/Hardware.md) and [docs/Input.md](docs/Input.md) for more details.
 
@@ -146,7 +146,7 @@ CPUFriendDataProvider is set to rather aggressive power saving — default Apple
 - *Input*
     - VoodooPS2 for keyboard and trackpoint
     - VoodooI2C for trackpad
-    - VoodooI2CHID for touchscreen
+    - Patched VoodooI2CHID for touchscreen (see [docs/Input.md](docs/Input.md))
     - VoodooRMI for general improvements
     - YogaSMC for Fn keys
 - *Other stuff*
