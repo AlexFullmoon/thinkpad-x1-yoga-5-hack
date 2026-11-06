@@ -17,7 +17,7 @@ Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts.
 
 ## Pen
 
-The pen is part of the same USB HID digitizer as the touchscreen (Wacom `056A:5229`), so macOS handles it natively without any kexts — as a basic pointer, without pressure or tilt.
+The pen is part of the same USB HID digitizer as the touchscreen (Wacom `056A:5229`), and macOS handles it natively without any kexts — as a basic pointer, without pressure or tilt.
 
 Stock VoodooI2CHID attaches to this USB device as well: its event drivers match any HID interface with digitizer usage, not only I2C ones. Since [VoodooI2CHID#72](https://github.com/VoodooI2C/VoodooI2CHID/pull/72) (see also [VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500)) it also parses the pen, so you get duplicate readings: one from macOS, one from the kext. Touchscreen only works through VoodooI2CHID, so just disabling it is not an option.
 
@@ -25,7 +25,7 @@ The fix is a patched VoodooI2CHID that does not parse pen elements (the patch re
 
 ### OpenTabletDriver
 
-A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Copy files from [extras/OTD 0.6.8](../extras/OTD%200.6.8) into `~/Library/Application Support/OpenTabletDriver` (configuration to `Configurations/Wacom`, plugin to `Plugins/WacomHidPlugin`), restart OpenTabletDriver, and you'll get fully functional digitizer: pressure (up to 4095), two pen buttons, eraser, tool type and serial number.
+A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Copy files from [extras/OTD 0.6.8](../extras/OTD%200.6.8) into `~/Library/Application Support/OpenTabletDriver` (configuration to `Configurations/Wacom`, plugin to `Plugins/WacomHidPlugin`), restart OpenTabletDriver, and you'll get fully functional digitizer: pressure (up to 4095), two pen buttons, eraser, tool type and serial number. Plugin source files and build instructions are at [AlexFullmoon/otd-wacom-hid-plugin](https://github.com/AlexFullmoon/otd-wacom-hid-plugin).
 
 - OpenTabletDriver has no parser for this device, so the plugin supplies one (`WacomHidPlugin.WacomHidPenReportParser`). It is built against the Plugin API of this OpenTabletDriver version, so after an update of OpenTabletDriver it might stop loading and need a rebuild.
 - `InputReportLength: 59` in the configuration is the value macOS reports for this interface, it can differ on other systems.
