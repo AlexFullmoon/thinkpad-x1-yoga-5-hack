@@ -3,7 +3,8 @@
 ## Current status
 
 - VoodooPS2 for keyboard and trackpoint.
-- VoodooI2C for trackpad (works without need for GPIO pinning) and touchscreen.
+- VoodooI2C for trackpad (works without need for GPIO pinning).
+- VoodooI2CHID for touchscreen.
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
 - YogaSMC for most Fn keys and other functionality.
 - Pen doesn't have pressure detection.
@@ -16,9 +17,13 @@ Note: VoodooRMI requires *only* VoodooRMI, RMII2C and bundled VoodooInput kexts.
 
 ## Pen
 
-Pen support in VoodooI2C is limited — no pressure detection, no system integration (e.g. handwriting input like in Windows), essentially a mouse. Frankly, it's amazing it works so well for unsupported hardware.
+Stock VoodooI2CHID provides touchscreen as well as pen support, but it is very limited — no pressure detection, essentially a mouse.
 
-You might want to try third-party driver [Touch-Base UPDD](https://www.touch-base.com/), it is reported to work on X1Y3, and is supposedly more functional. Unfortunately it did not detect supported devices on my X1Y5, and is quite expensive, anyway.
+A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Install it, add configuration and parser from [extras](../extras) to ~/Library/Application Support/OpenTabletDriver, and you'll get fully functional digitizer.
+
+One big caveat — stock VoodooI2CHID also reads pen input, so you get duplicate readings. I've attached patched VoodooI2CHID that disables pen reading, as well as patch file if you'd want to build it yourself. With this kext pen won't be detected until you launch OpenTabletDriver.
+
+BTW, stock pen doesn't have tilt detection, but digitizer supports it.
 
 ## Keyboard
 
@@ -126,8 +131,6 @@ LID method in: `_Q2A`, `_Q2B`
 Convertible button (?): `_Q2E`
 
 ### Building VoodooI2CHID
-
-This was a workaround for broken pen support in VoodooI2C versions 2.7-2.8 (see [VoodooI2C/VoodooI2C#500](https://github.com/VoodooI2C/VoodooI2C/issues/500) for details). It's been fixed, so I'm leaving this information here just in case. 
 
 Docs are quite outdated, as part of toolchain depends on Python 2. You'll need XCode and some recent Python 3 installed.
 

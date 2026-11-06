@@ -1,0 +1,23 @@
+{
+  "Name": "Wacom Integrated Pen Display (056A:5229)",
+  "Specifications": {
+    "Digitizer": {
+      "Width": 309.31,
+      "Height": 173.99,
+      "MaxX": 30931,
+      "MaxY": 17399
+    },
+    "Pen": {
+      "MaxPressure": 4095,
+      "ButtonCount": 2
+    }
+  },
+  "DigitizerIdentifiers": [
+    {
+      "VendorID": 1386,
+      "ProductID": 21033,
+      "InputReportLength": 59,
+      "ReportParser": "WacomHidPlugin.WacomHidPenReportParser"
+    }
+  ]
+}
