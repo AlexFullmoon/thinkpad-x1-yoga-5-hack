@@ -7,6 +7,10 @@
  *
  * CSSI: some LED control fixes.
  *
+ * RCSM,GCSM,SCSM,_Q2A: clamshell mode. While it is on, lid opening is ignored,
+ * so the internal display stays off and the keyboard and touchpad stay usable.
+ * Needs ACPI patch _Q2A to XQ2A (lid open EC query) in config.plist.
+ *
  */
 DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
 {
@@ -15,6 +19,7 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
     External(_SB_.PCI0.LPCB.EC__.HKEY, DeviceObj)
     External(_SB_.PCI0.LPCB.EC__.BAT1, DeviceObj)
     External(_SI_._SST, MethodObj)
+    External(_SB_.PCI0.LPCB.EC__.XQ2A, MethodObj)
 
     Scope (_SB.PCI0.LPCB.EC)
     {
@@ -117,6 +122,18 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
             }
         }   
 
+        // Clamshell mode, set by YogaSMC through HKEY.SCSM
+        Name (RCSM, Zero)
+
+        // Lid open, original renamed to XQ2A
+        Method (_Q2A, 0, NotSerialized)
+        {
+            If (!_OSI ("Darwin") || (RCSM == Zero))
+            {
+                XQ2A ()
+            }
+        }
+
     }
 
     Scope (\_SB.PCI0.LPCB.EC.HKEY)
@@ -130,6 +147,26 @@ DefinitionBlock ("", "SSDT", 2, "hack", "YOGA", 0x00000000)
             {
                 \_SI._SST (Arg0)
             }
+        }
+
+        // Clamshell mode for YogaSMC
+        Method (GCSM, 0, NotSerialized)
+        {
+            Return (\_SB.PCI0.LPCB.EC.RCSM)
+        }
+
+        Method (SCSM, 1, NotSerialized)
+        {
+            If ((Arg0 == Zero))
+            {
+                \_SB.PCI0.LPCB.EC.RCSM = Zero
+            }
+            Else
+            {
+                \_SB.PCI0.LPCB.EC.RCSM = One
+            }
+
+            Return (Zero)
         }
     }
 }
