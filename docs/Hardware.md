@@ -90,7 +90,7 @@ Result of testing different audio layouts.
 
 Microphone is complicated. It's a digital microphone array powered by Intel Smart Sound Technology. It is not related to HDA chip, so AppleHDA (and AppleALC and VoodooHDA) can't use it at all.
 
-Fortunately, there's recent development of LatSOFAudio. Unfortunately, due to firmware license, you have to compile it yourself. [My fork](https://github.com/AlexFullmoon/LatSOF-Audio) is preconfigured for this laptop (including support of all four mics), all you need is 
+Fortunately, there's recent development of LatSOF-Audio that provides fully functional driver using Sound Open Firmware. Unfortunately, due to firmware license, you have to compile it yourself. [My fork](https://github.com/AlexFullmoon/LatSOF-Audio) is preconfigured for this laptop (including support of all four mics), all you need is 
 - grab specific firmware blob (sof-cml.ri v. 2.2.0)
   - Most certain way is to boot some Linux LiveUSB, e.g. Ubuntu 26.04, check that mics are working, and grab firmware from `/lib/firmware/intel/sof`
 - install Xcode
@@ -110,6 +110,16 @@ I have model EX280, P/N Sc10P42352, FRU 01YU026. There are several compatible P/
 Both variants — itlwm + HeliPort and AirportItlwm — work. Caveats: 
 
 - itlwm lacks some QoL things: YogaSMC doesn't disable it with Fn-F8, terminal scripts that work with airport utility will fail, etc. HeliPort app is well-made, though.
-- AirportItlwm is more native, but (with older beta version) I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. As it seems stable nowadays, I recommend using it.
+- AirportItlwm is more native, but I had some (albeit rare) kernel panics and some cases when WiFi after sleep had no connection until I disabled and reenabled it. Also, note that it requires different kexts for different OS versions. As it seems stable nowadays, I recommend using it.
 
 Since you don't have access to Heliport during installation, AirportItlwm is the only option for installer.
+
+## Power states and other Thinkpad features
+
+As stated in readme, CPUFriendDataProvider is set to significantly lower settings than default for this SMBIOS. The problem is not even in thermal throttling, it's in power throttling — with default settings CPU sits too much at 15W. If you want to try more power, use CPUFriendFriend script to generate your own data.
+
+Thinkpad thermal control firmware has several modes. Of note are Standard (automatic average), Lap (turns on if accelerometer detects movement, decreased power), Quiet (power saving) and Performance. If set to Standard, it will automatically switch to and from Lap, Quiet and Performance override that. You can use Fn-L, Fn-M and Fn-H to switch between them or use YogaSMC prefpane.
+
+[My fork](https://github.com/AlexFullmoon/YogaSMC) of YogaSMC also detects screen hinge pose; with angle > 180° keyboard, touchpad and trackpad automatically turn off.
+
+There is clamshell mode. While it is on, lid opening is ignored, so the internal display stays off and the keyboard and touchpad stay usable. It isn't very reliable when exiting sleep, bot otherwise works as intended.

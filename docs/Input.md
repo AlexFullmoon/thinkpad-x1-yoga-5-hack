@@ -6,7 +6,7 @@
 - VoodooI2C for trackpad (works without need for GPIO pinning).
 - Patched VoodooI2CHID for touchscreen (see [Pen](#pen)).
 - VoodooRMI for some improvements: better trackpoint, no trackpad lag with trackpoint buttons.
-- YogaSMC for most Fn keys and other functionality.
+- YogaSMC for most Fn keys and other Thinkpad-specific functionality. Use [my fork](https://github.com/AlexFullmoon/YogaSMC), it fixes some bugs and enables pose detection.
 - Pen works natively in macOS (basic pointer), pressure and tilt via OpenTabletDriver, see [Pen](#pen).
 - Middle trackpoint key works only as middle mouse button. See [acidanthera/bugtracker#2263](https://github.com/acidanthera/bugtracker/issues/2263).
 - Several keys require (re)mapping. Some Fn keys work even outside of OS, most will require YogaSMC and BrightnessKeys.
@@ -28,9 +28,8 @@ The fix is a patched VoodooI2CHID that does not parse pen elements (the patch re
 A much better option is OpenTabletDriver. It works in usermode and doesn't require installing kexts. Copy files from [extras/OTD 0.6.8](../extras/OTD%200.6.8) into `~/Library/Application Support/OpenTabletDriver` (configuration to `Configurations/Wacom`, plugin to `Plugins/WacomHidPlugin`), restart OpenTabletDriver, and you'll get fully functional digitizer: pressure (up to 4095), two pen buttons, eraser, tool type and serial number. Plugin source files and build instructions are at [AlexFullmoon/otd-wacom-hid-plugin](https://github.com/AlexFullmoon/otd-wacom-hid-plugin).
 
 - OpenTabletDriver has no parser for this device, so the plugin supplies one (`WacomHidPlugin.WacomHidPenReportParser`). It is built against the Plugin API of this OpenTabletDriver version, so after an update of OpenTabletDriver it might stop loading and need a rebuild.
-- `InputReportLength: 59` in the configuration is the value macOS reports for this interface, it can differ on other systems.
 - Pen reports use Report ID 6 (18 bytes), touch reports use Report ID 12 (40 bytes). The plugin parses touch too, but OpenTabletDriver cannot pass touch input to the system, so it is only visible in Tablet Debugger.
-- Tilt: the bundled pen does not report tilt, but digitizer does — a pen that supports it works (tested up to ±65°).
+- The bundled pen does not report tilt, but digitizer does — a pen that supports it works (tested up to ±65°).
 - Do **not** add the generic Wacom `FeatureInitReport` (`AgI=`) that most Wacom configurations in OpenTabletDriver use. It switches the digitizer to a legacy mode with a different product ID (`056A:0094`) and no usable HID reports, so both OpenTabletDriver and macOS lose the pen until the device is reset (a reboot should do it).
 - Byte 15 of the pen report is declared as "battery strength", but it jumps between 0 and 128/255 independently of pen state. Its meaning is not confirmed, so it is not used.
 
@@ -67,12 +66,12 @@ Provided kext was built from the VoodooI2CHID commit pinned by VoodooI2C master 
 | ✔️ | Fn-F1-F3  | Media keys, work OOB.                                             |                |
 | ✔️ | Fn-F4     | Mute mic.                                                         | YogaSMC        |
 | ✔️ | Fn-F5-F6  | Brightness down/up.                                               | BrightnessKeys |
-| ❌  | Fn-F7     | Dual display. YogaSMC gives notification but doesn't do anything. | YogaSMC        |
+| ✔️ | Fn-F7     | Toggle mirror display on and off.                                 | YogaSMC        |
 | ✔️ | Fn-F8     | Airplane mode. Works with AirportItlwm                            | YogaSMC        |
-| ❌  | Fn-F9-F11 | Windows-only keys. Output Event 0x1317:0 to 0x1319:0              | YogaSMC        |
-| ❌  | Fn-F12    | Custom key. Unclear. *Sometimes* detected, opens settings.        | YogaSMC        |
-| ❌  | Fn-Tab    | Windows HiDPI zoom. Outputs Event 0x1014:0                        | YogaSMC        |
-| ❌  | Fn-PrtSc  | Windows Snipping tool. Outputs Event 0x1312:0                     | YogaSMC        |
+| ✔️ | Fn-F9     | Opens notification pane (clicks of clock in menubar)              | YogaSMC        |
+| ✔️ | Fn-F10-F12| Custom keys, remappable in YogaSMC prefpane.                      | YogaSMC        |
+| ✔️ | Fn-Tab    | Windows HiDPI zoom, remappable in YogaSMC prefpane.               | YogaSMC        |
+| ✔️ | Fn-PrtSc  | Screenshot tool.                                                  | YogaSMC        |
 | ✔️ | Fn-B      | Break. Hardwired to emit Ctrl-Pause. Non-remappable.              | VoodooPS2      |
 | ✔️ | Fn-S      | SysRq. Emits Alt-F18 by default. Non-remappable.                  | VoodooPS2      |
 | ✔️ | Fn-K      | ScrollLock. Mapped to F14 Brightness down. Remapped.              | VoodooPS2      |
@@ -88,17 +87,15 @@ Provided kext was built from the VoodooI2CHID commit pinned by VoodooI2C master 
 
 YogaSMC adds notifications to most Fn keys.
 
-Fn- F9 to F12, Tab, PrtSc do not emit PS2 codes, probably they work via EC queries, caught by YogaSMC. I suspect that YogaSMC events can somehow be used, but how exactly is unclear. Additionally, Fn-F7 shows notification but doesn't seem to do anything. Might be something wrong with my display configuration, though.
-
 BrightnessKeys kext connects to Fn-F5/F6, which output standard EC queries. Meanwhile, VoodooPS2 additionally maps brightness up/down to ADB keys 0x71/0x6b (F15/F14). I cannot unassign brightness change from these without recompiling VoodooPS2Keyboard, so I remap them.
 
 Fn-4 can crash system without patches. System shuts down and on start gives CMOS checksum error. Seems to be due to writes into restricted RTC memory regions, see [docs/Hardware.md](Hardware.md) notes on hibernation. Aside from RTC blacklisting, this can be fixed either with SSDT edit ([TODO] try to find that information again) or simply by installing YogaSMC.
 
-VoodooPS2 can optionally use PrtSc to disable touchpad and keyboard. This is useful for manually locking keyboard in tablet mode for Yoga. To enable that, set variable `RemapPrntScr` to true either in VoodooPS2Keyboard.kext/Info.plist, or via SSDT (recommended). This actually *disables* remapping PrtSc to F13. As PrtSc is so conveniently placed, I remap it to RCmd, and use one of other keys (Fn-P, currently) for keyboard lock.
+VoodooPS2 can optionally use PrtSc to disable touchpad and keyboard. This is useful for manually locking keyboard. To enable that, set variable `RemapPrntScr` to true either in VoodooPS2Keyboard.kext/Info.plist, or via SSDT (recommended). This actually *disables* remapping PrtSc to F13. As PrtSc is so conveniently placed, I remap it to RCmd, and use one of other keys (Fn-P, currently) for keyboard lock.
 
 Keyboard lock works as follows:
 
-- PrtSc - toggles touchpad.
+- PrtSc (now Fn-P) - toggles touchpad.
 - Win-PrtSc (i.e. LCmd-PrtSc) - toggles touchpad *and* keyboard.
 - Ctrl-Alt-PrtSc - reset and enable touchpad (don't know how useful is this).
 - Shift-PrtSc - SysRq interrupt.
@@ -130,7 +127,7 @@ Set F16-F17 as shortcuts to whatever you like in macOS keyboard settings.
 
 I use SSDT to inject remaps; it is also possible to edit plist in VoodooPS2Keyboard kext, but SSDT is more update-proof.
  
-## Extras
+### Extras
 
 Some key codes:
 
@@ -154,12 +151,6 @@ Some key codes:
 Note: ADB 0x80 = DEADKEY, keys caught by VoodooPS2Keyboard, e.g. PrtSc, report 0x0.
 
 Full list of keycodes: https://github.com/acidanthera/VoodooPS2/blob/master/VoodooPS2Keyboard/ApplePS2ToADBMap.h
-
-Some EC queries:
-
-LID method in: `_Q2A`, `_Q2B`
-
-Convertible button (?): `_Q2E`
 
 ## Links
 

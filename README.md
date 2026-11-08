@@ -1,8 +1,8 @@
 # Yet another Opencore config for Lenovo Thinkpad X1 Yoga 5.
 
-OC 1.0.8 | macOS Ventura 13.7.8 | BIOS 1.39 | **EOL**
+OC 1.0.8 | macOS Ventura 13.7.8 | BIOS 1.39
 
-Build is considered complete. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
+Build is considered fully complete and end-of-life. Should work for X1 Carbon 8, possibly also would be useful for X1 Carbon 7 and X1 Yoga 4.
 
 ## Why isn't there an EFI folder that I can just drop in and use?
 
@@ -33,13 +33,6 @@ See [docs/Hardware.md](docs/Hardware.md) and [docs/Input.md](docs/Input.md) for 
 
 - Fingerprint, IR camera (if present), WWAN (if present).
 - [DRM playback](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.Chart.md) — broken on iGPU.
-
-## ❓ Remaining issues
-
-- Fn keys. Most works with YogaSMC and Brightness keys, but several are missing, mostly Windows-only functions.
-- Yoga conversion detection (i.e. rotate screen and disable keyboard) doesn't work.
-  - Apparently *Thinkpad* Yogas are not supported by YogaSMC.
-  - You can manually disable keyboard and touchpad (but not trackpoint, currently).
 
 ## ⚠️ Warnings
 
@@ -122,8 +115,7 @@ See [docs/ACPI.md](docs/ACPI.md) for more details.
 
 ## Kexts
 
-I am providing UTBMap (USB mapping) and CPUFriendDataProvider for convenience. For everything else you should grab latest versions.
-CPUFriendDataProvider is set to rather aggressive power saving — default Apple settings are designed to MBP, as set in SMBIOS, and this laptop is more like MBA in thermals nad power throttling. 
+I am providing several custom-made kexts for convenience: UTBMap (USB mapping), CPUFriendDataProvider (CPU performance tuning) and VoodooI2CHID (patched). For everything else you should always grab latest versions.
 
 - Lilu
 - VirtualSMC
@@ -131,7 +123,7 @@ CPUFriendDataProvider is set to rather aggressive power saving — default Apple
   - SMCProcessor
   - SMCSuperIO
   - SMCLightSensor
-- CPUFriend + data
+- CPUFriend + CPUFriendDataProvider for CPU power tuning
 - WhateverGreen
 - AppleALC
 - IntelMausi
@@ -148,7 +140,7 @@ CPUFriendDataProvider is set to rather aggressive power saving — default Apple
     - VoodooI2C for trackpad
     - Patched VoodooI2CHID for touchscreen (see [docs/Input.md](docs/Input.md))
     - VoodooRMI for general improvements
-    - YogaSMC for Fn keys
+    - YogaSMC for Fn keys and other Thinkpad stuff (use [my fork](https://github.com/AlexFullmoon/YogaSMC))
 - *Other stuff*
     - ECEnabler
     - RestrictEvents
