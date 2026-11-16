@@ -1,0 +1,55 @@
+diff --git a/itl80211/openbsd/net80211/ieee80211_node.c b/itl80211/openbsd/net80211/ieee80211_node.c
+index b8fce74..4c6b5c2 100644
+--- a/itl80211/openbsd/net80211/ieee80211_node.c
++++ b/itl80211/openbsd/net80211/ieee80211_node.c
+@@ -1199,6 +1199,16 @@ ieee80211_node_switch_bss(struct ieee80211com *ic, struct ieee80211_node *ni)
+     
+     splassert(IPL_NET);
+     
++    if (sba == NULL) {
++        /* Argument already released (e.g. ic_bss cleaned up by a scan). */
++        ic->ic_xflags &= ~IEEE80211_F_TX_MGMT_ONLY;
++        if (ic->ic_flags & IEEE80211_F_BGSCAN) {
++            ic->ic_flags &= ~IEEE80211_F_BGSCAN;
++            ieee80211_new_state(ic, IEEE80211_S_SCAN, -1);
++        }
++        return;
++    }
++    
+     if ((ic->ic_flags & IEEE80211_F_BGSCAN) == 0) {
+         free(sba);
+         return;
+@@ -1674,11 +1684,18 @@ ieee80211_node_cleanup(struct ieee80211com *ic, struct ieee80211_node *ni)
+     }
+     ieee80211_ba_del(ni);
+     ieee80211_ba_free(ni);
+-    if (ni->ni_unref_arg != NULL) {
++    /*
++     * Drop any pending unref callback together with its argument.
++     * Freeing only the argument leaves ni_unref_cb armed with a NULL
++     * argument; the next ieee80211_release_node() dropping the refcount
++     * to 0 then calls ieee80211_node_switch_bss() with sba == NULL and
++     * panics on &sba->sel_macaddr (CR2 = 0x6).
++     */
++    if (ni->ni_unref_arg != NULL)
+         free(ni->ni_unref_arg);
+-        ni->ni_unref_arg = NULL;
+-        ni->ni_unref_arg_size = 0;
+-    }
++    ni->ni_unref_cb = NULL;
++    ni->ni_unref_arg = NULL;
++    ni->ni_unref_arg_size = 0;
+     
+ #ifndef IEEE80211_STA_ONLY
+     mq_purge(&ni->ni_savedq);
+@@ -1698,6 +1715,10 @@ ieee80211_node_copy(struct ieee80211com *ic,
+ {
+     ieee80211_node_cleanup(ic, dst);
+     *dst = *src;
++    /* Never share ownership of src's pending unref callback argument. */
++    dst->ni_unref_cb = NULL;
++    dst->ni_unref_arg = NULL;
++    dst->ni_unref_arg_size = 0;
+     dst->ni_rsnie = NULL;
+     if (src->ni_rsnie != NULL)
+         ieee80211_save_ie(src->ni_rsnie, &dst->ni_rsnie);

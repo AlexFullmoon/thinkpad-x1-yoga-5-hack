@@ -114,6 +114,8 @@ Both variants — itlwm + HeliPort and AirportItlwm — work. Caveats:
 
 Since you don't have access to Heliport during installation, AirportItlwm is the only option for installer.
 
+[extras/fix-bgscan-unref-null.patch](extras/fix-bgscan-unref-null.patch) is a patch that fixes rare kernel panic, caused by network scan during roaming switch (one scenario is switching between several APs with same SSID).
+
 ## Power states and other Thinkpad features
 
 As stated in readme, CPUFriendDataProvider is set to significantly lower settings than default for this SMBIOS. The problem is not even in thermal throttling, it's in power throttling — with default settings CPU sits too much at 15W. If you want to try more power, use CPUFriendFriend script to generate your own data.
